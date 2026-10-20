@@ -5,46 +5,46 @@
 
 /* (tema claro) */
 :root {
-  color-scheme: light;
+    color-scheme: light;
 
-  --background: #f8f7ff;
-  --foreground: #1f1535;
-  --surface: #ede9fe;
-  --selection: #ede9fe;
-  --title: #5b21b6;
-  --primary: #7c3aed;
-  --primary-strong: #5b21b6;
-  --on-primary: #ffffff;
+    --background: #f8f7ff;
+    --foreground: #1f1535;
+    --surface: #ede9fe;
+    --selection: #ede9fe;
+    --title: #5b21b6;
+    --primary: #7c3aed;
+    --primary-strong: #5b21b6;
+    --on-primary: #ffffff;
 }
 
 /*(tema escuro) */
 .dark {
-  color-scheme: dark;
+    color-scheme: dark;
 
-  --background: #0f0b1a;
-  --foreground: #f3f0ff;
-  --surface: #1a1330;
-  --selection: #5b21b6;
-  --title: #ede9fe;
-  --primary: #7c3aed;
-  --primary-strong: #5b21b6;
-  --on-primary: #ffffff;
+    --background: #0f0b1a;
+    --foreground: #f3f0ff;
+    --surface: #1a1330;
+    --selection: #5b21b6;
+    --title: #ede9fe;
+    --primary: #7c3aed;
+    --primary-strong: #5b21b6;
+    --on-primary: #ffffff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-selection: var(--selection);
-  --color-title: var(--title);
-  --color-primary: var(--primary);
-  --color-primary-strong: var(--primary-strong);
-  --color-on-primary: var(--on-primary);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-surface: var(--surface);
+    --color-selection: var(--selection);
+    --color-title: var(--title);
+    --color-primary: var(--primary);
+    --color-primary-strong: var(--primary-strong);
+    --color-on-primary: var(--on-primary);
+    --font-sans: var(--font-poppins);
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+    background: var(--background);
+    color: var(--foreground);
 }

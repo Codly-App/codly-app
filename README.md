@@ -134,6 +134,7 @@ codly-app/
 | `capacitor.config.ts` | Configuração do Capacitor: identificador do app (`appId`), nome e pasta do build (`out`) que vira Android e iOS. |
 | `next.config.ts` | Configuração do Next.js: React Compiler, Tailwind via Turbopack e exportação estática, necessária para o Capacitor. |
 | `public/` | Arquivos servidos como estão: manifest da PWA, ícones e imagens fixas. |
+| `public/manifest.webmanifest` | Manifest da PWA: descreve o app ao navegador (nome, ícones, cores e modo de exibição) para que ele possa ser instalado na tela inicial e abrir em tela cheia, sem a barra do navegador. Vale só para a versão web; os apps Android e iOS gerados pelo Capacitor usam os ícones dos projetos nativos. |
 | `src/app/` | Rotas e páginas (App Router). Cada pasta vira uma rota, e `layout.tsx` envolve todas as telas. |
 | `src/app/globals.css` | Estilos globais: Tailwind, variáveis de cor e ordem de camadas entre o Tailwind e o MUI. |
 | `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), cache de dados (`query-client.ts`) e, depois, o cliente do Supabase. |
