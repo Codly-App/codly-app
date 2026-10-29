@@ -5,7 +5,10 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Arquitetura
 
 - Exportação estática (`output: "export"`): não use Server Actions, rotas de API do Next nem SSR dinâmico.
-- O app nunca acessa o Firestore. Dados vêm da API via `src/lib/api.ts` (axios), com o token do Supabase. Login e imagens usam o Supabase.
+- O app nunca acessa o Firestore. É proibido importar `firebase/firestore` ou usar `getFirestore`, `getDoc`, `setDoc` e similares. Todo dado (perfil, XP, progresso, cursos, amigos, plano) vem da API via `src/lib/api.ts` (axios), com o token de login no cabeçalho `Authorization`.
+- O Firebase no app serve **só para o login** (Firebase Auth), em `src/lib/firebase.ts`. As imagens (avatar e conteúdo) usam o Supabase Storage.
+- Perfil, XP, sequência e progresso nunca são gravados pelo app: quem grava é a API, que aplica as regras de plano e de acesso.
+- Variáveis `NEXT_PUBLIC_*` só recebem valores públicos. Nunca coloque `service_role`, chave privada do Firebase ou qualquer segredo no app.
 - Dados do servidor sempre com React Query. Não use `useEffect` para buscar dados.
 - Alias `@/` aponta para `src/`. Use sempre `@/...`, nunca imports relativos que subam pastas (`../../`).
 
@@ -15,7 +18,8 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 - `src/components/ui/`: componentes compartilhados entre telas.
 - `src/components/<tela>/`: uma pasta por tela (ex.: `courses/`, `lessons/`, `friends/`, `profile/`), com tudo que só essa tela usa: componentes, hooks e chamadas à API.
 - `src/hooks/`: hooks globais (ex.: autenticação).
-- `src/lib/`: infraestrutura sem interface (api, Supabase, query client).
+- `src/components/auth/`: proteção de rotas (`AuthGuard`).
+- `src/lib/`: infraestrutura sem interface (api, Firebase Auth, Supabase, query client).
 - `src/providers/`: providers que envolvem o app.
 - `src/theme/`: tema do MUI.
 - `src/types/`: tipos globais.
@@ -53,6 +57,9 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 | `bg-primary` / `text-primary` | Ações e progresso (`#7C3AED`) |
 | `bg-primary-strong` / `text-primary-strong` | Ativos e destaques (`#5B21B6`) |
 | `text-on-primary` | Texto sobre fundo primário |
+| `text-flame` / `bg-flame` | Chama da sequência diária (laranja, claro e escuro) |
+
+Use apenas classes de cor desta tabela. Classes como `text-muted` só podem ser usadas depois de existirem no `globals.css`.
 
 - Tema claro e escuro funcionam automaticamente pelas variáveis. Evite `dark:` quando uma classe acima já resolve. Use `dark:` só quando não houver variável adequada.
 - Se faltar uma cor, adicione a variável em `:root` e `.dark` no `globals.css` e o mapeamento em `@theme inline`, em vez de usar um valor solto.

@@ -72,9 +72,13 @@ Trabalhamos com tecnologias modernas para o desenvolvimento de aplicações web,
 - `framer-motion`: biblioteca de animações e transições declarativas para React.
 - `next-themes`: gerencia o tema claro/escuro, persistindo a escolha do usuário.
 
-### Supabase (login e imagens)
+### Firebase (login)
 
-- `@supabase/supabase-js`: cliente oficial do Supabase para autenticação (Google OAuth) e Storage de imagens.
+- `firebase`: SDK de cliente do Firebase, usado **só para o Firebase Auth** (login com Google e com e-mail e senha). O app não acessa o Firestore: os dados passam pela API.
+
+### Supabase (usuários e imagens)
+
+- `@supabase/supabase-js`: cliente oficial do Supabase, usado para o Storage de imagens (avatar e conteúdo).
 - `@supabase/ssr`: guarda a sessão do Supabase em cookies, permitindo usá-la no servidor e no cliente do Next.js.
 
 ### Capacitor (apps Android e iOS)
@@ -108,6 +112,7 @@ Trabalhamos com tecnologias modernas para o desenvolvimento de aplicações web,
 
 ```
 codly-app/
+├─ .env.example
 ├─ capacitor.config.ts
 ├─ next.config.ts
 ├─ public/
@@ -116,10 +121,35 @@ codly-app/
    ├─ app/
    │  ├─ layout.tsx
    │  ├─ page.tsx
-   │  └─ globals.css
+   │  ├─ globals.css
+   │  └─ login/
+   │     └─ page.tsx
+   ├─ components/
+   │  ├─ auth/
+   │  │  └─ AuthGuard.tsx
+   │  ├─ home/
+   │  │  ├─ HomeMain.tsx
+   │  │  ├─ HomeHeader.tsx
+   │  │  ├─ ContinueCard.tsx
+   │  │  ├─ DailyGoalCard.tsx
+   │  │  ├─ CourseList.tsx
+   │  │  ├─ CourseCard.tsx
+   │  │  ├─ StreakFlame.tsx
+   │  │  ├─ mock-data.ts
+   │  │  └─ types.ts
+   │  ├─ login/
+   │  │  └─ LoginMain.tsx
+   │  └─ ui/
+   │     ├─ BottomNav.tsx
+   │     ├─ IconButton.tsx
+   │     ├─ ProgressBar.tsx
+   │     ├─ StatPill.tsx
+   │     └─ ThemeToggle.tsx
    ├─ lib/
    │  ├─ api.ts
-   │  └─ query-client.ts
+   │  ├─ firebase.ts
+   │  ├─ query-client.ts
+   │  └─ supabase/
    ├─ providers/
    │  ├─ Providers.tsx
    │  └─ ThemeSync.tsx
@@ -137,16 +167,21 @@ codly-app/
 | `public/manifest.webmanifest` | Manifest da PWA: descreve o app ao navegador (nome, ícones, cores e modo de exibição) para que ele possa ser instalado na tela inicial e abrir em tela cheia, sem a barra do navegador. Vale só para a versão web; os apps Android e iOS gerados pelo Capacitor usam os ícones dos projetos nativos. |
 | `src/app/` | Rotas e páginas (App Router). Cada pasta vira uma rota, e `layout.tsx` envolve todas as telas. |
 | `src/app/globals.css` | Estilos globais: Tailwind, variáveis de cor e ordem de camadas entre o Tailwind e o MUI. |
-| `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), cache de dados (`query-client.ts`) e, depois, o cliente do Supabase. |
+| `src/app/login/` | Rota `/login`: só monta o componente da tela de login. |
+| `src/components/auth/` | Proteção de rotas: o `AuthGuard` verifica a sessão do Firebase Auth e manda quem não está logado para `/login`. |
+| `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária, a sequência (`StreakFlame`) e a lista de cursos. Hoje usa dados fictícios (`mock-data.ts`). |
+| `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). |
+| `src/components/ui/` | Componentes compartilhados entre telas: barra de navegação inferior, botão de ícone, barra de progresso, indicador de estatística e alternador de tema. |
+| `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`) e o cliente do Supabase (`supabase/`). |
 | `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. |
 | `src/theme/` | Tema do Material UI: cores, tipografia e modo claro/escuro. |
+| `.env.example` | Modelo das variáveis de ambiente. Copie para `.env.local` e preencha (o `.env` nunca vai para o Git). |
 
 Conforme o app crescer, as próximas pastas previstas são:
 
 | Caminho | Função |
 | --- | --- |
-| `src/components/ui/` | Componentes compartilhados entre telas (botões, cards, barra de XP, avatar). |
-| `src/components/<tela>/` | Uma pasta por tela (`cursos`, `licoes`, `amigos`, `perfil`), com os componentes, hooks e chamadas à API que só essa tela usa. A rota em `src/app/` apenas monta o componente da tela. |
+| `src/components/<tela>/` | Uma pasta por tela (`courses`, `lessons`, `friends`, `profile`), com os componentes, hooks e chamadas à API que só essa tela usa. A rota em `src/app/` apenas monta o componente da tela. |
 | `src/hooks/` | Hooks globais usados em várias telas (por exemplo, o de autenticação). |
 | `src/types/` | Tipos TypeScript globais. |
 
@@ -154,21 +189,23 @@ Conforme o app crescer, as próximas pastas previstas são:
 
 ### Como o fluxo funciona
 
-- **Supabase:** guarda os usuários (login com Google) e as imagens (avatar e conteúdo).
-- **Firestore:** é o banco de dados (cursos, lições, progresso, XP, amigos e plano de cada aluno). O app nunca acessa o Firestore diretamente.
-- **API:** recebe o token do Supabase, confere quem é o usuário e lê ou grava no Firestore.
+- **Firebase Auth:** faz o login do usuário (Google e e-mail e senha) e entrega o token de acesso.
+- **Supabase:** guarda os usuários da plataforma e as imagens (avatar e conteúdo).
+- **Firestore:** é o banco de dados (cursos, lições, progresso, XP, amigos e plano de cada aluno). **O app nunca acessa o Firestore.** As regras do Firestore negam todo acesso de cliente.
+- **API:** recebe o token, confere quem é o usuário e é a única que lê e grava no Firestore, aplicando as regras de plano, XP e progresso.
 
 ```
-App ──(Google OAuth)──> Supabase Auth ──> token
-App ──(Bearer token)──> codly-api ──(Firebase Admin)──> Firestore
+App ──(login Google / e-mail)──> Firebase Auth ──> token
+App ──(Bearer token)──────────> codly-api ──(Firebase Admin)──> Firestore
+App ──(imagens)───────────────> Supabase Storage
 ```
 
 1. **Abertura:** `layout.tsx` carrega o `Providers`, que ativa o tema (claro/escuro), o MUI e o React Query em todas as telas.
-2. **Login:** o usuário entra com Google pelo Supabase, que devolve uma sessão com um token.
+2. **Login:** o usuário entra pelo Firebase Auth. O `AuthGuard` protege as telas e redireciona para `/login` quem não tem sessão.
 3. **Pedido de dados:** uma tela usa o React Query, que chama `lib/api.ts`. O axios envia o token no cabeçalho `Authorization`.
-4. **Validação:** a API confere o token no Supabase para saber quem é o usuário.
-5. **Leitura e gravação:** a API lê ou grava no Firestore e devolve o resultado, que o React Query guarda em cache e mostra na tela.
-6. **Imagens:** avatar e imagens de conteúdo vão direto ao Supabase Storage.
+4. **Validação:** a API confere o token para saber quem é o usuário.
+5. **Leitura e gravação:** a API lê ou grava no Firestore e devolve o resultado, que o React Query guarda em cache e mostra na tela. Perfil, XP e progresso nunca são gravados pelo app.
+6. **Imagens:** avatar e imagens de conteúdo vão ao Supabase Storage.
 7. **Tema:** a escolha de tema do `next-themes` é repassada ao MUI pelo `ThemeSync`, e o Tailwind usa a mesma classe `.dark`.
 8. **Android e iOS:** `next build` gera a pasta `out/`, e o Capacitor a empacota para o Android Studio e o Xcode.
 
@@ -176,8 +213,22 @@ App ──(Bearer token)──> codly-api ──(Firebase Admin)──> Firestor
 
 ```bash
 npm install
+```
+
+Copie o `.env.example` para `.env.local` e preencha (no PowerShell: `Copy-Item .env.example .env.local`):
+
+| Variável | Onde pegar |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | Endereço da `codly-api` (local: `http://localhost:3333`). No celular, use o IP da máquina ou o endereço publicado. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase: Project Settings → API → Project URL. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase: chave pública (`anon` ou `publishable`). Nunca a `service_role`. |
+| `NEXT_PUBLIC_FIREBASE_*` | Firebase: Project Settings → General → Your apps → app Web (seis variáveis do `firebaseConfig`). |
+
+```bash
 npm run dev
 ```
+
+Reinicie o servidor sempre que alterar o `.env.local`.
 
 Para gerar os aplicativos Android e iOS:
 
