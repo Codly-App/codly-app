@@ -1,19 +1,10 @@
-
 "use client";
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { FirebaseError } from "firebase/app";
-import {
-    GoogleAuthProvider,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    sendEmailVerification,
-    sendPasswordResetEmail,
-    updateProfile,
-    type User,
-} from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, sendEmailVerification, sendPasswordResetEmail, updateProfile, type User, }
+    from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { FiArrowRight, FiEye, FiEyeOff, FiLock, FiMail, FiPhone, FiUser, FiCheckCircle } from "react-icons/fi";
 import { auth, db } from "@/lib/firebase";
@@ -185,14 +176,11 @@ export default function LoginPage() {
     return (
         <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6 sm:py-16">
 
-            {/* Iluminação suave ao fundo */}
             <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_35%,rgba(124,58,237,0.07),transparent_65%)]" />
             <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[110px] sm:size-125" />
 
-            {/* Card de autenticação */}
             <div className="relative w-full max-w-110 rounded-[28px] bg-surface p-6 shadow-[0_20px_70px_-25px_rgba(91,33,182,0.17)] ring-1 ring-primary/5 sm:p-9 dark:shadow-[0_20px_70px_-25px_rgba(0,0,0,0.25)]">
 
-                {/* Cabeçalho */}
                 <div className="mb-7 text-center">
                     <div className="relative mx-auto mb-5 flex size-14 items-center justify-center">
                         <div className="absolute inset-0 rounded-2xl bg-primary/25 blur-xl" />
@@ -210,20 +198,14 @@ export default function LoginPage() {
                     </p>
                 </div>
 
-                {/* Login com Google */}
-                <button
-                    type="button"
-                    onClick={handleGoogleLogin}
-                    disabled={loading}
-                    className="group flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-background px-4 text-sm font-semibold text-foreground shadow-[0_3px_14px_rgba(91,33,182,0.05)] ring-1 ring-primary/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-lavender hover:shadow-[0_7px_20px_rgba(124,58,237,0.1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
-                >
+                <button type="button" onClick={handleGoogleLogin} disabled={loading}
+                    className="group flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-background px-4 text-sm font-semibold text-foreground shadow-[0_3px_14px_rgba(91,33,182,0.05)] ring-1 ring-primary/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-lavender hover:shadow-[0_7px_20px_rgba(124,58,237,0.1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60">
                     <svg viewBox="0 0 48 48" className="size-5 shrink-0" aria-hidden="true">
                         <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
                         <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6C44.4 38.03 46.98 31.88 46.98 24.55z" />
                         <path fill="#FBBC05" d="M10.53 28.59A14.41 14.41 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.2A23.98 23.98 0 0 0 0 24c0 3.87.93 7.51 2.56 10.78l7.97-6.19z" />
                         <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.8l-7.73-6c-2.15 1.45-4.92 2.3-8.17 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
                     </svg>
-
                     Continuar com Google
                 </button>
 
@@ -232,35 +214,24 @@ export default function LoginPage() {
                     Recomendado: mais rápido e prático
                 </p>
 
-                {/* Separador */}
                 <div className="my-6 flex items-center gap-4">
                     <span className="h-px flex-1 bg-primary/10" />
                     <span className="text-xs text-muted">ou continue com e-mail</span>
                     <span className="h-px flex-1 bg-primary/10" />
                 </div>
 
-                {/* Alternância: Entrar / Criar conta */}
                 <div className="mb-6 grid grid-cols-2 gap-1 rounded-xl bg-surface-alt/70 p-1">
-                    <button
-                        type="button"
-                        onClick={() => changeMode("login")}
-                        aria-pressed={mode === "login"}
-                        className={`h-10 cursor-pointer rounded-lg text-sm font-semibold transition-all duration-300 ${mode === "login" ? "bg-surface text-primary shadow-[0_2px_10px_rgba(91,33,182,0.07)]" : "text-muted hover:text-foreground"}`}
-                    >
+                    <button type="button" onClick={() => changeMode("login")} aria-pressed={mode === "login"}
+                        className={`h-10 cursor-pointer rounded-lg text-sm font-semibold transition-all duration-300 ${mode === "login" ? "bg-surface text-primary shadow-[0_2px_10px_rgba(91,33,182,0.07)]" : "text-muted hover:text-foreground"}`}>
                         Entrar
                     </button>
 
-                    <button
-                        type="button"
-                        onClick={() => changeMode("register")}
-                        aria-pressed={mode === "register"}
-                        className={`h-10 cursor-pointer rounded-lg text-sm font-semibold transition-all duration-300 ${mode === "register" ? "bg-surface text-primary shadow-[0_2px_10px_rgba(91,33,182,0.07)]" : "text-muted hover:text-foreground"}`}
-                    >
+                    <button type="button" onClick={() => changeMode("register")} aria-pressed={mode === "register"}
+                        className={`h-10 cursor-pointer rounded-lg text-sm font-semibold transition-all duration-300 ${mode === "register" ? "bg-surface text-primary shadow-[0_2px_10px_rgba(91,33,182,0.07)]" : "text-muted hover:text-foreground"}`}>
                         Criar conta
                     </button>
                 </div>
 
-                {/* Formulário */}
                 <form onSubmit={handleEmailAuth} className="space-y-4">
 
                     {mode === "register" && (
@@ -341,16 +312,12 @@ export default function LoginPage() {
                         </div>
                     )}
 
-                    {/* Mensagens */}
                     {error && (
                         <p role="alert" className="rounded-xl bg-red-500/8 px-3.5 py-3 text-xs leading-5 text-red-500">
                             {error}
                         </p>
                     )}
 
-                  
-
-                    {/* Botão principal */}
                     <button type="submit" disabled={loading} className="group mt-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(124,58,237,0.17)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-[0_12px_30px_rgba(124,58,237,0.23)] disabled:cursor-not-allowed disabled:opacity-60">
                         {loading ? "Aguarde..." : mode === "login" ? "Entrar na minha conta" : "Criar minha conta"}
                         {!loading && <FiArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />}
