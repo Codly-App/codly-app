@@ -15,7 +15,7 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Estrutura de pastas
 
 - `src/app/`: só rotas. Cada `page.tsx` apenas monta o componente principal da tela.
-- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (BottomNav, MenuItem), `buttons/` (IconButton, ThemeToggle) e `display/` (Avatar, ProgressBar, StatPill). Crie uma nova subpasta só quando nenhuma dessas servir.
+- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (BottomNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup). Crie uma nova subpasta só quando nenhuma dessas servir.
 - `src/components/<tela>/`: uma pasta por tela (ex.: `courses/`, `lessons/`, `friends/`, `profile/`), com tudo que só essa tela usa: componentes, hooks e chamadas à API.
 - Dentro de `src/components/<tela>/`, só o `XxxMain.tsx` fica na raiz. O resto vai em subpastas:
     - `sections/`: blocos grandes da tela (ex.: `HomeHeader`, `ProfileStats`).
@@ -24,7 +24,10 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
     - `types/`: tipos da tela, em `index.ts` (o import fica `@/components/<tela>/types`).
     - `schemas/`: validações `zod` dos formulários.
     - `hooks/`: hooks usados só por essa tela. Crie a subpasta quando houver o primeiro hook.
-- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`).
+- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`, `useSettings`, `useUpdateSettings`).
+- Telas internas (abertas a partir de outra tela, como `preferences/`, `settings/` e `security-privacy/`) usam o `SubPageLayout` de `ui/navigation/`, que traz o título e o botão de voltar. Não repita esse cabeçalho em cada tela.
+- Listas de opções (rótulo, descrição e chave de cada interruptor) ficam em `data/` da tela, e a section apenas percorre a lista. Não repita um `SettingToggle` escrito à mão para cada opção.
+- Preferências do usuário (privacidade, preferências e notificações) são gravadas pela API em `PATCH /me/settings`, nunca no app. Use `useUpdateSettings`, que atualiza a tela na hora e desfaz se a API falhar. Quem aplica as flags de privacidade é a API, nunca o app.
 - `src/components/auth/`: proteção de rotas (`AuthGuard`).
 - `src/lib/`: infraestrutura sem interface (api, Firebase Auth, Supabase, query client).
 - `src/providers/`: providers que envolvem o app.

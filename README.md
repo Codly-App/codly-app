@@ -124,7 +124,13 @@ codly-app/
    │  ├─ globals.css
    │  ├─ login/
    │  │  └─ page.tsx
-   │  └─ profile/
+   │  ├─ profile/
+   │  │  └─ page.tsx
+   │  ├─ preferences/
+   │  │  └─ page.tsx
+   │  ├─ settings/
+   │  │  └─ page.tsx
+   │  └─ security-privacy/
    │     └─ page.tsx
    ├─ components/
    │  ├─ auth/
@@ -144,13 +150,31 @@ codly-app/
    │  │  ├─ schemas/         name-schema.ts
    │  │  ├─ data/            mock-data.ts
    │  │  └─ types/           index.ts
+   │  ├─ preferences/
+   │  │  ├─ PreferencesMain.tsx
+   │  │  ├─ sections/        AppearanceSection, DailyGoalSection, ExperienceSection
+   │  │  └─ data/            goal-options.ts, experience-options.ts
+   │  ├─ settings/
+   │  │  ├─ SettingsMain.tsx
+   │  │  ├─ sections/        NotificationsSection, AccountSection
+   │  │  ├─ components/      DeleteAccountButton
+   │  │  └─ data/            notification-options.ts
+   │  ├─ security-privacy/
+   │  │  ├─ SecurityPrivacyMain.tsx
+   │  │  ├─ sections/        PrivacySection, SecuritySection
+   │  │  ├─ components/      EmailStatusRow, PasswordResetRow
+   │  │  └─ data/            privacy-options.ts
    │  └─ ui/
-   │     ├─ navigation/      BottomNav, MenuItem
-   │     ├─ buttons/         IconButton, ThemeToggle
-   │     └─ display/         Avatar, ProgressBar, StatPill
+   │     ├─ navigation/      BottomNav, MenuItem, SubPageLayout
+   │     ├─ buttons/         IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl
+   │     └─ display/         Avatar, ProgressBar, StatPill, SettingsGroup
    ├─ hooks/
    │  ├─ useProfile.ts
-   │  └─ useUpdateName.ts
+   │  ├─ useUpdateName.ts
+   │  ├─ useSettings.ts
+   │  └─ useUpdateSettings.ts
+   ├─ types/
+   │  └─ settings.ts
    ├─ lib/
    │  ├─ api.ts
    │  ├─ firebase.ts
@@ -178,22 +202,34 @@ codly-app/
 | `src/app/profile/` | Rota `/profile`: protegida pelo `AuthGuard`, só monta o `ProfileMain`. É aberta pelo botão Perfil da barra de navegação. |
 | `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária e a lista de cursos (em `sections/`), com peças menores como `CourseCard` e `StreakFlame` (em `components/`). Hoje usa dados fictícios (`data/mock-data.ts`). |
 | `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). |
-| `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
-| `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (barra inferior e item de menu), `buttons/` (botão de ícone e alternador de tema) e `display/` (avatar, barra de progresso e indicador de estatística). |
-| `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`) e `useUpdateName` (`PATCH /me`). |
-
-**Organização dentro de cada tela:** só o arquivo `XxxMain.tsx` fica na raiz da pasta. O restante vai em subpastas: `sections/` (blocos grandes da tela), `components/` (peças menores usadas pelas sections), `data/` (dados fictícios), `types/` (tipos da tela) e `schemas/` (validações `zod`).
+| `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências, configurações e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
+| `src/app/preferences/`, `src/app/settings/`, `src/app/security-privacy/` | Rotas `/preferences`, `/settings` e `/security-privacy`: protegidas pelo `AuthGuard`, abertas pelo menu do perfil. |
+| `src/components/preferences/` | Preferências de estudo: tema (claro, escuro ou sistema), meta diária de XP (20, 50 ou 100), efeitos sonoros e reduzir animações. |
+| `src/components/settings/` | Configurações da conta: notificações (lembrete de estudo, conquistas e atividade dos amigos) e exclusão da conta, com confirmação em dois passos. |
+| `src/components/security-privacy/` | Privacidade e segurança: flags de privacidade (mostrar online, mostrar o curso atual, aparecer no ranking, mostrar a sequência e permitir pedidos de amizade), status do e-mail e redefinição de senha por e-mail (só para quem entra com e-mail e senha). |
+| `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (barra inferior, item de menu e layout das telas internas com botão de voltar), `buttons/` (botão de ícone, alternador de tema, interruptor, linha com interruptor e seletor segmentado) e `display/` (avatar, barra de progresso, indicador de estatística e grupo de configurações). |
+| `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`), `useUpdateName` (`PATCH /me`), `useSettings` (`GET /me/settings`) e `useUpdateSettings` (`PATCH /me/settings`, com atualização otimista: o interruptor muda na hora e volta atrás se a API falhar). |
+| `src/types/` | Tipos TypeScript globais usados em mais de uma tela, como `settings.ts` (privacidade, preferências e notificações). |
 | `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`) e o cliente do Supabase (`supabase/`). |
 | `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. |
 | `src/theme/` | Tema do Material UI: cores, tipografia e modo claro/escuro. |
 | `.env.example` | Modelo das variáveis de ambiente. Copie para `.env.local` e preencha (o `.env` nunca vai para o Git). |
 
-Conforme o app crescer, as próximas pastas previstas são:
+**Organização dentro de cada tela:** só o arquivo `XxxMain.tsx` fica na raiz da pasta. O restante vai em subpastas: `sections/` (blocos grandes da tela), `components/` (peças menores usadas pelas sections), `data/` (dados fictícios e listas de opções), `types/` (tipos da tela) e `schemas/` (validações `zod`).
 
-| Caminho | Função |
-| --- | --- |
-| `src/components/<tela>/` | Uma pasta por tela (`courses`, `lessons`, `ranking`, `friends`, `preferences`, `security-privacy`), seguindo a mesma organização em subpastas. A rota em `src/app/` apenas monta o componente da tela. |
-| `src/types/` | Tipos TypeScript globais. |
+Conforme o app crescer, as próximas telas previstas são `courses`, `lessons`, `ranking` e `friends`, seguindo a mesma organização em subpastas. A rota em `src/app/` apenas monta o componente da tela.
+
+### Rotas da API usadas pelas telas
+
+| Rota | Usada por | Situação |
+| --- | --- | --- |
+| `GET /me` | Perfil | Existe. |
+| `PATCH /me` | Edição do nome | A criar. |
+| `GET /me/settings` | Preferências, configurações e privacidade | A criar. Cria os padrões se o usuário ainda não tem. |
+| `PATCH /me/settings` | Preferências, configurações e privacidade | A criar. Valida só os campos conhecidos. |
+| `DELETE /me` | Excluir conta | A criar. Apaga Firestore, Supabase e o usuário do Firebase Auth. |
+
+As flags de privacidade são aplicadas **pela API**: ao devolver amigos e ranking, ela omite online, curso atual e sequência de quem desligou. O app só mostra o que recebe.
 
 > A API (Node.js + Firebase Admin) fica em um repositório separado, `codly-api`. Este app só se comunica com ela por HTTP.
 
