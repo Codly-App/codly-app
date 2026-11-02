@@ -1,8 +1,8 @@
-import { ProgressBar } from "@/components/ui/display/ProgressBar";
 import type { ProfileUser } from "@/components/profile/types";
+import { ProgressBar } from "@/components/ui/display/ProgressBar";
 
 interface ProfileLevelCardProps {
-    user: ProfileUser;
+    readonly user: ProfileUser;
 }
 
 export function ProfileLevelCard({ user }: ProfileLevelCardProps) {

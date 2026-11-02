@@ -1,19 +1,19 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import { FirebaseError } from "firebase/app";
 import {
-    GoogleAuthProvider,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signInWithPopup,
+    GoogleAuthProvider,
     sendEmailVerification,
     sendPasswordResetEmail,
-    updateProfile,
+    signInWithEmailAndPassword,
+    signInWithPopup,
     type User,
+    updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { type FormEvent, useState } from "react";
 import {
     FiArrowRight,
     FiEye,

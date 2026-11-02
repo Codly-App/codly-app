@@ -1,5 +1,5 @@
-import { HomeMain } from "@/components/home/HomeMain";
 import AuthGuard from "@/components/auth/AuthGuard";
+import { HomeMain } from "@/components/home/HomeMain";
 
 export default function Home() {
     return (

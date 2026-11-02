@@ -1,10 +1,10 @@
 import { ProfileName } from "@/components/profile/components/ProfileName";
 import type { ProfileUser } from "@/components/profile/types";
-import { Avatar } from "@/components/ui/display/Avatar";
 import { ThemeToggle } from "@/components/ui/buttons/ThemeToggle";
+import { Avatar } from "@/components/ui/display/Avatar";
 
 interface ProfileHeaderProps {
-    user: ProfileUser;
+    readonly user: ProfileUser;
 }
 
 export function ProfileHeader({ user }: ProfileHeaderProps) {

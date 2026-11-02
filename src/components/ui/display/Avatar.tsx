@@ -2,9 +2,9 @@ import clsx from "clsx";
 import Image from "next/image";
 
 interface AvatarProps {
-    name: string;
-    src?: string | null;
-    size?: "md" | "lg";
+    readonly name: string;
+    readonly src?: string | null;
+    readonly size?: "md" | "lg";
 }
 
 export function Avatar({ name, src, size = "md" }: AvatarProps) {

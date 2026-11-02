@@ -178,7 +178,7 @@ codly-app/
 | `src/app/profile/` | Rota `/profile`: protegida pelo `AuthGuard`, só monta o `ProfileMain`. É aberta pelo botão Perfil da barra de navegação. |
 | `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária e a lista de cursos (em `sections/`), com peças menores como `CourseCard` e `StreakFlame` (em `components/`). Hoje usa dados fictícios (`data/mock-data.ts`). |
 | `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). |
-| `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (configurações, segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
+| `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
 | `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (barra inferior e item de menu), `buttons/` (botão de ícone e alternador de tema) e `display/` (avatar, barra de progresso e indicador de estatística). |
 | `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`) e `useUpdateName` (`PATCH /me`). |
 
@@ -192,7 +192,7 @@ Conforme o app crescer, as próximas pastas previstas são:
 
 | Caminho | Função |
 | --- | --- |
-| `src/components/<tela>/` | Uma pasta por tela (`courses`, `lessons`, `ranking`, `friends`, `settings`, `security`, `privacy`), seguindo a mesma organização em subpastas. A rota em `src/app/` apenas monta o componente da tela. |
+| `src/components/<tela>/` | Uma pasta por tela (`courses`, `lessons`, `ranking`, `friends`, `preferences`, `security-privacy`), seguindo a mesma organização em subpastas. A rota em `src/app/` apenas monta o componente da tela. |
 | `src/types/` | Tipos TypeScript globais. |
 
 > A API (Node.js + Firebase Admin) fica em um repositório separado, `codly-api`. Este app só se comunica com ela por HTTP.

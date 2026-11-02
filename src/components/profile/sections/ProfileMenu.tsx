@@ -1,16 +1,24 @@
-import { FiLock, FiSettings, FiShield } from "react-icons/fi";
+import { FiSettings, FiShield, FiSliders } from "react-icons/fi";
 import { MenuItem } from "@/components/ui/navigation/MenuItem";
 
 export function ProfileMenu() {
     return (
         <nav aria-label="Opções da conta" className="flex flex-col gap-3">
             <MenuItem
+                href="/preferences"
+                icon={<FiSliders />}
+                label="Preferências"
+            />
+            <MenuItem
                 href="/settings"
                 icon={<FiSettings />}
                 label="Configurações"
             />
-            <MenuItem href="/security" icon={<FiShield />} label="Segurança" />
-            <MenuItem href="/privacy" icon={<FiLock />} label="Privacidade" />
+            <MenuItem
+                href="/security-privacy"
+                icon={<FiShield />}
+                label="Segurança e privacidade"
+            />
         </nav>
     );
 }

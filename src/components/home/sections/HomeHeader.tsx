@@ -2,8 +2,8 @@ import { FiBell, FiStar, FiZap } from "react-icons/fi";
 import { StreakFlame } from "@/components/home/components/StreakFlame";
 import type { HomeUser } from "@/components/home/types";
 import { IconButton } from "@/components/ui/buttons/IconButton";
-import { StatPill } from "@/components/ui/display/StatPill";
 import { ThemeToggle } from "@/components/ui/buttons/ThemeToggle";
+import { StatPill } from "@/components/ui/display/StatPill";
 
 interface HomeHeaderProps {
     user: HomeUser;

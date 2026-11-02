@@ -3,7 +3,7 @@ import { ProfileStatCard } from "@/components/profile/components/ProfileStatCard
 import type { ProfileUser } from "@/components/profile/types";
 
 interface ProfileStatsProps {
-    user: ProfileUser;
+    readonly user: ProfileUser;
 }
 
 export function ProfileStats({ user }: ProfileStatsProps) {
