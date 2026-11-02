@@ -113,8 +113,13 @@ Trabalhamos com tecnologias modernas para o desenvolvimento de aplicações web,
 ```
 codly-app/
 ├─ .env.example
+├─ .gitignore
+├─ biome.json
 ├─ capacitor.config.ts
+├─ CLAUDE.md
 ├─ next.config.ts
+├─ package.json
+├─ tsconfig.json
 ├─ public/
 │  └─ manifest.webmanifest
 └─ src/
@@ -187,12 +192,29 @@ codly-app/
       └─ theme.ts
 ```
 
+### Arquivos de configuração (raiz do projeto)
+
+| Arquivo | Para que serve |
+| --- | --- |
+| `package.json` | Lista as bibliotecas do projeto e os comandos: `npm run dev` (servidor local), `npm run build` (gera o app), `npm run lint` (confere o código com o Biome) e `npm run format` (formata o código). |
+| `package-lock.json` | Trava a versão exata de cada biblioteca instalada, para todo mundo e o deploy usarem as mesmas. Não edite à mão. |
+| `next.config.ts` | Configuração do Next.js. Hoje liga o **React Compiler** (`reactCompiler`), que otimiza os componentes sozinho (por isso não usamos `useMemo` nem `useCallback`), e registra o loader do **Tailwind** no Turbopack (`@tailwindcss/turbopack`) para processar os `.css`. O `allowedDevOrigins` libera o IP da rede local (`192.168.1.10`) para abrir o servidor de desenvolvimento pelo celular; troque pelo IP da sua máquina. |
+| `capacitor.config.ts` | Configuração do Capacitor, que embute o app web em um aplicativo Android e iOS: define o `appId`, o nome do app e a pasta do build (`webDir: "out"`). Hoje o arquivo está **vazio** e precisa ser preenchido antes de rodar `npx cap sync`. |
+| `tsconfig.json` | Configuração do TypeScript: modo estrito, suporte ao JSX do React e o alias `@/` que aponta para `src/`. É por causa dele que os imports são `@/components/...`. |
+| `biome.json` | Configuração do Biome, que faz o lint e a formatação: indentação de 4 espaços, regras recomendadas para Next.js e React e organização automática dos imports. |
+| `.env.example` | Modelo das variáveis de ambiente (API, Supabase e Firebase). Copie para `.env.local` e preencha. Só valores públicos (`NEXT_PUBLIC_*`). |
+| `.gitignore` | Arquivos que não vão para o Git: `node_modules`, builds (`.next`, `out`), variáveis de ambiente (`.env*`), arquivos gerados pelo TypeScript e a chave de serviço do Firebase. |
+| `CLAUDE.md` | Regras de arquitetura, de organização das pastas, de componentes e de estilo do projeto. Vale para qualquer pessoa, e para o Claude Code, antes de alterar o código. |
+| `LICENSE` | Licença e direitos de uso do código. |
+
+Arquivos gerados automaticamente, que não se editam e não vão para o Git: `next-env.d.ts` (tipos do Next.js) e `tsconfig.tsbuildinfo` (cache do TypeScript). O Tailwind 4 não precisa de `tailwind.config` nem de `postcss.config`: a configuração das cores fica no `src/app/globals.css`.
+
+> **Pendente para gerar o Android e o iOS:** para o Capacitor empacotar o app, o `next.config.ts` precisa gerar a exportação estática (`output: "export"`, com `images.unoptimized` e `trailingSlash`) e o `capacitor.config.ts` precisa ser preenchido. Os dois ainda não estão assim.
+
 ### Para que serve cada pasta e arquivo
 
 | Caminho | Função |
 | --- | --- |
-| `capacitor.config.ts` | Configuração do Capacitor: identificador do app (`appId`), nome e pasta do build (`out`) que vira Android e iOS. |
-| `next.config.ts` | Configuração do Next.js: React Compiler, Tailwind via Turbopack e exportação estática, necessária para o Capacitor. |
 | `public/` | Arquivos servidos como estão: manifest da PWA, ícones e imagens fixas. |
 | `public/manifest.webmanifest` | Manifest da PWA: descreve o app ao navegador (nome, ícones, cores e modo de exibição) para que ele possa ser instalado na tela inicial e abrir em tela cheia, sem a barra do navegador. Vale só para a versão web; os apps Android e iOS gerados pelo Capacitor usam os ícones dos projetos nativos. |
 | `src/app/` | Rotas e páginas (App Router). Cada pasta vira uma rota, e `layout.tsx` envolve todas as telas. |
