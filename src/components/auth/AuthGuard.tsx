@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { motion, useReducedMotion } from "motion/react";
+import { useRouter } from "next/navigation";
+import { type ReactNode, useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
 
 type AuthGuardProps = {
@@ -33,7 +33,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     if (loading || !user) {
         return (
             <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6">
-
                 {/* Iluminação suave de fundo */}
                 <div className="pointer-events-none absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[100px] sm:size-96" />
 
@@ -46,12 +45,19 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                 >
                     {/* Logo com sombra suave */}
                     <div className="relative flex items-center justify-center">
-
                         <div className="absolute size-20 rounded-full bg-primary/20 blur-2xl" />
 
                         <motion.div
-                            animate={reduceMotion ? undefined : { scale: [1, 1.05, 1] }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            animate={
+                                reduceMotion
+                                    ? undefined
+                                    : { scale: [1, 1.05, 1] }
+                            }
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            }}
                             className="relative flex size-16 items-center justify-center rounded-2xl bg-primary text-3xl font-extrabold text-white shadow-[0_12px_35px_rgba(124,58,237,0.22)]"
                         >
                             C
@@ -63,8 +69,20 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                         {[0, 1, 2].map((index) => (
                             <motion.span
                                 key={index}
-                                animate={reduceMotion ? undefined : { opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
-                                transition={{ duration: 1.2, repeat: Infinity, delay: index * 0.15, ease: "easeInOut" }}
+                                animate={
+                                    reduceMotion
+                                        ? undefined
+                                        : {
+                                              opacity: [0.3, 1, 0.3],
+                                              y: [0, -3, 0],
+                                          }
+                                }
+                                transition={{
+                                    duration: 1.2,
+                                    repeat: Infinity,
+                                    delay: index * 0.15,
+                                    ease: "easeInOut",
+                                }}
                                 className="size-1.5 rounded-full bg-primary"
                             />
                         ))}

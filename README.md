@@ -113,8 +113,13 @@ Trabalhamos com tecnologias modernas para o desenvolvimento de aplicações web,
 ```
 codly-app/
 ├─ .env.example
+├─ .gitignore
+├─ biome.json
 ├─ capacitor.config.ts
+├─ CLAUDE.md
 ├─ next.config.ts
+├─ package.json
+├─ tsconfig.json
 ├─ public/
 │  └─ manifest.webmanifest
 └─ src/
@@ -122,29 +127,59 @@ codly-app/
    │  ├─ layout.tsx
    │  ├─ page.tsx
    │  ├─ globals.css
-   │  └─ login/
+   │  ├─ login/
+   │  │  └─ page.tsx
+   │  ├─ profile/
+   │  │  └─ page.tsx
+   │  ├─ preferences/
+   │  │  └─ page.tsx
+   │  ├─ settings/
+   │  │  └─ page.tsx
+   │  └─ security-privacy/
    │     └─ page.tsx
    ├─ components/
    │  ├─ auth/
    │  │  └─ AuthGuard.tsx
    │  ├─ home/
    │  │  ├─ HomeMain.tsx
-   │  │  ├─ HomeHeader.tsx
-   │  │  ├─ ContinueCard.tsx
-   │  │  ├─ DailyGoalCard.tsx
-   │  │  ├─ CourseList.tsx
-   │  │  ├─ CourseCard.tsx
-   │  │  ├─ StreakFlame.tsx
-   │  │  ├─ mock-data.ts
-   │  │  └─ types.ts
+   │  │  ├─ sections/        HomeHeader, DailyGoalCard, ContinueCard, CourseList
+   │  │  ├─ components/      CourseCard, StreakFlame
+   │  │  ├─ data/            mock-data.ts
+   │  │  └─ types/           index.ts
    │  ├─ login/
    │  │  └─ LoginMain.tsx
+   │  ├─ profile/
+   │  │  ├─ ProfileMain.tsx
+   │  │  ├─ sections/        ProfileHeader, ProfileStats, ProfileLevelCard, ProfileMenu
+   │  │  ├─ components/      ProfileName, ProfileStatCard, EditNameForm, LogoutButton
+   │  │  ├─ schemas/         name-schema.ts
+   │  │  ├─ data/            mock-data.ts
+   │  │  └─ types/           index.ts
+   │  ├─ preferences/
+   │  │  ├─ PreferencesMain.tsx
+   │  │  ├─ sections/        AppearanceSection, DailyGoalSection, ExperienceSection
+   │  │  └─ data/            goal-options.ts, experience-options.ts
+   │  ├─ settings/
+   │  │  ├─ SettingsMain.tsx
+   │  │  ├─ sections/        NotificationsSection, AccountSection
+   │  │  ├─ components/      DeleteAccountButton
+   │  │  └─ data/            notification-options.ts
+   │  ├─ security-privacy/
+   │  │  ├─ SecurityPrivacyMain.tsx
+   │  │  ├─ sections/        PrivacySection, SecuritySection
+   │  │  ├─ components/      EmailStatusRow, PasswordResetRow
+   │  │  └─ data/            privacy-options.ts
    │  └─ ui/
-   │     ├─ BottomNav.tsx
-   │     ├─ IconButton.tsx
-   │     ├─ ProgressBar.tsx
-   │     ├─ StatPill.tsx
-   │     └─ ThemeToggle.tsx
+   │     ├─ navigation/      BottomNav, MenuItem, SubPageLayout
+   │     ├─ buttons/         IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl
+   │     └─ display/         Avatar, ProgressBar, StatPill, SettingsGroup
+   ├─ hooks/
+   │  ├─ useProfile.ts
+   │  ├─ useUpdateName.ts
+   │  ├─ useSettings.ts
+   │  └─ useUpdateSettings.ts
+   ├─ types/
+   │  └─ settings.ts
    ├─ lib/
    │  ├─ api.ts
    │  ├─ firebase.ts
@@ -157,33 +192,66 @@ codly-app/
       └─ theme.ts
 ```
 
+### Arquivos de configuração (raiz do projeto)
+
+| Arquivo | Para que serve |
+| --- | --- |
+| `package.json` | Lista as bibliotecas do projeto e os comandos: `npm run dev` (servidor local), `npm run build` (gera o app), `npm run lint` (confere o código com o Biome) e `npm run format` (formata o código). |
+| `package-lock.json` | Trava a versão exata de cada biblioteca instalada, para todo mundo e o deploy usarem as mesmas. Não edite à mão. |
+| `next.config.ts` | Configuração do Next.js. Hoje liga o **React Compiler** (`reactCompiler`), que otimiza os componentes sozinho (por isso não usamos `useMemo` nem `useCallback`), e registra o loader do **Tailwind** no Turbopack (`@tailwindcss/turbopack`) para processar os `.css`. O `allowedDevOrigins` libera o IP da rede local (`192.168.1.10`) para abrir o servidor de desenvolvimento pelo celular; troque pelo IP da sua máquina. |
+| `capacitor.config.ts` | Configuração do Capacitor, que embute o app web em um aplicativo Android e iOS: define o `appId`, o nome do app e a pasta do build (`webDir: "out"`). Hoje o arquivo está **vazio** e precisa ser preenchido antes de rodar `npx cap sync`. |
+| `tsconfig.json` | Configuração do TypeScript: modo estrito, suporte ao JSX do React e o alias `@/` que aponta para `src/`. É por causa dele que os imports são `@/components/...`. |
+| `biome.json` | Configuração do Biome, que faz o lint e a formatação: indentação de 4 espaços, regras recomendadas para Next.js e React e organização automática dos imports. |
+| `.env.example` | Modelo das variáveis de ambiente (API, Supabase e Firebase). Copie para `.env.local` e preencha. Só valores públicos (`NEXT_PUBLIC_*`). |
+| `.gitignore` | Arquivos que não vão para o Git: `node_modules`, builds (`.next`, `out`), variáveis de ambiente (`.env*`), arquivos gerados pelo TypeScript e a chave de serviço do Firebase. |
+| `CLAUDE.md` | Regras de arquitetura, de organização das pastas, de componentes e de estilo do projeto. Vale para qualquer pessoa, e para o Claude Code, antes de alterar o código. |
+| `LICENSE` | Licença e direitos de uso do código. |
+
+Arquivos gerados automaticamente, que não se editam e não vão para o Git: `next-env.d.ts` (tipos do Next.js) e `tsconfig.tsbuildinfo` (cache do TypeScript). O Tailwind 4 não precisa de `tailwind.config` nem de `postcss.config`: a configuração das cores fica no `src/app/globals.css`.
+
+> **Pendente para gerar o Android e o iOS:** para o Capacitor empacotar o app, o `next.config.ts` precisa gerar a exportação estática (`output: "export"`, com `images.unoptimized` e `trailingSlash`) e o `capacitor.config.ts` precisa ser preenchido. Os dois ainda não estão assim.
+
 ### Para que serve cada pasta e arquivo
 
 | Caminho | Função |
 | --- | --- |
-| `capacitor.config.ts` | Configuração do Capacitor: identificador do app (`appId`), nome e pasta do build (`out`) que vira Android e iOS. |
-| `next.config.ts` | Configuração do Next.js: React Compiler, Tailwind via Turbopack e exportação estática, necessária para o Capacitor. |
 | `public/` | Arquivos servidos como estão: manifest da PWA, ícones e imagens fixas. |
 | `public/manifest.webmanifest` | Manifest da PWA: descreve o app ao navegador (nome, ícones, cores e modo de exibição) para que ele possa ser instalado na tela inicial e abrir em tela cheia, sem a barra do navegador. Vale só para a versão web; os apps Android e iOS gerados pelo Capacitor usam os ícones dos projetos nativos. |
 | `src/app/` | Rotas e páginas (App Router). Cada pasta vira uma rota, e `layout.tsx` envolve todas as telas. |
 | `src/app/globals.css` | Estilos globais: Tailwind, variáveis de cor e ordem de camadas entre o Tailwind e o MUI. |
 | `src/app/login/` | Rota `/login`: só monta o componente da tela de login. |
 | `src/components/auth/` | Proteção de rotas: o `AuthGuard` verifica a sessão do Firebase Auth e manda quem não está logado para `/login`. |
-| `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária, a sequência (`StreakFlame`) e a lista de cursos. Hoje usa dados fictícios (`mock-data.ts`). |
+| `src/app/profile/` | Rota `/profile`: protegida pelo `AuthGuard`, só monta o `ProfileMain`. É aberta pelo botão Perfil da barra de navegação. |
+| `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária e a lista de cursos (em `sections/`), com peças menores como `CourseCard` e `StreakFlame` (em `components/`). Hoje usa dados fictícios (`data/mock-data.ts`). |
 | `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). |
-| `src/components/ui/` | Componentes compartilhados entre telas: barra de navegação inferior, botão de ícone, barra de progresso, indicador de estatística e alternador de tema. |
+| `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências, configurações e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
+| `src/app/preferences/`, `src/app/settings/`, `src/app/security-privacy/` | Rotas `/preferences`, `/settings` e `/security-privacy`: protegidas pelo `AuthGuard`, abertas pelo menu do perfil. |
+| `src/components/preferences/` | Preferências de estudo: tema (claro, escuro ou sistema), meta diária de XP (20, 50 ou 100), efeitos sonoros e reduzir animações. |
+| `src/components/settings/` | Configurações da conta: notificações (lembrete de estudo, conquistas e atividade dos amigos) e exclusão da conta, com confirmação em dois passos. |
+| `src/components/security-privacy/` | Privacidade e segurança: flags de privacidade (mostrar online, mostrar o curso atual, aparecer no ranking, mostrar a sequência e permitir pedidos de amizade), status do e-mail e redefinição de senha por e-mail (só para quem entra com e-mail e senha). |
+| `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (barra inferior, item de menu e layout das telas internas com botão de voltar), `buttons/` (botão de ícone, alternador de tema, interruptor, linha com interruptor e seletor segmentado) e `display/` (avatar, barra de progresso, indicador de estatística e grupo de configurações). |
+| `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`), `useUpdateName` (`PATCH /me`), `useSettings` (`GET /me/settings`) e `useUpdateSettings` (`PATCH /me/settings`, com atualização otimista: o interruptor muda na hora e volta atrás se a API falhar). |
+| `src/types/` | Tipos TypeScript globais usados em mais de uma tela, como `settings.ts` (privacidade, preferências e notificações). |
 | `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`) e o cliente do Supabase (`supabase/`). |
 | `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. |
 | `src/theme/` | Tema do Material UI: cores, tipografia e modo claro/escuro. |
 | `.env.example` | Modelo das variáveis de ambiente. Copie para `.env.local` e preencha (o `.env` nunca vai para o Git). |
 
-Conforme o app crescer, as próximas pastas previstas são:
+**Organização dentro de cada tela:** só o arquivo `XxxMain.tsx` fica na raiz da pasta. O restante vai em subpastas: `sections/` (blocos grandes da tela), `components/` (peças menores usadas pelas sections), `data/` (dados fictícios e listas de opções), `types/` (tipos da tela) e `schemas/` (validações `zod`).
 
-| Caminho | Função |
-| --- | --- |
-| `src/components/<tela>/` | Uma pasta por tela (`courses`, `lessons`, `friends`, `profile`), com os componentes, hooks e chamadas à API que só essa tela usa. A rota em `src/app/` apenas monta o componente da tela. |
-| `src/hooks/` | Hooks globais usados em várias telas (por exemplo, o de autenticação). |
-| `src/types/` | Tipos TypeScript globais. |
+Conforme o app crescer, as próximas telas previstas são `courses`, `lessons`, `ranking` e `friends`, seguindo a mesma organização em subpastas. A rota em `src/app/` apenas monta o componente da tela.
+
+### Rotas da API usadas pelas telas
+
+| Rota | Usada por | Situação |
+| --- | --- | --- |
+| `GET /me` | Perfil | Existe. |
+| `PATCH /me` | Edição do nome | A criar. |
+| `GET /me/settings` | Preferências, configurações e privacidade | A criar. Cria os padrões se o usuário ainda não tem. |
+| `PATCH /me/settings` | Preferências, configurações e privacidade | A criar. Valida só os campos conhecidos. |
+| `DELETE /me` | Excluir conta | A criar. Apaga Firestore, Supabase e o usuário do Firebase Auth. |
+
+As flags de privacidade são aplicadas **pela API**: ao devolver amigos e ranking, ela omite online, curso atual e sequência de quem desligou. O app só mostra o que recebe.
 
 > A API (Node.js + Firebase Admin) fica em um repositório separado, `codly-api`. Este app só se comunica com ela por HTTP.
 
