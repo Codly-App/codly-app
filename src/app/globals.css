@@ -7,6 +7,7 @@
 :root {
     color-scheme: light;
     --flame: #f97316;
+    --danger: #dc2626;
     --background: #f8f7ff;
     --foreground: #1f1535;
     --surface: #ede9fe;
@@ -21,6 +22,7 @@
 .dark {
     color-scheme: dark;
     --flame: #fb923c;
+    --danger: #f87171;
     --background: #0f0b1a;
     --foreground: #f3f0ff;
     --surface: #1a1330;
@@ -38,6 +40,7 @@
     --color-selection: var(--selection);
     --color-title: var(--title);
     --color-flame: var(--flame);
+    --color-danger: var(--danger);
     --color-primary: var(--primary);
     --color-primary-strong: var(--primary-strong);
     --color-on-primary: var(--on-primary);

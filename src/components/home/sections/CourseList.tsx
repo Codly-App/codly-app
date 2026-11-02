@@ -1,4 +1,4 @@
-import { CourseCard } from "@/components/home/CourseCard";
+import { CourseCard } from "@/components/home/components/CourseCard";
 import type { HomeCourse } from "@/components/home/types";
 
 interface CourseListProps {

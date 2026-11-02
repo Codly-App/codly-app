@@ -1,5 +1,5 @@
 import type { HomeCourse } from "@/components/home/types";
-import { ProgressBar } from "@/components/ui/ProgressBar";
+import { ProgressBar } from "@/components/ui/display/ProgressBar";
 
 interface CourseCardProps {
     course: HomeCourse;
@@ -16,12 +16,17 @@ export function CourseCard({ course }: CourseCardProps) {
             </span>
             <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <div className="flex items-baseline justify-between gap-2">
-                    <h3 className="truncate font-semibold text-title">{course.title}</h3>
+                    <h3 className="truncate font-semibold text-title">
+                        {course.title}
+                    </h3>
                     <span className="shrink-0 text-xs text-foreground/70">
                         {course.lessonsDone}/{course.lessonsTotal}
                     </span>
                 </div>
-                <ProgressBar value={percent} label={`Progresso em ${course.title}`} />
+                <ProgressBar
+                    value={percent}
+                    label={`Progresso em ${course.title}`}
+                />
             </div>
         </li>
     );

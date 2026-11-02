@@ -1,5 +1,5 @@
 import type { DailyGoal } from "@/components/home/types";
-import { ProgressBar } from "@/components/ui/ProgressBar";
+import { ProgressBar } from "@/components/ui/display/ProgressBar";
 
 interface DailyGoalCardProps {
     goal: DailyGoal;
@@ -18,7 +18,8 @@ export function DailyGoalCard({ goal }: DailyGoalCardProps) {
             </div>
             <ProgressBar value={percent} label="Progresso da meta diária" />
             <p className="text-sm text-foreground/70">
-                Faltam {goal.targetXp - goal.earnedXp} XP para bater a meta de hoje.
+                Faltam {goal.targetXp - goal.earnedXp} XP para bater a meta de
+                hoje.
             </p>
         </section>
     );

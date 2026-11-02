@@ -1,9 +1,13 @@
-import { ContinueCard } from "@/components/home/ContinueCard";
-import { CourseList } from "@/components/home/CourseList";
-import { DailyGoalCard } from "@/components/home/DailyGoalCard";
-import { HomeHeader } from "@/components/home/HomeHeader";
-import { MOCK_COURSES, MOCK_DAILY_GOAL, MOCK_USER } from "@/components/home/mock-data";
-import { BottomNav } from "@/components/ui/BottomNav";
+import { ContinueCard } from "@/components/home/sections/ContinueCard";
+import { CourseList } from "@/components/home/sections/CourseList";
+import { DailyGoalCard } from "@/components/home/sections/DailyGoalCard";
+import { HomeHeader } from "@/components/home/sections/HomeHeader";
+import {
+    MOCK_COURSES,
+    MOCK_DAILY_GOAL,
+    MOCK_USER,
+} from "@/components/home/data/mock-data";
+import { BottomNav } from "@/components/ui/navigation/BottomNav";
 
 export function HomeMain() {
     const [current] = MOCK_COURSES;
