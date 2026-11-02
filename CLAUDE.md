@@ -15,9 +15,16 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Estrutura de pastas
 
 - `src/app/`: só rotas. Cada `page.tsx` apenas monta o componente principal da tela.
-- `src/components/ui/`: componentes compartilhados entre telas.
+- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (BottomNav, MenuItem), `buttons/` (IconButton, ThemeToggle) e `display/` (Avatar, ProgressBar, StatPill). Crie uma nova subpasta só quando nenhuma dessas servir.
 - `src/components/<tela>/`: uma pasta por tela (ex.: `courses/`, `lessons/`, `friends/`, `profile/`), com tudo que só essa tela usa: componentes, hooks e chamadas à API.
-- `src/hooks/`: hooks globais (ex.: autenticação).
+- Dentro de `src/components/<tela>/`, só o `XxxMain.tsx` fica na raiz. O resto vai em subpastas:
+    - `sections/`: blocos grandes da tela (ex.: `HomeHeader`, `ProfileStats`).
+    - `components/`: peças menores usadas pelas sections (ex.: `CourseCard`, `ProfileStatCard`).
+    - `data/`: dados fictícios (`mock-data.ts`) enquanto a tela não usa a API.
+    - `types/`: tipos da tela, em `index.ts` (o import fica `@/components/<tela>/types`).
+    - `schemas/`: validações `zod` dos formulários.
+    - `hooks/`: hooks usados só por essa tela. Crie a subpasta quando houver o primeiro hook.
+- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`).
 - `src/components/auth/`: proteção de rotas (`AuthGuard`).
 - `src/lib/`: infraestrutura sem interface (api, Firebase Auth, Supabase, query client).
 - `src/providers/`: providers que envolvem o app.
@@ -27,7 +34,7 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Componentes: um arquivo por componente
 
 - Um componente por arquivo, sem exceção. Nunca declare vários componentes no mesmo arquivo.
-- O arquivo principal da tela (ex.: `CoursesMain.tsx`) só compõe os componentes menores, cada um em seu próprio arquivo na mesma pasta (`CourseCard.tsx`, `CourseList.tsx`, `CourseFilters.tsx`).
+- O arquivo principal da tela (ex.: `CoursesMain.tsx`) só compõe os componentes menores, cada um em seu próprio arquivo nas subpastas da tela (`sections/CourseList.tsx`, `sections/CourseFilters.tsx`, `components/CourseCard.tsx`).
 - Nome do arquivo = nome do componente, em PascalCase e em inglês. Hooks em `useXxx.ts`.
 - Arquivos curtos e focados. Se um arquivo passa de cerca de 100 linhas, divida.
 - Props tipadas com `interface` no próprio arquivo do componente. Sem `any`.
@@ -58,8 +65,9 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 | `bg-primary-strong` / `text-primary-strong` | Ativos e destaques (`#5B21B6`) |
 | `text-on-primary` | Texto sobre fundo primário |
 | `text-flame` / `bg-flame` | Chama da sequência diária (laranja, claro e escuro) |
+| `text-danger` | Mensagens de erro (vermelho, claro e escuro) |
 
-Use apenas classes de cor desta tabela. Classes como `text-muted` só podem ser usadas depois de existirem no `globals.css`.
+Use apenas classes de cor desta tabela. Classes como `text-muted` só podem ser usadas depois de existirem no `globals.css`. Para texto secundário, use `text-foreground/70`.
 
 - Tema claro e escuro funcionam automaticamente pelas variáveis. Evite `dark:` quando uma classe acima já resolve. Use `dark:` só quando não houver variável adequada.
 - Se faltar uma cor, adicione a variável em `:root` e `.dark` no `globals.css` e o mapeamento em `@theme inline`, em vez de usar um valor solto.

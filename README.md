@@ -122,29 +122,35 @@ codly-app/
    │  ├─ layout.tsx
    │  ├─ page.tsx
    │  ├─ globals.css
-   │  └─ login/
+   │  ├─ login/
+   │  │  └─ page.tsx
+   │  └─ profile/
    │     └─ page.tsx
    ├─ components/
    │  ├─ auth/
    │  │  └─ AuthGuard.tsx
    │  ├─ home/
    │  │  ├─ HomeMain.tsx
-   │  │  ├─ HomeHeader.tsx
-   │  │  ├─ ContinueCard.tsx
-   │  │  ├─ DailyGoalCard.tsx
-   │  │  ├─ CourseList.tsx
-   │  │  ├─ CourseCard.tsx
-   │  │  ├─ StreakFlame.tsx
-   │  │  ├─ mock-data.ts
-   │  │  └─ types.ts
+   │  │  ├─ sections/        HomeHeader, DailyGoalCard, ContinueCard, CourseList
+   │  │  ├─ components/      CourseCard, StreakFlame
+   │  │  ├─ data/            mock-data.ts
+   │  │  └─ types/           index.ts
    │  ├─ login/
    │  │  └─ LoginMain.tsx
+   │  ├─ profile/
+   │  │  ├─ ProfileMain.tsx
+   │  │  ├─ sections/        ProfileHeader, ProfileStats, ProfileLevelCard, ProfileMenu
+   │  │  ├─ components/      ProfileName, ProfileStatCard, EditNameForm, LogoutButton
+   │  │  ├─ schemas/         name-schema.ts
+   │  │  ├─ data/            mock-data.ts
+   │  │  └─ types/           index.ts
    │  └─ ui/
-   │     ├─ BottomNav.tsx
-   │     ├─ IconButton.tsx
-   │     ├─ ProgressBar.tsx
-   │     ├─ StatPill.tsx
-   │     └─ ThemeToggle.tsx
+   │     ├─ navigation/      BottomNav, MenuItem
+   │     ├─ buttons/         IconButton, ThemeToggle
+   │     └─ display/         Avatar, ProgressBar, StatPill
+   ├─ hooks/
+   │  ├─ useProfile.ts
+   │  └─ useUpdateName.ts
    ├─ lib/
    │  ├─ api.ts
    │  ├─ firebase.ts
@@ -169,9 +175,14 @@ codly-app/
 | `src/app/globals.css` | Estilos globais: Tailwind, variáveis de cor e ordem de camadas entre o Tailwind e o MUI. |
 | `src/app/login/` | Rota `/login`: só monta o componente da tela de login. |
 | `src/components/auth/` | Proteção de rotas: o `AuthGuard` verifica a sessão do Firebase Auth e manda quem não está logado para `/login`. |
-| `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária, a sequência (`StreakFlame`) e a lista de cursos. Hoje usa dados fictícios (`mock-data.ts`). |
+| `src/app/profile/` | Rota `/profile`: protegida pelo `AuthGuard`, só monta o `ProfileMain`. É aberta pelo botão Perfil da barra de navegação. |
+| `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária e a lista de cursos (em `sections/`), com peças menores como `CourseCard` e `StreakFlame` (em `components/`). Hoje usa dados fictícios (`data/mock-data.ts`). |
 | `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). |
-| `src/components/ui/` | Componentes compartilhados entre telas: barra de navegação inferior, botão de ícone, barra de progresso, indicador de estatística e alternador de tema. |
+| `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (configurações, segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
+| `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (barra inferior e item de menu), `buttons/` (botão de ícone e alternador de tema) e `display/` (avatar, barra de progresso e indicador de estatística). |
+| `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`) e `useUpdateName` (`PATCH /me`). |
+
+**Organização dentro de cada tela:** só o arquivo `XxxMain.tsx` fica na raiz da pasta. O restante vai em subpastas: `sections/` (blocos grandes da tela), `components/` (peças menores usadas pelas sections), `data/` (dados fictícios), `types/` (tipos da tela) e `schemas/` (validações `zod`).
 | `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`) e o cliente do Supabase (`supabase/`). |
 | `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. |
 | `src/theme/` | Tema do Material UI: cores, tipografia e modo claro/escuro. |
@@ -181,8 +192,7 @@ Conforme o app crescer, as próximas pastas previstas são:
 
 | Caminho | Função |
 | --- | --- |
-| `src/components/<tela>/` | Uma pasta por tela (`courses`, `lessons`, `friends`, `profile`), com os componentes, hooks e chamadas à API que só essa tela usa. A rota em `src/app/` apenas monta o componente da tela. |
-| `src/hooks/` | Hooks globais usados em várias telas (por exemplo, o de autenticação). |
+| `src/components/<tela>/` | Uma pasta por tela (`courses`, `lessons`, `ranking`, `friends`, `settings`, `security`, `privacy`), seguindo a mesma organização em subpastas. A rota em `src/app/` apenas monta o componente da tela. |
 | `src/types/` | Tipos TypeScript globais. |
 
 > A API (Node.js + Firebase Admin) fica em um repositório separado, `codly-api`. Este app só se comunica com ela por HTTP.
