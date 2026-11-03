@@ -13,10 +13,8 @@ export function Providers({ children }: ProvidersProps) {
     const [queryClient] = useState(makeQueryClient);
 
     return (
-
-            <QueryClientProvider client={queryClient}>
-                {children}
-            </QueryClientProvider>
-  
+        <QueryClientProvider client={queryClient}>
+            {children}
+        </QueryClientProvider>
     );
 }

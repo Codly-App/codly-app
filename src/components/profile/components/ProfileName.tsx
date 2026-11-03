@@ -11,10 +11,7 @@ export function ProfileName() {
 
     if (editing) {
         return (
-            <EditNameForm
-                initialName={name}
-                onDone={() => setEditing(false)}
-            />
+            <EditNameForm initialName={name} onDone={() => setEditing(false)} />
         );
     }
 

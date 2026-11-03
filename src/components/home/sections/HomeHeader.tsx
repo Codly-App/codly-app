@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { FiBell, FiStar, FiUser, FiZap } from "react-icons/fi";
-import { StreakFlame } from "@/components/home/components/StreakFlame";
+import { StreakIcon } from "@/components/ui/display/StreakIcon";
 import type { HomeUser } from "@/components/home/types";
 import { IconButton } from "@/components/ui/buttons/IconButton";
 import { ThemeToggle } from "@/components/ui/buttons/ThemeToggle";
@@ -122,13 +122,7 @@ export function HomeHeader({ user }: HomeHeaderProps) {
 
             <div className="flex flex-wrap gap-2">
                 <StatPill
-                    icon={
-                        onFire ? (
-                            <StreakFlame />
-                        ) : (
-                            <FiZap className="text-primary" />
-                        )
-                    }
+                    icon={<StreakIcon streak={user.streak} />}
                     value={`${user.streak} dias`}
                     label="Sequência diária"
                 />
