@@ -4,7 +4,7 @@ import {
 } from "@/components/courses/data/course-icons";
 
 interface CourseIconProps {
-    iconKey: string;
+    readonly iconKey: string;
 }
 
 export function CourseIcon({ iconKey }: CourseIconProps) {

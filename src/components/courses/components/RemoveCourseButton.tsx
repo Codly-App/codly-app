@@ -5,7 +5,7 @@ import { FiTrash2 } from "react-icons/fi";
 import { useSetEnrollment } from "@/hooks/useSetEnrollment";
 
 interface RemoveCourseButtonProps {
-    courseId: string;
+    readonly courseId: string;
 }
 
 export function RemoveCourseButton({ courseId }: RemoveCourseButtonProps) {

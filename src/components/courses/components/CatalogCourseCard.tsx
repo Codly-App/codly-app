@@ -1,11 +1,11 @@
 import { FiLock } from "react-icons/fi";
 import { AddCourseButton } from "@/components/courses/components/AddCourseButton";
 import { CourseIcon } from "@/components/courses/components/CourseIcon";
-import { PLAN_LABELS } from "@/components/courses/data/plan-labels";
+import { LOCK_MESSAGES } from "@/components/courses/data/lock-messages";
 import type { Course } from "@/components/courses/types";
 
 interface CatalogCourseCardProps {
-    course: Course;
+    readonly course: Course;
 }
 
 export function CatalogCourseCard({ course }: CatalogCourseCardProps) {
@@ -23,10 +23,10 @@ export function CatalogCourseCard({ course }: CatalogCourseCardProps) {
                 </div>
             </div>
             <p className="text-sm text-foreground/70">{course.description}</p>
-            {course.locked ? (
-                <p className="flex items-center gap-2 text-sm font-medium text-foreground/70">
-                    <FiLock aria-hidden />
-                    Disponível no plano {PLAN_LABELS[course.requiredPlan]}
+            {course.lockReason ? (
+                <p className="flex items-start gap-2 text-sm font-medium text-foreground/70">
+                    <FiLock aria-hidden className="mt-0.5 shrink-0" />
+                    {LOCK_MESSAGES[course.lockReason]}
                 </p>
             ) : (
                 <div className="flex justify-end">

@@ -10,8 +10,9 @@ export const MOCK_COURSES: Course[] = [
         lessonsTotal: 24,
         lessonsDone: 6,
         enrolled: true,
-        requiredPlan: "demo",
-        locked: false,
+        requiredPlan: "free",
+        lockReason: null,
+
     },
     {
         id: "js-basico",
@@ -21,8 +22,8 @@ export const MOCK_COURSES: Course[] = [
         lessonsTotal: 30,
         lessonsDone: 12,
         enrolled: true,
-        requiredPlan: "demo",
-        locked: false,
+        requiredPlan: "free",
+        lockReason: null,
     },
     {
         id: "sql-avancado",
@@ -32,8 +33,8 @@ export const MOCK_COURSES: Course[] = [
         lessonsTotal: 20,
         lessonsDone: 0,
         enrolled: false,
-        requiredPlan: "basico",
-        locked: true,
+        requiredPlan: "pro",
+        lockReason: "plan",
     },
     {
         id: "js-avancado",
@@ -44,6 +45,6 @@ export const MOCK_COURSES: Course[] = [
         lessonsDone: 0,
         enrolled: false,
         requiredPlan: "pro",
-        locked: true,
+        lockReason: "plan",
     },
 ];

@@ -5,7 +5,7 @@ import type { Course } from "@/components/courses/types";
 import { ProgressBar } from "@/components/ui/display/ProgressBar";
 
 interface EnrolledCourseCardProps {
-    course: Course;
+    readonly course: Course;
 }
 
 function getActionLabel({ lessonsDone, lessonsTotal }: Course) {

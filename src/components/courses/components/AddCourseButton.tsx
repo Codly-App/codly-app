@@ -4,7 +4,7 @@ import { FiPlus } from "react-icons/fi";
 import { useSetEnrollment } from "@/hooks/useSetEnrollment";
 
 interface AddCourseButtonProps {
-    courseId: string;
+    readonly courseId: string;
 }
 
 export function AddCourseButton({ courseId }: AddCourseButtonProps) {

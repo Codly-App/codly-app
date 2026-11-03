@@ -4,7 +4,7 @@ import type { Course } from "@/components/courses/types";
 import { EmptyState } from "@/components/ui/display/EmptyState";
 
 interface ExploreCoursesSectionProps {
-    courses: Course[];
+    readonly courses: Course[];
 }
 
 export function ExploreCoursesSection({ courses }: ExploreCoursesSectionProps) {

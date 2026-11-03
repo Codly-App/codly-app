@@ -4,8 +4,8 @@ import type { Course } from "@/components/courses/types";
 import { EmptyState } from "@/components/ui/display/EmptyState";
 
 interface MyCoursesSectionProps {
-    courses: Course[];
-    onExplore: () => void;
+    readonly courses: Course[];
+    readonly onExplore: () => void;
 }
 
 export function MyCoursesSection({

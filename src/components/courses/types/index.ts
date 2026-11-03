@@ -1,4 +1,6 @@
-export type CoursePlan = "demo" | "basico" | "pro";
+export type CoursePlan = "free" | "pro";
+
+export type LockReason = "plan" | "limit";
 
 export type CoursesTab = "mine" | "explore";
 
@@ -11,5 +13,5 @@ export interface Course {
     lessonsDone: number;
     enrolled: boolean;
     requiredPlan: CoursePlan;
-    locked: boolean;
+    lockReason: LockReason | null;
 }
