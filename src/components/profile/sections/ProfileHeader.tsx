@@ -15,7 +15,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
             </div>
             <Avatar name={user.name} src={user.picture} size="lg" />
             <div className="w-full">
-                <ProfileName name={user.name} />
+                <ProfileName />
                 <p className="text-sm text-foreground/70">{user.email}</p>
             </div>
             <span className="rounded-full bg-selection px-3 py-1 text-xs font-semibold text-primary-strong dark:text-title">

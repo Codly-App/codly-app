@@ -15,7 +15,7 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Estrutura de pastas
 
 - `src/app/`: só rotas. Cada `page.tsx` apenas monta o componente principal da tela.
-- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (BottomNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup). Crie uma nova subpasta só quando nenhuma dessas servir.
+- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (BottomNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon). Crie uma nova subpasta só quando nenhuma dessas servir.
 - `src/components/<tela>/`: uma pasta por tela (ex.: `courses/`, `lessons/`, `friends/`, `profile/`), com tudo que só essa tela usa: componentes, hooks e chamadas à API.
 - Dentro de `src/components/<tela>/`, só o `XxxMain.tsx` fica na raiz. O resto vai em subpastas:
     - `sections/`: blocos grandes da tela (ex.: `HomeHeader`, `ProfileStats`).
@@ -24,7 +24,11 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
     - `types/`: tipos da tela, em `index.ts` (o import fica `@/components/<tela>/types`).
     - `schemas/`: validações `zod` dos formulários.
     - `hooks/`: hooks usados só por essa tela. Crie a subpasta quando houver o primeiro hook.
-- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`, `useSettings`, `useUpdateSettings`).
+- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`, `useSettings`, `useUpdateSettings`, `useCourses`, `useSetEnrollment`).
+- A sequência diária sempre usa o `StreakIcon` de `ui/display/` (chama com mais de 3 dias, raio nas sequências curtas). Não copie essa regra nem o `StreakFlame` para dentro de uma tela.
+- Planos: existem só o gratuito (`free`) e o Pro (`pro`). Quem decide o acesso e o limite de cursos é a API. O app nunca calcula plano nem limite: mostra o `lockReason` (`plan` ou `limit`) que a API devolve em cada curso, com as mensagens em `courses/data/lock-messages.ts`, e deixa a API recusar o pedido (`403`).
+- Remover um curso não apaga o progresso: a API só marca o curso como não ativo. Diga isso ao usuário na confirmação.
+- Estados vazios usam o `EmptyState` de `ui/display/`, sem montar um bloco novo em cada tela.
 - Telas internas (abertas a partir de outra tela, como `preferences/`, `settings/` e `security-privacy/`) usam o `SubPageLayout` de `ui/navigation/`, que traz o título e o botão de voltar. Não repita esse cabeçalho em cada tela.
 - Listas de opções (rótulo, descrição e chave de cada interruptor) ficam em `data/` da tela, e a section apenas percorre a lista. Não repita um `SettingToggle` escrito à mão para cada opção.
 - Preferências do usuário (privacidade, preferências e notificações) são gravadas pela API em `PATCH /me/settings`, nunca no app. Use `useUpdateSettings`, que atualiza a tela na hora e desfaz se a API falhar. Quem aplica as flags de privacidade é a API, nunca o app.

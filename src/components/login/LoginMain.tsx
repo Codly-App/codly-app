@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 import {
     FiArrowRight,
+    FiCheckCircle,
     FiEye,
     FiEyeOff,
     FiLock,
@@ -123,6 +124,7 @@ export default function LoginPage() {
                 ].includes(err.code)
             )
                 return;
+
             console.error("Erro no login Google:", err);
             setError(getErrorMessage(err));
         } finally {
@@ -216,25 +218,29 @@ export default function LoginPage() {
     }
 
     return (
-        <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6">
-            <div className="pointer-events-none absolute -top-40 left-1/2 size-100 -translate-x-1/2 rounded-full bg-primary/10 blur-[110px]" />
+        <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6 sm:py-16">
+            <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_35%,rgba(124,58,237,0.07),transparent_65%)]" />
+            <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[110px] sm:size-125" />
 
-            <div className="relative z-10 w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-[0_25px_70px_rgba(91,33,182,0.08)] sm:p-8">
+            <div className="relative w-full max-w-110 rounded-[28px] bg-surface p-6 shadow-[0_20px_70px_-25px_rgba(91,33,182,0.17)] ring-1 ring-primary/5 sm:p-9 dark:shadow-[0_20px_70px_-25px_rgba(0,0,0,0.25)]">
                 <div className="mb-7 text-center">
-                    <div className="mx-auto mb-5 flex size-13 items-center justify-center rounded-2xl bg-primary text-2xl font-extrabold text-white shadow-[0_8px_25px_rgba(124,58,237,0.2)]">
-                        C
+                    <div className="relative mx-auto mb-5 flex size-14 items-center justify-center">
+                        <div className="absolute inset-0 rounded-2xl bg-primary/25 blur-xl" />
+                        <div className="relative flex size-13 items-center justify-center rounded-2xl bg-primary text-2xl font-extrabold text-white shadow-[0_8px_24px_rgba(124,58,237,0.2)]">
+                            C
+                        </div>
                     </div>
 
-                    <h1 className="text-2xl font-extrabold tracking-tight text-foreground">
+                    <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-[27px]">
                         {mode === "login"
                             ? "Bem-vindo à Codly"
                             : "Crie sua conta na Codly"}
                     </h1>
 
-                    <p className="mt-2 text-sm leading-6 text-muted">
+                    <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-muted">
                         {mode === "login"
-                            ? "Entre na sua conta e continue evoluindo."
-                            : "Comece sua jornada na programação gratuitamente."}
+                            ? "Entre na sua conta e continue sua jornada na programação."
+                            : "Dê o primeiro passo para aprender, praticar e evoluir."}
                     </p>
                 </div>
 
@@ -242,7 +248,7 @@ export default function LoginPage() {
                     type="button"
                     onClick={handleGoogleLogin}
                     disabled={loading}
-                    className="flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-border bg-background px-4 text-sm font-semibold text-foreground transition-all duration-200 hover:border-primary/40 hover:bg-lavender disabled:cursor-not-allowed disabled:opacity-60"
+                    className="group flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-background px-4 text-sm font-semibold text-foreground shadow-[0_3px_14px_rgba(91,33,182,0.05)] ring-1 ring-primary/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-lavender hover:shadow-[0_7px_20px_rgba(124,58,237,0.1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <svg
                         viewBox="0 0 48 48"
@@ -270,23 +276,24 @@ export default function LoginPage() {
                 </button>
 
                 <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs font-medium text-primary">
-                    {/*   <FiCheck size={14} /> */}
-                    Recomendado: mais rápido e prático.
+                    <FiCheckCircle size={14} />
+                    Recomendado: mais rápido e prático
                 </p>
 
-                <div className="my-6 flex items-center gap-3">
-                    <span className="h-px flex-1 bg-border" />
+                <div className="my-6 flex items-center gap-4">
+                    <span className="h-px flex-1 bg-primary/10" />
                     <span className="text-xs text-muted">
                         ou continue com e-mail
                     </span>
-                    <span className="h-px flex-1 bg-border" />
+                    <span className="h-px flex-1 bg-primary/10" />
                 </div>
 
-                <div className="mb-6 grid grid-cols-2 gap-1 rounded-xl bg-surface-alt p-1">
+                <div className="mb-6 grid grid-cols-2 gap-1 rounded-xl bg-surface-alt/70 p-1">
                     <button
                         type="button"
                         onClick={() => changeMode("login")}
-                        className={`h-10 cursor-pointer rounded-lg text-sm font-semibold transition-all ${mode === "login" ? "bg-surface text-foreground shadow-sm" : "text-muted hover:text-foreground"}`}
+                        aria-pressed={mode === "login"}
+                        className={`h-10 cursor-pointer rounded-lg text-sm font-semibold transition-all duration-300 ${mode === "login" ? "bg-surface text-primary shadow-[0_2px_10px_rgba(91,33,182,0.07)]" : "text-muted hover:text-foreground"}`}
                     >
                         Entrar
                     </button>
@@ -294,7 +301,8 @@ export default function LoginPage() {
                     <button
                         type="button"
                         onClick={() => changeMode("register")}
-                        className={`h-10 cursor-pointer rounded-lg text-sm font-semibold transition-all ${mode === "register" ? "bg-surface text-foreground shadow-sm" : "text-muted hover:text-foreground"}`}
+                        aria-pressed={mode === "register"}
+                        className={`h-10 cursor-pointer rounded-lg text-sm font-semibold transition-all duration-300 ${mode === "register" ? "bg-surface text-primary shadow-[0_2px_10px_rgba(91,33,182,0.07)]" : "text-muted hover:text-foreground"}`}
                     >
                         Criar conta
                     </button>
@@ -309,6 +317,7 @@ export default function LoginPage() {
                             >
                                 Nome completo
                             </label>
+
                             <div className="relative">
                                 <FiUser
                                     size={16}
@@ -323,7 +332,7 @@ export default function LoginPage() {
                                     placeholder="Seu nome completo"
                                     required
                                     minLength={3}
-                                    className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted/60 focus:border-primary"
+                                    className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-4 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                                 />
                             </div>
                         </div>
@@ -336,6 +345,7 @@ export default function LoginPage() {
                         >
                             E-mail
                         </label>
+
                         <div className="relative">
                             <FiMail
                                 size={16}
@@ -349,7 +359,7 @@ export default function LoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="seuemail@exemplo.com"
                                 required
-                                className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted/60 focus:border-primary"
+                                className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-4 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                             />
                         </div>
                     </div>
@@ -362,6 +372,7 @@ export default function LoginPage() {
                             >
                                 Telefone com DDD
                             </label>
+
                             <div className="relative">
                                 <FiPhone
                                     size={16}
@@ -376,12 +387,13 @@ export default function LoginPage() {
                                     onChange={(e) => setPhone(e.target.value)}
                                     placeholder="(85) 99999-9999"
                                     required
-                                    className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted/60 focus:border-primary"
+                                    className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-4 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                                 />
                             </div>
-                            <p className="mt-1 text-[11px] text-muted">
-                                Usaremos este número como informação de contato.
-                                Não enviaremos SMS nesta etapa.
+
+                            <p className="mt-1.5 text-[11px] leading-4 text-muted">
+                                Usaremos este número como contato. Não
+                                enviaremos SMS nesta etapa.
                             </p>
                         </div>
                     )}
@@ -393,11 +405,13 @@ export default function LoginPage() {
                         >
                             Senha
                         </label>
+
                         <div className="relative">
                             <FiLock
                                 size={16}
                                 className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
                             />
+
                             <input
                                 id="password"
                                 type={showPassword ? "text" : "password"}
@@ -415,8 +429,9 @@ export default function LoginPage() {
                                 }
                                 required
                                 minLength={mode === "register" ? 8 : undefined}
-                                className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-11 text-sm text-foreground outline-none transition-colors placeholder:text-muted/60 focus:border-primary"
+                                className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-11 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                             />
+
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
@@ -425,7 +440,7 @@ export default function LoginPage() {
                                         ? "Ocultar senha"
                                         : "Mostrar senha"
                                 }
-                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted hover:text-foreground"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted transition-colors hover:text-primary"
                             >
                                 {showPassword ? (
                                     <FiEyeOff size={17} />
@@ -444,6 +459,7 @@ export default function LoginPage() {
                             >
                                 Confirmar senha
                             </label>
+
                             <div className="relative">
                                 <FiLock
                                     size={16}
@@ -459,40 +475,37 @@ export default function LoginPage() {
                                     }
                                     placeholder="Repita sua senha"
                                     required
-                                    className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted/60 focus:border-primary"
+                                    className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-4 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                                 />
                             </div>
                         </div>
                     )}
 
                     {mode === "login" && (
-                        <button
-                            type="button"
-                            onClick={handlePasswordReset}
-                            className="cursor-pointer text-xs font-medium text-primary hover:underline"
-                        >
-                            Esqueceu sua senha?
-                        </button>
+                        <div className="text-right">
+                            <button
+                                type="button"
+                                onClick={handlePasswordReset}
+                                className="cursor-pointer text-xs font-medium text-primary transition-colors hover:text-primary-dark hover:underline"
+                            >
+                                Esqueceu sua senha?
+                            </button>
+                        </div>
                     )}
 
                     {error && (
                         <p
                             role="alert"
-                            className="rounded-lg border border-red-500/20 bg-red-500/5 px-3 py-2 text-xs leading-5 text-red-500"
+                            className="rounded-xl bg-red-500/8 px-3.5 py-3 text-xs leading-5 text-red-500"
                         >
                             {error}
-                        </p>
-                    )}
-                    {notice && (
-                        <p className="rounded-lg border border-primary/20 bg-lavender px-3 py-2 text-xs leading-5 text-primary">
-                            {notice}
                         </p>
                     )}
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className="group flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white transition-all duration-300 hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                        className="group mt-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(124,58,237,0.17)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-[0_12px_30px_rgba(124,58,237,0.23)] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         {loading
                             ? "Aguarde..."
@@ -502,13 +515,13 @@ export default function LoginPage() {
                         {!loading && (
                             <FiArrowRight
                                 size={16}
-                                className="transition-transform group-hover:translate-x-1"
+                                className="transition-transform duration-300 group-hover:translate-x-1"
                             />
                         )}
                     </button>
                 </form>
 
-                <p className="mt-6 text-center text-xs leading-5 text-muted">
+                <p className="mx-auto mt-7 max-w-xs text-center text-[11px] leading-5 text-muted">
                     Ao continuar, você concorda com os termos de uso e a
                     política de privacidade da Codly.
                 </p>

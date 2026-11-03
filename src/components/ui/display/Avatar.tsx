@@ -24,6 +24,7 @@ export function Avatar({ name, src, size = "md" }: AvatarProps) {
                     alt={`Foto de ${name}`}
                     width={96}
                     height={96}
+                    referrerPolicy="no-referrer"
                     className="size-full object-cover"
                 />
             ) : (

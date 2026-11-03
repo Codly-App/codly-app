@@ -3,13 +3,11 @@
 import { useState } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { EditNameForm } from "@/components/profile/components/EditNameForm";
+import { getAuthUserInfo } from "@/lib/auth-user";
 
-interface ProfileNameProps {
-    name: string;
-}
-
-export function ProfileName({ name }: ProfileNameProps) {
+export function ProfileName() {
     const [editing, setEditing] = useState(false);
+    const { name } = getAuthUserInfo();
 
     if (editing) {
         return (
