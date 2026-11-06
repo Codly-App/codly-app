@@ -37,7 +37,7 @@ export function EnrolledCourseCard({ course }: EnrolledCourseCardProps) {
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <RemoveCourseButton courseId={course.id} />
                 <Link
-                    href={`/lessons?course=${course.id}`}
+                    href={`/trail?course=${course.id}`}
                     className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary transition active:scale-95"
                 >
                     {getActionLabel(course)}

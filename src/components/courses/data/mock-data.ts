@@ -12,7 +12,6 @@ export const MOCK_COURSES: Course[] = [
         enrolled: true,
         requiredPlan: "free",
         lockReason: null,
-
     },
     {
         id: "js-basico",
