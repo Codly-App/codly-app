@@ -133,6 +133,8 @@ codly-app/
    │  │  └─ page.tsx
    │  ├─ courses/
    │  │  └─ page.tsx
+   │  ├─ trail/
+   │  │  └─ page.tsx
    │  ├─ preferences/
    │  │  └─ page.tsx
    │  ├─ settings/
@@ -153,6 +155,12 @@ codly-app/
    │  │  ├─ sections/        MyCoursesSection, ExploreCoursesSection
    │  │  ├─ components/      CourseIcon, EnrolledCourseCard, CatalogCourseCard, AddCourseButton, RemoveCourseButton
    │  │  ├─ data/            mock-data.ts, course-icons.ts, lock-messages.ts
+   │  │  └─ types/           index.ts
+   │  ├─ trail/
+   │  │  ├─ TrailMain.tsx
+   │  │  ├─ sections/        TrailSummary, TrailUnitSection
+   │  │  ├─ components/      UnitBanner, TrailNode, TrailConnector, NodePulse, StartBubble
+   │  │  ├─ data/            sql-trail.ts, trails.ts, trail-layout.ts, trail-progress.ts
    │  │  └─ types/           index.ts
    │  ├─ login/
    │  │  └─ LoginMain.tsx
@@ -179,7 +187,7 @@ codly-app/
    │  │  └─ data/            privacy-options.ts
    │  └─ ui/
    │     ├─ navigation/      BottomNav, MenuItem, SubPageLayout
-   │     ├─ buttons/         IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl
+   │     ├─ buttons/         IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput
    │     └─ display/         Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon
    ├─ hooks/
    │  ├─ useProfile.ts
@@ -194,6 +202,7 @@ codly-app/
    │  ├─ api.ts
    │  ├─ firebase.ts
    │  ├─ query-client.ts
+   │  ├─ normalize-text.ts
    │  └─ supabase/
    ├─ providers/
    │  ├─ Providers.tsx
@@ -234,17 +243,19 @@ Arquivos gerados automaticamente, que não se editam e não vão para o Git: `ne
 | `src/app/profile/` | Rota `/profile`: protegida pelo `AuthGuard`, só monta o `ProfileMain`. É aberta pelo botão Perfil da barra de navegação. |
 | `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária e a lista de cursos (em `sections/`), com a peça menor `CourseCard` (em `components/`). A sequência diária usa o `StreakIcon` de `ui/display/`. Hoje usa dados fictícios (`data/mock-data.ts`). |
 | `src/app/courses/` | Rota `/courses`: protegida pelo `AuthGuard`, só monta o `CoursesMain`. É aberta pelo botão Cursos da barra de navegação. |
-| `src/components/courses/` | Tela de cursos, onde o usuário gerencia os cursos dele. Duas abas: **Meus cursos** (progresso, Continuar e Remover com confirmação, mantendo o progresso salvo) e **Explorar** (Adicionar). Cada curso vem da API com um `lockReason`: `plan` (curso exclusivo do plano Pro) ou `limit` (o plano gratuito atingiu o limite de cursos ao mesmo tempo), e a tela só mostra a mensagem (`data/lock-messages.ts`). Quem aplica as regras é a API. Os ícones são escolhidos pela chave `iconKey` (`data/course-icons.ts`). Enquanto a API não responde, usa dados fictícios (`data/mock-data.ts`) e mostra um aviso. |
+| `src/components/courses/` | Tela de cursos, onde o usuário gerencia os cursos dele. Duas abas: **Meus cursos** (progresso, Continuar, que abre a trilha, e Remover com confirmação, mantendo o progresso salvo) e **Explorar** (barra de busca por título e descrição, que ignora acentos e maiúsculas, e Adicionar). Cada curso vem da API com um `lockReason`: `plan` (curso exclusivo do plano Pro) ou `limit` (o plano gratuito atingiu o limite de cursos ao mesmo tempo), e a tela só mostra a mensagem (`data/lock-messages.ts`). Quem aplica as regras é a API. Os ícones são escolhidos pela chave `iconKey` (`data/course-icons.ts`). Enquanto a API não responde, usa dados fictícios (`data/mock-data.ts`) e mostra um aviso. |
+| `src/app/trail/` | Rota `/trail?course=<id>`: protegida pelo `AuthGuard`, só monta o `TrailMain`. O curso vem da URL (por isso a página usa `Suspense`, exigido pela exportação estática). |
+| `src/components/trail/` | Trilha do curso, em estilo de caminho. Cada unidade (`TrailUnitSection`) tem um banner (`UnitBanner`) e as lições em zigue-zague (`NODE_X` em `data/trail-layout.ts`), ligadas por uma linha pontilhada curva (`TrailConnector`) que fica roxa até onde o aluno já chegou. Cada lição (`TrailNode`) pode estar **feita** (check), **atual** (play, com pulso e o balão "Começar") ou **bloqueada** (cadeado), e o último item de cada unidade é um desafio, maior e com troféu. O status vem do `lessonsDone` do curso (`withProgress` em `data/trail-progress.ts`), e o resumo no topo mostra progresso, próxima lição e XP ganho. Hoje existe só a trilha de SQL, com 6 unidades e 24 lições fixas (`data/sql-trail.ts`, registrada em `data/trails.ts`). Cursos sem trilha mostram "Trilha em construção". As animações respeitam a preferência de movimento reduzido do sistema. Tocar numa lição leva a `/lessons`, que ainda não existe. |
 | `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). |
 | `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências, configurações e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
 | `src/app/preferences/`, `src/app/settings/`, `src/app/security-privacy/` | Rotas `/preferences`, `/settings` e `/security-privacy`: protegidas pelo `AuthGuard`, abertas pelo menu do perfil. |
 | `src/components/preferences/` | Preferências de estudo: tema (claro, escuro ou sistema), meta diária de XP (20, 50 ou 100), efeitos sonoros e reduzir animações. |
 | `src/components/settings/` | Configurações da conta: notificações (lembrete de estudo, conquistas e atividade dos amigos) e exclusão da conta, com confirmação em dois passos. |
 | `src/components/security-privacy/` | Privacidade e segurança: flags de privacidade (mostrar online, mostrar o curso atual, aparecer no ranking, mostrar a sequência e permitir pedidos de amizade), status do e-mail e redefinição de senha por e-mail (só para quem entra com e-mail e senha). |
-| `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (barra inferior, item de menu e layout das telas internas com botão de voltar), `buttons/` (botão de ícone, alternador de tema, interruptor, linha com interruptor e seletor segmentado) e `display/` (avatar, barra de progresso, indicador de estatística, grupo de configurações, estado vazio e o foguinho da sequência: `StreakFlame` e `StreakIcon`, que mostra a chama com mais de 3 dias e um raio nas sequências curtas). |
+| `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (barra inferior, item de menu e layout das telas internas com botão de voltar), `buttons/` (botão de ícone, alternador de tema, interruptor, linha com interruptor, seletor segmentado e campo de busca) e `display/` (avatar, barra de progresso, indicador de estatística, grupo de configurações, estado vazio e o foguinho da sequência: `StreakFlame` e `StreakIcon`, que mostra a chama com mais de 3 dias e um raio nas sequências curtas). |
 | `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`), `useUpdateName` (`PATCH /me`), `useSettings` (`GET /me/settings`), `useUpdateSettings` (`PATCH /me/settings`), `useCourses` (`GET /courses`) e `useSetEnrollment` (`PUT` e `DELETE /me/courses/:courseId`). Os que gravam usam atualização otimista: a tela muda na hora e volta atrás se a API falhar. |
 | `src/types/` | Tipos TypeScript globais usados em mais de uma tela, como `settings.ts` (privacidade, preferências e notificações). |
-| `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`) e o cliente do Supabase (`supabase/`). |
+| `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`), o cliente do Supabase (`supabase/`) e o `normalize-text.ts`, que tira acentos e maiúsculas para comparar textos nas buscas. |
 | `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. |
 | `src/theme/` | Tema do Material UI: cores, tipografia e modo claro/escuro. |
 | `.env.example` | Modelo das variáveis de ambiente. Copie para `.env.local` e preencha (o `.env` nunca vai para o Git). |

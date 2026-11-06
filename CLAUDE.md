@@ -15,7 +15,7 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Estrutura de pastas
 
 - `src/app/`: só rotas. Cada `page.tsx` apenas monta o componente principal da tela.
-- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (BottomNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon). Crie uma nova subpasta só quando nenhuma dessas servir.
+- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (BottomNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon). Crie uma nova subpasta só quando nenhuma dessas servir.
 - `src/components/<tela>/`: uma pasta por tela (ex.: `courses/`, `lessons/`, `friends/`, `profile/`), com tudo que só essa tela usa: componentes, hooks e chamadas à API.
 - Dentro de `src/components/<tela>/`, só o `XxxMain.tsx` fica na raiz. O resto vai em subpastas:
     - `sections/`: blocos grandes da tela (ex.: `HomeHeader`, `ProfileStats`).
@@ -29,11 +29,14 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 - Planos: existem só o gratuito (`free`) e o Pro (`pro`). Quem decide o acesso e o limite de cursos é a API. O app nunca calcula plano nem limite: mostra o `lockReason` (`plan` ou `limit`) que a API devolve em cada curso, com as mensagens em `courses/data/lock-messages.ts`, e deixa a API recusar o pedido (`403`).
 - Remover um curso não apaga o progresso: a API só marca o curso como não ativo. Diga isso ao usuário na confirmação.
 - Estados vazios usam o `EmptyState` de `ui/display/`, sem montar um bloco novo em cada tela.
+- Buscas em listas usam o `SearchInput` de `ui/buttons/` e comparam o texto com o `normalizeText` de `src/lib/normalize-text.ts`, para ignorar acentos e maiúsculas. Não escreva campo de busca nem comparação de texto nova em cada tela.
+- Trilhas dos cursos ficam em `src/components/trail/data/` (uma por curso, registrada em `trails.ts`). O status de cada lição (feita, atual ou bloqueada) é sempre calculado a partir do `lessonsDone` que a API devolve, nunca guardado no app. O cadeado na trilha é só visual: quem bloqueia o conteúdo da lição é a API.
+- Animações que se repetem (pulso, balão, chama) usam `useReducedMotion` do `framer-motion` e ficam paradas para quem pediu menos movimento no sistema.
 - Telas internas (abertas a partir de outra tela, como `preferences/`, `settings/` e `security-privacy/`) usam o `SubPageLayout` de `ui/navigation/`, que traz o título e o botão de voltar. Não repita esse cabeçalho em cada tela.
 - Listas de opções (rótulo, descrição e chave de cada interruptor) ficam em `data/` da tela, e a section apenas percorre a lista. Não repita um `SettingToggle` escrito à mão para cada opção.
 - Preferências do usuário (privacidade, preferências e notificações) são gravadas pela API em `PATCH /me/settings`, nunca no app. Use `useUpdateSettings`, que atualiza a tela na hora e desfaz se a API falhar. Quem aplica as flags de privacidade é a API, nunca o app.
 - `src/components/auth/`: proteção de rotas (`AuthGuard`).
-- `src/lib/`: infraestrutura sem interface (api, Firebase Auth, Supabase, query client).
+- `src/lib/`: infraestrutura sem interface (api, Firebase Auth, Supabase, query client) e utilitários puros sem tela, como `normalize-text.ts`.
 - `src/providers/`: providers que envolvem o app.
 - `src/theme/`: tema do MUI.
 - `src/types/`: tipos globais.
