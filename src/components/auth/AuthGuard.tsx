@@ -32,7 +32,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
     if (loading || !user) {
         return (
-            <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6">
+            <div className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-background px-6">
                 {/* Iluminação suave de fundo */}
                 <div className="pointer-events-none absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[100px] sm:size-96" />
 
@@ -58,7 +58,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                                 repeat: Infinity,
                                 ease: "easeInOut",
                             }}
-                            className="relative flex size-16 items-center justify-center rounded-2xl bg-primary text-3xl font-extrabold text-white shadow-[0_12px_35px_rgba(124,58,237,0.22)]"
+                            className="relative flex size-16 items-center justify-center rounded-2xl bg-primary text-3xl font-extrabold text-on-primary shadow-lg shadow-primary/20"
                         >
                             C
                         </motion.div>
@@ -93,7 +93,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                             Verificando sua sessão
                         </p>
 
-                        <p className="mt-1 text-xs text-muted">
+                        <p className="mt-1 text-xs text-foreground/70">
                             Preparando sua experiência na Codly...
                         </p>
                     </div>

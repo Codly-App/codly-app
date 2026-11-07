@@ -3,15 +3,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiAward, FiBookOpen, FiHome, FiUser, FiUsers } from "react-icons/fi";
-
-const ITEMS = [
-    { href: "/", label: "Início", icon: FiHome },
-    { href: "/courses", label: "Cursos", icon: FiBookOpen },
-    { href: "/ranking", label: "Ranking", icon: FiAward },
-    { href: "/friends", label: "Amigos", icon: FiUsers },
-    { href: "/profile", label: "Perfil", icon: FiUser },
-];
+import { NAV_ITEMS } from "@/components/ui/navigation/nav-items";
 
 export function BottomNav() {
     const pathname = usePathname();
@@ -19,10 +11,10 @@ export function BottomNav() {
     return (
         <nav
             aria-label="Navegação principal"
-            className="fixed inset-x-0 bottom-0 z-10 border-t border-selection bg-background pb-[env(safe-area-inset-bottom)]"
+            className="fixed inset-x-0 bottom-0 z-10 border-t border-selection bg-background pb-[env(safe-area-inset-bottom)] md:hidden"
         >
             <ul className="mx-auto flex max-w-md items-stretch justify-around">
-                {ITEMS.map(({ href, label, icon: Icon }) => {
+                {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
                     const active = pathname === href;
                     return (
                         <li key={href} className="flex-1">

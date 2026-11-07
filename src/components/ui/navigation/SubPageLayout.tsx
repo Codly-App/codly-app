@@ -14,7 +14,7 @@ export function SubPageLayout({
     children,
 }: SubPageLayoutProps) {
     return (
-        <main className="mx-auto flex w-full max-w-md flex-col gap-5 px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-10">
+        <main className="mx-auto flex w-full max-w-md flex-col gap-5 px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-10 md:max-w-3xl md:px-8 md:pt-10">
             <header className="flex items-center gap-3">
                 <Link
                     href={backHref}

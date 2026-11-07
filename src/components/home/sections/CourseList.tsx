@@ -9,7 +9,7 @@ export function CourseList({ courses }: CourseListProps) {
     return (
         <section className="flex flex-col gap-3">
             <h2 className="text-lg font-semibold text-title">Seus cursos</h2>
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col gap-3 md:grid md:grid-cols-2">
                 {courses.map((course) => (
                     <CourseCard key={course.id} course={course} />
                 ))}

@@ -8,7 +8,7 @@ import {
     SegmentedControl,
     type SegmentedOption,
 } from "@/components/ui/buttons/SegmentedControl";
-import { BottomNav } from "@/components/ui/navigation/BottomNav";
+import { AppShell } from "@/components/ui/navigation/AppShell";
 import { useCourses } from "@/hooks/useCourses";
 
 export function CoursesMain() {
@@ -22,30 +22,27 @@ export function CoursesMain() {
     ];
 
     return (
-        <>
-            <main className="mx-auto flex w-full max-w-md flex-col gap-5 px-4 pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-28">
-                <h1 className="text-2xl font-bold text-title">Cursos</h1>
-                <SegmentedControl
-                    label="Seção de cursos"
-                    options={options}
-                    value={tab}
-                    onChange={setTab}
+        <AppShell>
+            <h1 className="text-2xl font-bold text-title">Cursos</h1>
+            <SegmentedControl
+                label="Seção de cursos"
+                options={options}
+                value={tab}
+                onChange={setTab}
+            />
+            {isError && (
+                <p role="alert" className="text-sm text-danger">
+                    Não foi possível atualizar seus cursos.
+                </p>
+            )}
+            {tab === "mine" ? (
+                <MyCoursesSection
+                    courses={courses}
+                    onExplore={() => setTab("explore")}
                 />
-                {isError && (
-                    <p role="alert" className="text-sm text-danger">
-                        Não foi possível atualizar seus cursos.
-                    </p>
-                )}
-                {tab === "mine" ? (
-                    <MyCoursesSection
-                        courses={courses}
-                        onExplore={() => setTab("explore")}
-                    />
-                ) : (
-                    <ExploreCoursesSection courses={courses} />
-                )}
-            </main>
-            <BottomNav />
-        </>
+            ) : (
+                <ExploreCoursesSection courses={courses} />
+            )}
+        </AppShell>
     );
 }

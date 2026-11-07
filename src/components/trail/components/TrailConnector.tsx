@@ -27,7 +27,6 @@ export function TrailConnector({ fromX, toX, active }: TrailConnectorProps) {
                 strokeDasharray="1 8"
                 vectorEffect="non-scaling-stroke"
             />
-            
         </svg>
     );
 }
