@@ -167,7 +167,7 @@ codly-app/
    │  ├─ profile/
    │  │  ├─ ProfileMain.tsx
    │  │  ├─ sections/        ProfileHeader, ProfileStats, ProfileLevelCard, ProfileMenu
-   │  │  ├─ components/      ProfileName, ProfileStatCard, EditNameForm, LogoutButton
+   │  │  ├─ components/      ProfileName, ProfileStatCard, EditNameForm
    │  │  ├─ schemas/         name-schema.ts
    │  │  ├─ data/            mock-data.ts
    │  │  └─ types/           index.ts
@@ -186,8 +186,8 @@ codly-app/
    │  │  ├─ components/      EmailStatusRow, PasswordResetRow
    │  │  └─ data/            privacy-options.ts
    │  └─ ui/
-   │     ├─ navigation/      BottomNav, MenuItem, SubPageLayout
-   │     ├─ buttons/         IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput
+   │     ├─ navigation/      AppShell, BottomNav, SideNav, nav-items.ts, MenuItem, SubPageLayout
+   │     ├─ buttons/         IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput, LogoutButton
    │     └─ display/         Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon
    ├─ hooks/
    │  ├─ useProfile.ts
@@ -252,13 +252,16 @@ Arquivos gerados automaticamente, que não se editam e não vão para o Git: `ne
 | `src/components/preferences/` | Preferências de estudo: tema (claro, escuro ou sistema), meta diária de XP (20, 50 ou 100), efeitos sonoros e reduzir animações. |
 | `src/components/settings/` | Configurações da conta: notificações (lembrete de estudo, conquistas e atividade dos amigos) e exclusão da conta, com confirmação em dois passos. |
 | `src/components/security-privacy/` | Privacidade e segurança: flags de privacidade (mostrar online, mostrar o curso atual, aparecer no ranking, mostrar a sequência e permitir pedidos de amizade), status do e-mail e redefinição de senha por e-mail (só para quem entra com e-mail e senha). |
-| `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (barra inferior, item de menu e layout das telas internas com botão de voltar), `buttons/` (botão de ícone, alternador de tema, interruptor, linha com interruptor, seletor segmentado e campo de busca) e `display/` (avatar, barra de progresso, indicador de estatística, grupo de configurações, estado vazio e o foguinho da sequência: `StreakFlame` e `StreakIcon`, que mostra a chama com mais de 3 dias e um raio nas sequências curtas). |
+| `src/components/ui/navigation/AppShell.tsx` | Casca de layout das telas principais (Início, Cursos, Perfil): mostra a barra inferior no celular e o menu lateral a partir de 768 px (`md`), e define a largura do conteúdo (coluna estreita no celular, mais larga no computador), já respeitando a área segura do celular. A tela só passa o conteúdo. As telas internas usam o `SubPageLayout`, e o login não usa nenhum dos dois porque não tem menu. |
+| `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (`AppShell`, barra inferior, menu lateral, lista de itens do menu, item de menu e layout das telas internas com botão de voltar), `buttons/` (botão de ícone, alternador de tema, interruptor, linha com interruptor, seletor segmentado, campo de busca e botão de sair, com as variantes `card` e `nav` e a prop `className`) e `display/` (avatar, barra de progresso, indicador de estatística, grupo de configurações, estado vazio e o foguinho da sequência: `StreakFlame` e `StreakIcon`, que mostra a chama com mais de 3 dias e um raio nas sequências curtas). |
 | `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`), `useUpdateName` (`PATCH /me`), `useSettings` (`GET /me/settings`), `useUpdateSettings` (`PATCH /me/settings`), `useCourses` (`GET /courses`) e `useSetEnrollment` (`PUT` e `DELETE /me/courses/:courseId`). Os que gravam usam atualização otimista: a tela muda na hora e volta atrás se a API falhar. |
 | `src/types/` | Tipos TypeScript globais usados em mais de uma tela, como `settings.ts` (privacidade, preferências e notificações). |
 | `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`), o cliente do Supabase (`supabase/`) e o `normalize-text.ts`, que tira acentos e maiúsculas para comparar textos nas buscas. |
 | `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. |
 | `src/theme/` | Tema do Material UI: cores, tipografia e modo claro/escuro. |
 | `.env.example` | Modelo das variáveis de ambiente. Copie para `.env.local` e preencha (o `.env` nunca vai para o Git). |
+
+**Web e celular com o mesmo código:** o app é escrito primeiro para o celular (`mobile first`) e ganha ajustes com `md:` só onde o layout muda. A navegação troca de barra inferior para menu lateral em 768 px, as listas de cards passam para duas colunas e as telas internas ficam mais largas. A altura de tela cheia usa `dvh` (não `vh`, que no navegador do celular inclui a barra de endereço), os campos de texto têm 16 px para o iPhone não dar zoom ao focar e o foco do teclado aparece com um contorno roxo (`:focus-visible` no `globals.css`). Diferenças entre plataformas se resolvem com CSS, e só em casos de comportamento (como o login com Google no app nativo) se usa o `Capacitor.isNativePlatform()`.
 
 **Organização dentro de cada tela:** só o arquivo `XxxMain.tsx` fica na raiz da pasta. O restante vai em subpastas: `sections/` (blocos grandes da tela), `components/` (peças menores usadas pelas sections), `data/` (dados fictícios e listas de opções), `types/` (tipos da tela) e `schemas/` (validações `zod`).
 

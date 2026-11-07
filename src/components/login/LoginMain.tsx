@@ -218,15 +218,15 @@ export default function LoginPage() {
     }
 
     return (
-        <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6 sm:py-16">
-            <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_35%,rgba(124,58,237,0.07),transparent_65%)]" />
+        <main className="relative isolate flex min-h-dvh items-center justify-center overflow-hidden bg-background px-4 py-12 sm:px-6 sm:py-16">
+            <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_50%_35%,bg-[radial-gradient(ellipse_at_50%_35%,var(--primary),transparent_65%))] opacity-10" />
             <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 size-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[110px] sm:size-125" />
 
-            <div className="relative w-full max-w-110 rounded-[28px] bg-surface p-6 shadow-[0_20px_70px_-25px_rgba(91,33,182,0.17)] ring-1 ring-primary/5 sm:p-9 dark:shadow-[0_20px_70px_-25px_rgba(0,0,0,0.25)]">
+            <div className="relative w-full max-w-110 rounded-[28px] bg-surface p-6 shadow-2xl shadow-primary-strong/15 ring-1 ring-primary/5 sm:p-9 ">
                 <div className="mb-7 text-center">
                     <div className="relative mx-auto mb-5 flex size-14 items-center justify-center">
                         <div className="absolute inset-0 rounded-2xl bg-primary/25 blur-xl" />
-                        <div className="relative flex size-13 items-center justify-center rounded-2xl bg-primary text-2xl font-extrabold text-white shadow-[0_8px_24px_rgba(124,58,237,0.2)]">
+                        <div className="relative flex size-13 items-center justify-center rounded-2xl bg-primary text-2xl font-extrabold text-on-primary shadow-lg shadow-primary/20">
                             C
                         </div>
                     </div>
@@ -248,7 +248,7 @@ export default function LoginPage() {
                     type="button"
                     onClick={handleGoogleLogin}
                     disabled={loading}
-                    className="group flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-background px-4 text-sm font-semibold text-foreground shadow-[0_3px_14px_rgba(91,33,182,0.05)] ring-1 ring-primary/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-lavender hover:shadow-[0_7px_20px_rgba(124,58,237,0.1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
+                    className="group flex h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-background px-4 text-sm font-semibold text-foreground shadow-[0_3px_14px_rgba(91,33,182,0.05)] ring-1 ring-primary/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-selection hover:shadow-[0_7px_20px_rgba(124,58,237,0.1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <svg
                         viewBox="0 0 48 48"
@@ -288,7 +288,7 @@ export default function LoginPage() {
                     <span className="h-px flex-1 bg-primary/10" />
                 </div>
 
-                <div className="mb-6 grid grid-cols-2 gap-1 rounded-xl bg-surface-alt/70 p-1">
+                <div className="mb-6 grid grid-cols-2 gap-1 rounded-xl bg-background p-1">
                     <button
                         type="button"
                         onClick={() => changeMode("login")}
@@ -332,7 +332,7 @@ export default function LoginPage() {
                                     placeholder="Seu nome completo"
                                     required
                                     minLength={3}
-                                    className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-4 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
+                                    className="h-11 w-full rounded-xl bg-background pl-10 pr-4 text-base text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                                 />
                             </div>
                         </div>
@@ -359,7 +359,7 @@ export default function LoginPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="seuemail@exemplo.com"
                                 required
-                                className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-4 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
+                                className="h-11 w-full rounded-xl bg-background pl-10 pr-4 text-base text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                             />
                         </div>
                     </div>
@@ -387,7 +387,7 @@ export default function LoginPage() {
                                     onChange={(e) => setPhone(e.target.value)}
                                     placeholder="(85) 99999-9999"
                                     required
-                                    className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-4 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
+                                    className="h-11 w-full rounded-xl bg-background pl-10 pr-4 text-base text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                                 />
                             </div>
 
@@ -429,7 +429,7 @@ export default function LoginPage() {
                                 }
                                 required
                                 minLength={mode === "register" ? 8 : undefined}
-                                className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-11 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
+                                className="h-11 w-full rounded-xl bg-background pl-10 pr-11 text-base text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                             />
 
                             <button
@@ -475,7 +475,7 @@ export default function LoginPage() {
                                     }
                                     placeholder="Repita sua senha"
                                     required
-                                    className="h-11 w-full rounded-xl bg-surface-alt/60 pl-10 pr-4 text-sm text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
+                                    className="h-11 w-full rounded-xl bg-background pl-10 pr-4 text-base text-foreground outline-none ring-1 ring-transparent transition-all duration-200 placeholder:text-muted/60 focus:bg-surface focus:ring-primary/35"
                                 />
                             </div>
                         </div>
@@ -486,7 +486,7 @@ export default function LoginPage() {
                             <button
                                 type="button"
                                 onClick={handlePasswordReset}
-                                className="cursor-pointer text-xs font-medium text-primary transition-colors hover:text-primary-dark hover:underline"
+                                className="cursor-pointer text-xs font-medium text-primary transition-colors hover:text-primary-strong hover:underline"
                             >
                                 Esqueceu sua senha?
                             </button>
@@ -496,7 +496,7 @@ export default function LoginPage() {
                     {error && (
                         <p
                             role="alert"
-                            className="rounded-xl bg-red-500/8 px-3.5 py-3 text-xs leading-5 text-red-500"
+                            className="rounded-xl bg-danger/10 px-3.5 py-3 text-xs leading-5 text-danger"
                         >
                             {error}
                         </p>
@@ -505,7 +505,7 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="group mt-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-white shadow-[0_8px_24px_rgba(124,58,237,0.17)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-dark hover:shadow-[0_12px_30px_rgba(124,58,237,0.23)] disabled:cursor-not-allowed disabled:opacity-60"
+                        className="group mt-2 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-bold text-on-primary shadow-[0_8px_24px_rgba(124,58,237,0.17)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-strong hover:shadow-[0_12px_30px_rgba(124,58,237,0.23)] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         {loading
                             ? "Aguarde..."

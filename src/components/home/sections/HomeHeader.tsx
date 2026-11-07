@@ -4,11 +4,11 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { FiBell, FiStar, FiUser } from "react-icons/fi";
-import { StreakIcon } from "@/components/ui/display/StreakIcon";
 import type { HomeUser } from "@/components/home/types";
 import { IconButton } from "@/components/ui/buttons/IconButton";
 import { ThemeToggle } from "@/components/ui/buttons/ThemeToggle";
 import { StatPill } from "@/components/ui/display/StatPill";
+import { StreakIcon } from "@/components/ui/display/StreakIcon";
 import { auth, db } from "@/lib/firebase";
 
 interface HomeHeaderProps {

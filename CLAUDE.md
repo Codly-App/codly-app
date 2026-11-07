@@ -15,7 +15,7 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Estrutura de pastas
 
 - `src/app/`: só rotas. Cada `page.tsx` apenas monta o componente principal da tela.
-- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (BottomNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon). Crie uma nova subpasta só quando nenhuma dessas servir.
+- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (AppShell, BottomNav, SideNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput, LogoutButton) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon). Crie uma nova subpasta só quando nenhuma dessas servir.
 - `src/components/<tela>/`: uma pasta por tela (ex.: `courses/`, `lessons/`, `friends/`, `profile/`), com tudo que só essa tela usa: componentes, hooks e chamadas à API.
 - Dentro de `src/components/<tela>/`, só o `XxxMain.tsx` fica na raiz. O resto vai em subpastas:
     - `sections/`: blocos grandes da tela (ex.: `HomeHeader`, `ProfileStats`).
@@ -82,6 +82,14 @@ Use apenas classes de cor desta tabela. Classes como `text-muted` só podem ser 
 - Tema claro e escuro funcionam automaticamente pelas variáveis. Evite `dark:` quando uma classe acima já resolve. Use `dark:` só quando não houver variável adequada.
 - Se faltar uma cor, adicione a variável em `:root` e `.dark` no `globals.css` e o mapeamento em `@theme inline`, em vez de usar um valor solto.
 - Layout responsivo, pensando primeiro em celular (`mobile first`).
+- Todas as telas funcionam no celular e na web com o mesmo código. Escreva primeiro para o celular e acrescente `md:` só quando o layout mudar. Telas com navegação usam o `AppShell` de `ui/navigation/` (barra inferior no celular, menu lateral a partir de `md`) e telas internas usam o `SubPageLayout`. Não escreva `max-w-md` nem `<BottomNav />` direto numa tela, e não repita o `AppShell` por fora de outro `AppShell`.
+- Os itens do menu ficam só em `ui/navigation/nav-items.ts`, usados pela barra inferior e pelo menu lateral. Para uma tela nova aparecer no menu, acrescente lá.
+- Listas de cards usam `flex flex-col gap-3 md:grid md:grid-cols-2`, para aproveitar a largura do computador.
+- Altura de tela cheia com `min-h-dvh` ou `h-dvh`, nunca `min-h-screen` ou `h-screen` (no celular o `vh` inclui a barra de endereço).
+- Campos de texto com `text-base` (16 px): abaixo disso o Safari do iPhone dá zoom ao focar.
+- Diferenças de plataforma se resolvem com CSS responsivo. Use `Capacitor.isNativePlatform()` só quando o comportamento muda de verdade (por exemplo, o login com Google).
+- Botão de sair é sempre o `LogoutButton` de `ui/buttons/` (`variant="card"` ou `"nav"`, e `className` só para ajustes como `mt-auto`). Não crie outro.
+- Sombras e brilhos usam as cores do tema (`shadow-primary/20`), nunca `rgba(...)`. A única exceção são as cores oficiais do logo do Google.
 
 ## Código
 

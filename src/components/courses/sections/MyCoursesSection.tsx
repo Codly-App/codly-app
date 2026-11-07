@@ -33,7 +33,7 @@ export function MyCoursesSection({
     }
 
     return (
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-3 md:grid md:grid-cols-2">
             {enrolled.map((course) => (
                 <EnrolledCourseCard key={course.id} course={course} />
             ))}

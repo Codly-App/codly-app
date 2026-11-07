@@ -48,7 +48,7 @@ export function ExploreCoursesSection({ courses }: ExploreCoursesSectionProps) {
                     description="Tente outra palavra, como SQL ou JavaScript."
                 />
             ) : (
-                <ul className="flex flex-col gap-3">
+                <ul className="flex flex-col gap-3 md:grid md:grid-cols-2">
                     {results.map((course) => (
                         <CatalogCourseCard key={course.id} course={course} />
                     ))}
