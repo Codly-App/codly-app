@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Codly">
+<title>Codly</title>
+<defs>
+<radialGradient id="sphere" cx="256" cy="230" r="270" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#8b5cf6"/>
+<stop offset="0.55" stop-color="#7c3aed"/>
+<stop offset="1" stop-color="#5b21b6"/>
+</radialGradient>
+<filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+<feGaussianBlur in="SourceAlpha" stdDeviation="9"/>
+<feOffset dy="10" result="blur"/>
+<feFlood flood-color="#2e1065" flood-opacity="0.5"/>
+<feComposite in2="blur" operator="in"/>
+<feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter>
+</defs>
+<circle cx="256" cy="256" r="240" fill="url(#sphere)"/>
+<path d="M384 17Q340 17 291 3Q242-11 195-39Q148-67 109.50-110.50Q71-154 48.50-212.50Q26-271 26-346Q26-418 48.50-474.50Q71-531 109-573Q147-615 194-642.50Q241-670 291-683.50Q341-697 386-697Q437-697 475-685Q513-673 537-660.50Q561-648 567-643Q585-632 601-618Q617-604 618-581Q618-569 613.50-557.50Q609-546 600-533Q584-510 569.50-499.50Q555-489 540-489Q528-489 517.50-495Q507-501 491-511Q484-516 471-523.50Q458-531 436-537.50Q414-544 380-544Q345-544 309.50-531.50Q274-519 244-494Q214-469 196-430.50Q178-392 178-341Q178-288 196.50-250Q215-212 245-187Q275-162 310.50-149.50Q346-137 380-137Q410-137 431.50-143Q453-149 468.50-157.50Q484-166 495-173Q506-180 517.50-186Q529-192 541-192Q555-192 569.50-181Q584-170 599-146Q608-133 613-120.50Q618-108 617-96Q617-75 601-61.50Q585-48 567-37Q559-33 536-19.50Q513-6 475 5.50Q437 17 384 17" transform="translate(112.983 385.366) scale(0.37815)" fill="#ffffff" filter="url(#shadow)"/>
+</svg>
