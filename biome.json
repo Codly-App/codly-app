@@ -9,10 +9,11 @@
         "ignoreUnknown": true,
         "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
     },
-    "formatter": {
+        "formatter": {
         "enabled": true,
         "indentStyle": "space",
-        "indentWidth": 4
+        "indentWidth": 4,
+        "lineEnding": "auto"
     },
     "css": {
         "parser": {

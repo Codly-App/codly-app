@@ -1,0 +1,24 @@
+#!/bin/sh
+
+vai_para_main=0
+while read local_ref local_sha remote_ref remote_sha; do
+    if [ "$remote_ref" = "refs/heads/main" ]; then
+        vai_para_main=1
+    fi
+done
+
+if [ "$SKIP_CHECKS" = "1" ]; then
+    exit 0
+fi
+
+echo "Conferindo os tipos..."
+if ! npx --no-install tsc --noEmit; then
+    if [ "$vai_para_main" -eq 1 ]; then
+        echo ""
+        echo "ENVIO BLOQUEADO: corrija os erros de tipo acima."
+        echo "(Só em emergência: git push --no-verify)"
+        exit 1
+    fi
+    echo ""
+    echo "AVISO: há erros de tipo (acima). O envio para esta branch segue, mas corrija antes do PR."
+fi

@@ -1,0 +1,40 @@
+{
+    "sem-firestore": {
+        "src/components/home/sections/HomeHeader.tsx": "dívida: trocar o Firestore pelo GET /me da API",
+        "src/components/login/LoginMain.tsx": "dívida: a API cria o perfil no GET /me; tirar setDoc e getDoc",
+        "src/lib/firebase.ts": "dívida: remover getFirestore e o export db"
+    },
+    "sem-import-relativo-que-sobe": {
+        "src/components/ui/navigation/SideNav.tsx": "dívida: trocar ../buttons/LogoutButton por @/components/ui/buttons/LogoutButton"
+    },
+    "tipos-em-ts": {
+        "src/components/trail/types/index.tsx": "dívida: renomear para index.ts"
+    },
+    "nome-do-arquivo": {
+        "src/components/login/LoginMain.tsx": "dívida: a função se chama LoginPage; renomear para LoginMain"
+    },
+    "export-nomeado": {
+        "src/components/auth/AuthGuard.tsx": "dívida: trocar export default por export function",
+        "src/components/login/LoginMain.tsx": "dívida: trocar export default por export function"
+    },
+    "arquivo-curto": {
+        "src/components/home/sections/HomeHeader.tsx": "dívida: dividir em componentes menores",
+        "src/components/login/LoginMain.tsx": "dívida: dividir o formulário em componentes menores"
+    },
+    "cores-do-tailwind": {
+        "src/components/login/LoginMain.tsx": "dívida: trocar pelas cores da plataforma"
+    },
+    "cores-soltas": {
+        "src/app/layout.tsx": "exceção: o themeColor do navegador exige hex",
+        "src/components/login/LoginMain.tsx": "dívida: sombras com rgba; manter só as cores do logo do Google"
+    },
+    "sem-style-inline": {
+        "src/components/trail/components/TrailNode.tsx": "exceção: o left em % da lição é dinâmico"
+    },
+    "raiz-da-tela": {
+        "src/components/profile/LogoutButton.tsx": "dívida: arquivo antigo, apagar"
+    },
+    "exportacao-estatica": {
+        "next.config.ts": "dívida: acrescentar output: export antes de gerar o Android e o iOS"
+    }
+}
