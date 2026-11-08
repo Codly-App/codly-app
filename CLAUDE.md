@@ -94,8 +94,22 @@ Use apenas classes de cor desta tabela. Classes como `text-muted` só podem ser 
 ## Código
 
 - TypeScript estrito. Sem `any`, sem `@ts-ignore`.
-- Formatação e lint com Biome (`npm run lint`, `npm run format`). Rode antes de finalizar.
+- Formatação e lint com Biome (`npm run lint`, `npm run format`). Rode antes de finalizar, junto com `npm test` (verificação dos padrões, abaixo).
 - Textos da interface em português do Brasil. Nomes de código (arquivos, variáveis, componentes) em inglês.
 - Validação de formulários com `react-hook-form` + `zod`.
 - Ícones com `react-icons`. Animações com `framer-motion`.
 - Não instale bibliotecas novas sem avisar e justificar.
+
+## Verificação automática dos padrões
+
+- O teste `tests/conventions.test.mjs` confere estas regras. Rode `npm test` antes de commitar. Ele mostra, para cada erro, o arquivo, a linha e como corrigir.
+- Os hooks de `.githooks/` rodam sozinhos: na `develop` e em outras branches apenas **avisam**, e na `main` **bloqueiam** o commit e o envio. A ação `.github/workflows/padroes.yml` roda em todo Pull Request para a `main`. Não desligue nem contorne uma verificação sem avisar e justificar. `--no-verify` só em emergência, e o erro volta no Pull Request.
+- Se uma regra reclama de algo **legítimo**, registre em `tests/conventions-baseline.json` com o motivo (`exceção: ...` para o que é justificado, `dívida: ...` para o que precisa ser corrigido). Não afrouxe a regra. Quando corrigir uma dívida, tire a linha da lista (o teste exige).
+- Regra nova de padrão entra no `CLAUDE.md` **e** em `tests/conventions.test.mjs`, juntos, para o documento e a verificação não se separarem.
+- Os arquivos de `.githooks/` usam final de linha LF e precisam ser executáveis (`.gitattributes` e `git update-index --chmod=+x`). Com CRLF o hook não reconhece a branch e deixa de bloquear na `main`.
+- Pastas e arquivos de tela seguem o padrão em minúsculas (`sections`, nunca `Sections`). O deploy e o GitHub rodam em Linux, que diferencia maiúscula de minúscula, e no Windows isso passa despercebido.
+
+## Logo e ícones
+
+- A logo oficial é `public/icons/logo.svg` (esfera roxa com o "C" da fonte Fredoka, convertido em curvas e concêntrico com a esfera). Use sempre esse arquivo ou os PNGs gerados a partir dele em `public/icons/` (`logo.png`, `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` e `apple-touch-icon.png`). Não redesenhe o "C" nem troque a fonte à mão.
+- O favicon fica em `src/app/favicon.ico` e o Next.js o usa sozinho. Se a logo mudar, gere de novo o SVG, os PNGs e o favicon juntos.

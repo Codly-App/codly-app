@@ -113,6 +113,13 @@ Trabalhamos com tecnologias modernas para o desenvolvimento de aplicações web,
 ```
 codly-app/
 ├─ .env.example
+├─ .gitattributes
+├─ .github/
+│  └─ workflows/
+│     └─ padroes.yml
+├─ .githooks/
+│  ├─ pre-commit
+│  └─ pre-push
 ├─ .gitignore
 ├─ biome.json
 ├─ capacitor.config.ts
@@ -120,13 +127,21 @@ codly-app/
 ├─ next.config.ts
 ├─ package.json
 ├─ tsconfig.json
+├─ scripts/
+│  └─ setup-hooks.mjs
+├─ tests/
+│  ├─ conventions.test.mjs
+│  ├─ conventions-baseline.json
+│  └─ reporter.mjs
 ├─ public/
-│  └─ manifest.webmanifest
+│  ├─ manifest.webmanifest
+│  └─ icons/              logo.svg, logo.png, icon-192, icon-512, icon-maskable-512, apple-touch-icon
 └─ src/
    ├─ app/
    │  ├─ layout.tsx
    │  ├─ page.tsx
    │  ├─ globals.css
+   │  ├─ favicon.ico
    │  ├─ login/
    │  │  └─ page.tsx
    │  ├─ profile/
@@ -163,7 +178,8 @@ codly-app/
    │  │  ├─ data/            sql-trail.ts, trails.ts, trail-layout.ts, trail-progress.ts
    │  │  └─ types/           index.ts
    │  ├─ login/
-   │  │  └─ LoginMain.tsx
+   │  │  ├─ LoginMain.tsx
+   │  │  └─ sections/        LoginHeader, LoginForm
    │  ├─ profile/
    │  │  ├─ ProfileMain.tsx
    │  │  ├─ sections/        ProfileHeader, ProfileStats, ProfileLevelCard, ProfileMenu
@@ -215,12 +231,17 @@ codly-app/
 
 | Arquivo | Para que serve |
 | --- | --- |
-| `package.json` | Lista as bibliotecas do projeto e os comandos: `npm run dev` (servidor local), `npm run build` (gera o app), `npm run lint` (confere o código com o Biome) e `npm run format` (formata o código). |
+| `package.json` | Lista as bibliotecas do projeto e os comandos: `npm run dev` (servidor local), `npm run build` (gera o app), `npm run lint` (confere o código com o Biome), `npm run format` (formata o código), `npm test` (verifica os padrões do projeto) e `prepare` (liga os hooks do Git sozinho no `npm install`). |
 | `package-lock.json` | Trava a versão exata de cada biblioteca instalada, para todo mundo e o deploy usarem as mesmas. Não edite à mão. |
-| `next.config.ts` | Configuração do Next.js. Hoje liga o **React Compiler** (`reactCompiler`), que otimiza os componentes sozinho (por isso não usamos `useMemo` nem `useCallback`), e registra o loader do **Tailwind** no Turbopack (`@tailwindcss/turbopack`) para processar os `.css`. O `allowedDevOrigins` libera o IP da rede local (`192.168.1.10`) para abrir o servidor de desenvolvimento pelo celular; troque pelo IP da sua máquina. |
+| `next.config.ts` | Configuração do Next.js. Hoje liga o **React Compiler** (`reactCompiler`), que otimiza os componentes sozinho (por isso não usamos `useMemo` nem `useCallback`), e registra o loader do **Tailwind** no Turbopack (`@tailwindcss/turbopack`) para processar os `.css`. O `allowedDevOrigins` libera a rede local (`192.168.1.*`) para abrir o servidor de desenvolvimento pelo celular, e o `images.unoptimized` é necessário para a exportação estática. |
 | `capacitor.config.ts` | Configuração do Capacitor, que embute o app web em um aplicativo Android e iOS: define o `appId`, o nome do app e a pasta do build (`webDir: "out"`). Hoje o arquivo está **vazio** e precisa ser preenchido antes de rodar `npx cap sync`. |
 | `tsconfig.json` | Configuração do TypeScript: modo estrito, suporte ao JSX do React e o alias `@/` que aponta para `src/`. É por causa dele que os imports são `@/components/...`. |
-| `biome.json` | Configuração do Biome, que faz o lint e a formatação: indentação de 4 espaços, regras recomendadas para Next.js e React e organização automática dos imports. |
+| `biome.json` | Configuração do Biome, que faz o lint e a formatação: indentação de 4 espaços, regras recomendadas para Next.js e React, organização automática dos imports e `lineEnding: "auto"`, para o Biome não acusar o final de linha do Windows (CRLF). |
+| `.gitattributes` | Obriga os arquivos de `.githooks/` e os `.mjs` a usarem final de linha LF. Sem isso, no Windows os hooks ficam com CRLF e quebram (a branch lida ganha um `\r` e a comparação com `main` nunca é verdadeira). |
+| `.githooks/` | Hooks do Git versionados: `pre-commit` (roda o `npm test` e o Biome nos arquivos do commit) e `pre-push` (confere os tipos com o `tsc`). Fora da `main` só avisam. Na `main` bloqueiam. Ver **Verificação automática dos padrões**. |
+| `tests/` | Teste dos padrões do projeto (`conventions.test.mjs`), o relatório de erro limpo (`reporter.mjs`) e a lista de exceções conhecidas (`conventions-baseline.json`). |
+| `scripts/setup-hooks.mjs` | Roda no `npm install` (script `prepare`) e aponta o Git para a pasta `.githooks`. Se não houver Git (como no deploy), não faz nada. |
+| `.github/workflows/padroes.yml` | Ação do GitHub que roda o teste dos padrões e o `tsc` em todo Pull Request para a `main` e nos envios para `main` e `develop`. |
 | `.env.example` | Modelo das variáveis de ambiente (API, Supabase e Firebase). Copie para `.env.local` e preencha. Só valores públicos (`NEXT_PUBLIC_*`). |
 | `.gitignore` | Arquivos que não vão para o Git: `node_modules`, builds (`.next`, `out`), variáveis de ambiente (`.env*`), arquivos gerados pelo TypeScript e a chave de serviço do Firebase. |
 | `CLAUDE.md` | Regras de arquitetura, de organização das pastas, de componentes e de estilo do projeto. Vale para qualquer pessoa, e para o Claude Code, antes de alterar o código. |
@@ -228,13 +249,35 @@ codly-app/
 
 Arquivos gerados automaticamente, que não se editam e não vão para o Git: `next-env.d.ts` (tipos do Next.js) e `tsconfig.tsbuildinfo` (cache do TypeScript). O Tailwind 4 não precisa de `tailwind.config` nem de `postcss.config`: a configuração das cores fica no `src/app/globals.css`.
 
-> **Pendente para gerar o Android e o iOS:** para o Capacitor empacotar o app, o `next.config.ts` precisa gerar a exportação estática (`output: "export"`, com `images.unoptimized` e `trailingSlash`) e o `capacitor.config.ts` precisa ser preenchido. Os dois ainda não estão assim.
+> **Pendente para gerar o Android e o iOS:** para o Capacitor empacotar o app, o `next.config.ts` precisa gerar a exportação estática (`output: "export"` e `trailingSlash`; o `images.unoptimized` já está) e o `capacitor.config.ts` precisa ser preenchido. O teste dos padrões já avisa sobre o `output: "export"` (está na lista de exceções como dívida).
+
+### Verificação automática dos padrões
+
+O projeto confere sozinho se o código segue as regras do `CLAUDE.md`. O mesmo teste (`tests/conventions.test.mjs`) roda em três lugares:
+
+| Onde | Quando | Na `develop` e outras branches | Na `main` |
+| --- | --- | --- | --- |
+| Hook `pre-commit` | A cada `git commit` | **Avisa** e o commit passa | **Bloqueia** o commit |
+| Hook `pre-push` | A cada `git push` (confere os tipos com o `tsc`) | **Avisa** e o envio segue | **Bloqueia** o envio |
+| Ação do GitHub (`padroes.yml`) | Em todo Pull Request para a `main` | Informativo (X ou ✔) | Pode ser exigida na proteção da branch (Settings, Branches) |
+
+**O que ele confere (21 verificações):** nada de Firestore no app, sem `../` nos imports, um componente por arquivo, nome do arquivo igual ao componente, só o `XxxMain.tsx` na raiz da tela, `export default` só em `page` e `layout`, arquivos de até 120 linhas, sem `any`, só as cores da plataforma, sem cor solta (`#hex` ou `rgba`), `dvh` em vez de `vh`, `max-w-md` só no `AppShell` e no `SubPageLayout`, `BottomNav` só no `AppShell`, sem `useMemo` e `useCallback`, sem CSS inline, hooks `useXxx`, tipos em `.ts`, segredos fora do código, arquivos secretos fora do Git e o `output: "export"` do Next.
+
+**Como usar:**
+
+- `npm test` roda tudo na hora (leva menos de um segundo) e mostra, para cada erro, o arquivo, a linha e **como corrigir**.
+- Os hooks são ligados sozinhos no `npm install`.
+- Para pular de propósito: `git commit --no-verify` ou `git push --no-verify`. Na `develop` normalmente nem é preciso, porque só avisa. O erro não some: ele aparece de novo no Pull Request para a `main`.
+
+**Lista de exceções (`tests/conventions-baseline.json`):** guarda o que já está fora do padrão ou é uma exceção justificada, para a verificação não travar o que já existia. Cada entrada tem o **motivo**, começando com `dívida:` (a corrigir) ou `exceção:` (justificada, como as cores oficiais do logo do Google e o `themeColor` do navegador). Regra nova que não esteja na lista falha. Quando uma dívida é corrigida, o teste exige tirá-la da lista, então ela só diminui.
 
 ### Para que serve cada pasta e arquivo
 
 | Caminho | Função |
 | --- | --- |
 | `public/` | Arquivos servidos como estão: manifest da PWA, ícones e imagens fixas. |
+| `public/icons/` | Logo e ícones do app. `logo.svg` é a logo oficial (esfera roxa com o "C" da fonte Fredoka, convertido em curvas e concêntrico com a esfera) e é o arquivo de origem de todos os outros. `logo.png` (1024 px, fundo transparente) serve onde só se aceita imagem. `icon-192.png`, `icon-512.png`, `icon-maskable-512.png` e `apple-touch-icon.png` são os ícones do PWA, apontados pelo manifest e pelo `layout.tsx`. |
+| `src/app/favicon.ico` | Ícone da aba do navegador (16, 32 e 48 px), com o "C" maior e sem sombra para ficar nítido em tamanho pequeno. O Next.js usa este arquivo sozinho. |
 | `public/manifest.webmanifest` | Manifest da PWA: descreve o app ao navegador (nome, ícones, cores e modo de exibição) para que ele possa ser instalado na tela inicial e abrir em tela cheia, sem a barra do navegador. Vale só para a versão web; os apps Android e iOS gerados pelo Capacitor usam os ícones dos projetos nativos. |
 | `src/app/` | Rotas e páginas (App Router). Cada pasta vira uma rota, e `layout.tsx` envolve todas as telas. |
 | `src/app/globals.css` | Estilos globais: Tailwind, variáveis de cor e ordem de camadas entre o Tailwind e o MUI. |
@@ -246,7 +289,7 @@ Arquivos gerados automaticamente, que não se editam e não vão para o Git: `ne
 | `src/components/courses/` | Tela de cursos, onde o usuário gerencia os cursos dele. Duas abas: **Meus cursos** (progresso, Continuar, que abre a trilha, e Remover com confirmação, mantendo o progresso salvo) e **Explorar** (barra de busca por título e descrição, que ignora acentos e maiúsculas, e Adicionar). Cada curso vem da API com um `lockReason`: `plan` (curso exclusivo do plano Pro) ou `limit` (o plano gratuito atingiu o limite de cursos ao mesmo tempo), e a tela só mostra a mensagem (`data/lock-messages.ts`). Quem aplica as regras é a API. Os ícones são escolhidos pela chave `iconKey` (`data/course-icons.ts`). Enquanto a API não responde, usa dados fictícios (`data/mock-data.ts`) e mostra um aviso. |
 | `src/app/trail/` | Rota `/trail?course=<id>`: protegida pelo `AuthGuard`, só monta o `TrailMain`. O curso vem da URL (por isso a página usa `Suspense`, exigido pela exportação estática). |
 | `src/components/trail/` | Trilha do curso, em estilo de caminho. Cada unidade (`TrailUnitSection`) tem um banner (`UnitBanner`) e as lições em zigue-zague (`NODE_X` em `data/trail-layout.ts`), ligadas por uma linha pontilhada curva (`TrailConnector`) que fica roxa até onde o aluno já chegou. Cada lição (`TrailNode`) pode estar **feita** (check), **atual** (play, com pulso e o balão "Começar") ou **bloqueada** (cadeado), e o último item de cada unidade é um desafio, maior e com troféu. O status vem do `lessonsDone` do curso (`withProgress` em `data/trail-progress.ts`), e o resumo no topo mostra progresso, próxima lição e XP ganho. Hoje existe só a trilha de SQL, com 6 unidades e 24 lições fixas (`data/sql-trail.ts`, registrada em `data/trails.ts`). Cursos sem trilha mostram "Trilha em construção". As animações respeitam a preferência de movimento reduzido do sistema. Tocar numa lição leva a `/lessons`, que ainda não existe. |
-| `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). |
+| `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). `LoginMain` monta o cartão centralizado, que tem o próprio layout (sem menu), e as sections `LoginHeader` e `LoginForm` ficam em `sections/`. |
 | `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências, configurações e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
 | `src/app/preferences/`, `src/app/settings/`, `src/app/security-privacy/` | Rotas `/preferences`, `/settings` e `/security-privacy`: protegidas pelo `AuthGuard`, abertas pelo menu do perfil. |
 | `src/components/preferences/` | Preferências de estudo: tema (claro, escuro ou sistema), meta diária de XP (20, 50 ou 100), efeitos sonoros e reduzir animações. |
@@ -328,6 +371,12 @@ npm run dev
 ```
 
 Reinicie o servidor sempre que alterar o `.env.local`.
+
+Para conferir se o código segue os padrões do projeto (roda sozinho nos commits, mas pode rodar quando quiser):
+
+```bash
+npm test
+```
 
 Para gerar os aplicativos Android e iOS:
 
