@@ -1,6 +1,6 @@
 "use client";
 
-import { LogoutButton } from "@/components/profile/components/LogoutButton";
+import { LogoutButton } from "@/components/ui/buttons/LogoutButton";
 import { MOCK_PROFILE } from "@/components/profile/data/mock-data";
 import { ProfileHeader } from "@/components/profile/sections/ProfileHeader";
 import { ProfileLevelCard } from "@/components/profile/sections/ProfileLevelCard";

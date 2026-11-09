@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FriendsHeader } from "@/components/friends/sections/FriendsHeader";
 import { FriendsSearch } from "@/components/friends/sections/FriendsSearch";
 import { FriendsList } from "@/components/friends/sections/FriendsList";
-import { useFriends } from "@/components/friends/hooks/UseFriend";
+import { useFriends } from "@/hooks/useFriend";
 import { AppShell } from "@/components/ui/navigation/AppShell";
 import { normalizeText } from "@/lib/normalize-text";
 
