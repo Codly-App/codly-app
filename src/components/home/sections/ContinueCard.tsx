@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { FiPlay } from "react-icons/fi";
-import type { HomeCourse } from "@/components/home/types";
 import { ProgressBar } from "@/components/ui/display/ProgressBar";
+import type { SummaryCourse } from "@/types/summary";
 
 interface ContinueCardProps {
-    course: HomeCourse;
+    readonly course: SummaryCourse;
 }
 
 export function ContinueCard({ course }: ContinueCardProps) {
-    const percent = Math.round(
-        (course.lessonsDone / course.lessonsTotal) * 100,
-    );
+    const percent = course.lessonsTotal
+        ? Math.round((course.lessonsDone / course.lessonsTotal) * 100)
+        : 0;
 
     return (
         <section className="flex flex-col gap-4 rounded-3xl bg-primary p-5 text-on-primary shadow-lg">
@@ -36,7 +36,7 @@ export function ContinueCard({ course }: ContinueCardProps) {
             </div>
 
             <Link
-                href="/lessons"
+                href={`/trail?course=${course.id}`}
                 className="flex items-center justify-center gap-2 rounded-2xl bg-on-primary py-3 font-semibold text-primary-strong transition active:scale-95"
             >
                 <FiPlay aria-hidden />

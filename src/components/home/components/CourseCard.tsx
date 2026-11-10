@@ -1,19 +1,19 @@
-import type { HomeCourse } from "@/components/home/types";
+import { CourseIcon } from "@/components/ui/display/CourseIcon";
 import { ProgressBar } from "@/components/ui/display/ProgressBar";
+import type { SummaryCourse } from "@/types/summary";
 
 interface CourseCardProps {
-    course: HomeCourse;
+    readonly course: SummaryCourse;
 }
 
 export function CourseCard({ course }: CourseCardProps) {
-    const { icon: Icon } = course;
-    const percent = (course.lessonsDone / course.lessonsTotal) * 100;
+    const percent = course.lessonsTotal
+        ? (course.lessonsDone / course.lessonsTotal) * 100
+        : 0;
 
     return (
         <li className="flex items-center gap-3 rounded-2xl bg-surface p-4">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary text-2xl text-on-primary">
-                <Icon aria-hidden />
-            </span>
+            <CourseIcon iconKey={course.iconKey} />
             <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <div className="flex items-baseline justify-between gap-2">
                     <h3 className="truncate font-semibold text-title">

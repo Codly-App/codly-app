@@ -2,37 +2,34 @@
 "use client";
 
 import { FiBell, FiStar, FiUser } from "react-icons/fi";
-import type { HomeUser } from "@/components/home/types";
 import { IconButton } from "@/components/ui/buttons/IconButton";
 import { ThemeToggle } from "@/components/ui/buttons/ThemeToggle";
 import { StatPill } from "@/components/ui/display/StatPill";
+import type { UserStats } from "@/types/summary";
 import { StreakIcon } from "@/components/ui/display/StreakIcon";
 import { useProfile } from "@/hooks/useProfile";
+import { Avatar } from "@/components/ui/display/Avatar";
 
 interface HomeHeaderProps {
-    readonly user: HomeUser;
+    readonly stats?: UserStats;
 }
 
-const FLAME_MIN_STREAK = 3;
-
-export function HomeHeader({ user }: HomeHeaderProps) {
+export function HomeHeader({ stats }: HomeHeaderProps) {
     const { data: profile, isLoading } = useProfile();
 
     const displayName = profile?.name || "Estudante";
     const firstName = displayName.trim().split(/\s+/)[0];
     const photoURL = profile?.photoURL;
+    const streak = stats?.streak ?? 0;
+    const xp = stats?.xp ?? 0;
+    const level = stats?.level ?? 1;
 
     return (
         <header className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                     <div className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 shadow-lg shadow-primary/10 sm:size-14">
-                        {photoURL ? (
-                            <img src={photoURL} alt={`Foto de perfil de ${displayName}`}
-                                referrerPolicy="no-referrer" className="size-full rounded-full object-cover" />
-                        ) : (
-                            <FiUser size={23} className="text-primary" />
-                        )}
+                        <Avatar name={displayName} src={photoURL} />
                     </div>
 
                     <div className="min-w-0">
@@ -53,14 +50,14 @@ export function HomeHeader({ user }: HomeHeaderProps) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-                <StatPill icon={<StreakIcon streak={user.streak} />}
-                    value={`${user.streak} dias`} label="Sequência diária" />
+                <StatPill icon={<StreakIcon streak={streak} />}
+                    value={`${streak} dias`} label="Sequência diária" />
 
                 <StatPill icon={<FiStar className="text-primary" />}
-                    value={`${user.xp} XP`} label="Experiência" />
+                    value={`${xp} XP`} label="Experiência" />
 
                 <StatPill icon={<FiStar className="text-primary" />}
-                    value={`Nível ${user.level}`} label="Nível atual" />
+                    value={`Nível ${level}`} label="Nível atual" />
             </div>
         </header>
     );

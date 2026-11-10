@@ -4,7 +4,9 @@ import { ThemeToggle } from "@/components/ui/buttons/ThemeToggle";
 import { Avatar } from "@/components/ui/display/Avatar";
 
 interface ProfileHeaderProps {
-    readonly user: ProfileUser;
+    readonly user: Pick<ProfileUser, "name" | "email" | "picture"> & {
+        plan?: string;
+    };
 }
 
 export function ProfileHeader({ user }: ProfileHeaderProps) {
@@ -18,9 +20,11 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
                 <ProfileName />
                 <p className="text-sm text-foreground/70">{user.email}</p>
             </div>
-            <span className="rounded-full bg-selection px-3 py-1 text-xs font-semibold text-primary-strong dark:text-title">
-                Plano {user.plan}
-            </span>
+            {user.plan && (
+                <span className="rounded-full bg-selection px-3 py-1 text-xs font-semibold text-primary-strong dark:text-title">
+                    Plano {user.plan}
+                </span>
+            )}
         </header>
     );
 }
