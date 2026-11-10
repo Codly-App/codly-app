@@ -10,11 +10,7 @@ export function useFriends() {
     function sendRequest(uid: string) {
         setUsers((current) =>
             current.map((user) =>
-                user.uid === uid && !user.isFriend
-                    ? { ...user, requestSent: true }
-                    : user
-            )
-        );
+                user.uid === uid && !user.isFriend ? { ...user, requestSent: true } : user));
     }
 
     return { users, sendRequest };
