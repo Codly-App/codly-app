@@ -15,7 +15,7 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Estrutura de pastas
 
 - `src/app/`: só rotas. Cada `page.tsx` apenas monta o componente principal da tela.
-- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (AppShell, BottomNav, SideNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput, LogoutButton) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon). Crie uma nova subpasta só quando nenhuma dessas servir.
+- `src/components/ui/`: componentes compartilhados entre telas, divididos por tipo: `navigation/` (AppShell, BottomNav, SideNav, MenuItem, SubPageLayout), `buttons/` (IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput, LogoutButton) e `display/` (Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, CourseIcon, StreakFlame, StreakIcon). Crie uma nova subpasta só quando nenhuma dessas servir.
 - `src/components/<tela>/`: uma pasta por tela (ex.: `courses/`, `lessons/`, `friends/`, `profile/`), com tudo que só essa tela usa: componentes, hooks e chamadas à API.
 - Dentro de `src/components/<tela>/`, só o `XxxMain.tsx` fica na raiz. O resto vai em subpastas:
     - `sections/`: blocos grandes da tela (ex.: `HomeHeader`, `ProfileStats`).
@@ -24,9 +24,11 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
     - `types/`: tipos da tela, em `index.ts` (o import fica `@/components/<tela>/types`).
     - `schemas/`: validações `zod` dos formulários.
     - `hooks/`: hooks usados só por essa tela. Crie a subpasta quando houver o primeiro hook.
-- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`, `useSettings`, `useUpdateSettings`, `useCourses`, `useSetEnrollment`, `useFriends`). Hooks que chamam a API ou que mais de uma tela deve usar ficam aqui, num arquivo `useXxx.ts` (o arquivo do `useFriends` é `useFriend.ts`).
+- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`, `useSummary`, `useSettings`, `useUpdateSettings`, `useCourses`, `useSetEnrollment`, `useFriends`). Hooks que chamam a API ou que mais de uma tela deve usar ficam aqui, num arquivo `useXxx.ts` (o arquivo do `useFriends` é `useFriend.ts`).
 - A sequência diária sempre usa o `StreakIcon` de `ui/display/` (chama com mais de 3 dias, raio nas sequências curtas). Não copie essa regra nem o `StreakFlame` para dentro de uma tela.
 - Planos: existem só o gratuito (`free`) e o Pro (`pro`). Quem decide o acesso e o limite de cursos é a API. O app nunca calcula plano nem limite: mostra o `lockReason` (`plan` ou `limit`) que a API devolve em cada curso, com as mensagens em `courses/data/lock-messages.ts`, e deixa a API recusar o pedido (`403`).
+- XP, nível, sequência, meta do dia e cursos ativos da tela inicial e do perfil vêm do resumo da API (`useSummary`, `GET /me/summary`). O app nunca calcula nível nem sequência: só mostra o que recebe. Nome e foto vêm de `GET /me` (`name` e `photoURL`).
+- Ícone de curso é sempre o `CourseIcon` de `ui/display/`, escolhido pela chave `iconKey` que a API devolve.
 - Remover um curso não apaga o progresso: a API só marca o curso como não ativo. Diga isso ao usuário na confirmação.
 - Estados vazios usam o `EmptyState` de `ui/display/`, sem montar um bloco novo em cada tela.
 - Buscas em listas usam o `SearchInput` de `ui/buttons/` e comparam o texto com o `normalizeText` de `src/lib/normalize-text.ts`, para ignorar acentos e maiúsculas. Não escreva campo de busca nem comparação de texto nova em cada tela.

@@ -165,14 +165,12 @@ codly-app/
    │  ├─ home/
    │  │  ├─ HomeMain.tsx
    │  │  ├─ sections/        HomeHeader, DailyGoalCard, ContinueCard, CourseList
-   │  │  ├─ components/      CourseCard
-   │  │  ├─ data/            mock-data.ts
-   │  │  └─ types/           index.ts
+   │  │  └─ components/      CourseCard
    │  ├─ courses/
    │  │  ├─ CoursesMain.tsx
    │  │  ├─ sections/        MyCoursesSection, ExploreCoursesSection
-   │  │  ├─ components/      CourseIcon, EnrolledCourseCard, CatalogCourseCard, AddCourseButton, RemoveCourseButton
-   │  │  ├─ data/            mock-data.ts, course-icons.ts, lock-messages.ts
+   │  │  ├─ components/      EnrolledCourseCard, CatalogCourseCard, AddCourseButton, RemoveCourseButton
+   │  │  ├─ data/            mock-data.ts, lock-messages.ts
    │  │  └─ types/           index.ts
    │  ├─ trail/
    │  │  ├─ TrailMain.tsx
@@ -196,7 +194,7 @@ codly-app/
    │  │  ├─ sections/        ProfileHeader, ProfileStats, ProfileLevelCard, ProfileMenu
    │  │  ├─ components/      ProfileName, ProfileStatCard, EditNameForm
    │  │  ├─ schemas/         name-schema.ts
-   │  │  ├─ data/            mock-data.ts
+   │  │  ├─ data/            plan-labels.ts
    │  │  └─ types/           index.ts
    │  ├─ preferences/
    │  │  ├─ PreferencesMain.tsx
@@ -215,7 +213,7 @@ codly-app/
    │  └─ ui/
    │     ├─ navigation/      AppShell, BottomNav, SideNav, nav-items.ts, MenuItem, SubPageLayout
    │     ├─ buttons/         IconButton, ThemeToggle, Switch, SettingToggle, SegmentedControl, SearchInput, LogoutButton
-   │     └─ display/         Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, StreakFlame, StreakIcon
+   │     └─ display/         Avatar, ProgressBar, StatPill, SettingsGroup, EmptyState, CourseIcon, StreakFlame, StreakIcon
    ├─ hooks/
    │  ├─ useProfile.ts
    │  ├─ useUpdateName.ts
@@ -223,9 +221,11 @@ codly-app/
    │  ├─ useUpdateSettings.ts
    │  ├─ useCourses.ts
    │  ├─ useSetEnrollment.ts
+   │  ├─ useSummary.ts
    │  └─ useFriend.ts
    ├─ types/
-   │  └─ settings.ts
+   │  ├─ settings.ts
+   │  └─ summary.ts
    ├─ lib/
    │  ├─ api.ts
    │  ├─ firebase.ts
@@ -296,24 +296,24 @@ O projeto confere sozinho se o código segue as regras do `CLAUDE.md`. O mesmo t
 | `src/app/login/` | Rota `/login`: só monta o componente da tela de login. |
 | `src/components/auth/` | Proteção de rotas: o `AuthGuard` verifica a sessão do Firebase Auth e manda quem não está logado para `/login`. |
 | `src/app/profile/` | Rota `/profile`: protegida pelo `AuthGuard`, só monta o `ProfileMain`. É aberta pelo botão Perfil da barra de navegação. |
-| `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho, o card de continuar a lição, a meta diária e a lista de cursos (em `sections/`), com a peça menor `CourseCard` (em `components/`). A sequência diária usa o `StreakIcon` de `ui/display/`. Hoje usa dados fictícios (`data/mock-data.ts`). |
+| `src/components/home/` | Tela inicial: `HomeMain` compõe o cabeçalho (nome e foto do `GET /me`, e sequência, XP e nível do resumo), a meta diária, o card de continuar (o curso mexido por último, que abre a trilha) e a lista de cursos ativos (em `sections/`), com a peça menor `CourseCard` (em `components/`). Tudo vem do resumo da API (`useSummary`), sem dados fictícios. Quem não tem curso vê um aviso com o botão Explorar cursos. A sequência diária usa o `StreakIcon` de `ui/display/`. |
 | `src/app/courses/` | Rota `/courses`: protegida pelo `AuthGuard`, só monta o `CoursesMain`. É aberta pelo botão Cursos da barra de navegação. |
-| `src/components/courses/` | Tela de cursos, onde o usuário gerencia os cursos dele. Duas abas: **Meus cursos** (progresso, Continuar, que abre a trilha, e Remover com confirmação, mantendo o progresso salvo) e **Explorar** (barra de busca por título e descrição, que ignora acentos e maiúsculas, e Adicionar). Cada curso vem da API com um `lockReason`: `plan` (curso exclusivo do plano Pro) ou `limit` (o plano gratuito atingiu o limite de cursos ao mesmo tempo), e a tela só mostra a mensagem (`data/lock-messages.ts`). Quem aplica as regras é a API. Os ícones são escolhidos pela chave `iconKey` (`data/course-icons.ts`). Enquanto a API não responde, usa dados fictícios (`data/mock-data.ts`) e mostra um aviso. |
+| `src/components/courses/` | Tela de cursos, onde o usuário gerencia os cursos dele. Duas abas: **Meus cursos** (progresso, Continuar, que abre a trilha, e Remover com confirmação, mantendo o progresso salvo) e **Explorar** (barra de busca por título e descrição, que ignora acentos e maiúsculas, e Adicionar). Cada curso vem da API com um `lockReason`: `plan` (curso exclusivo do plano Pro) ou `limit` (o plano gratuito atingiu o limite de cursos ao mesmo tempo), e a tela só mostra a mensagem (`data/lock-messages.ts`). Quem aplica as regras é a API. Os ícones são escolhidos pela chave `iconKey`, pelo `CourseIcon` de `ui/display/`, que a tela inicial também usa. Enquanto a API não responde, usa dados fictícios (`data/mock-data.ts`) e mostra um aviso. |
 | `src/app/trail/` | Rota `/trail?course=<id>`: protegida pelo `AuthGuard`, só monta o `TrailMain`. O curso vem da URL (por isso a página usa `Suspense`, exigido pela exportação estática). |
 | `src/components/trail/` | Trilha do curso, em estilo de caminho. Cada unidade (`TrailUnitSection`) tem um banner (`UnitBanner`) e as lições em zigue-zague (`NODE_X` em `data/trail-layout.ts`), ligadas por uma linha pontilhada curva (`TrailConnector`) que fica roxa até onde o aluno já chegou. Cada lição (`TrailNode`) pode estar **feita** (check), **atual** (play, com pulso e o balão "Começar") ou **bloqueada** (cadeado), e o último item de cada unidade é um desafio, maior e com troféu. O status vem do `lessonsDone` do curso (`withProgress` em `data/trail-progress.ts`), e o resumo no topo mostra progresso, próxima lição e XP ganho. Hoje existe só a trilha de SQL, com 6 unidades e 24 lições fixas (`data/sql-trail.ts`, registrada em `data/trails.ts`). Cursos sem trilha mostram "Trilha em construção". As animações respeitam a preferência de movimento reduzido do sistema. Tocar numa lição leva a `/lessons`, que ainda não existe. |
 | `src/app/friends/` | Rota `/friends`: só monta o `FriendsMain`. É aberta pelo botão Amigos do menu. |
 | `src/components/friends/` | Tela de amigos: `FriendsMain` compõe o cabeçalho, a busca (por nome, usuário ou código, sem acento nem maiúscula, com `normalizeText`) e a lista de pessoas (`FriendCard`), com ações de enviar pedido, ver perfil e mensagem. Hoje usa dados fictícios (`data/mock-data.ts`) pelo hook `useFriends`, e o perfil público e as mensagens ainda mostram só um aviso. |
 | `src/components/rank/` | Tela de ranking: por enquanto só o `RankMain`, um placeholder. O menu já aponta para `/ranking`, mas a rota (`src/app/ranking/page.tsx`) ainda não existe. |
 | `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). `LoginMain` monta o cartão centralizado, que tem o próprio layout (sem menu), e as sections `LoginHeader` e `LoginForm` ficam em `sections/`. |
-| `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências, configurações e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Hoje usa dados fictícios. |
+| `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências, configurações e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Nome, e-mail e foto vêm do Firebase Auth, e o plano, o XP, o nível e a sequência vêm do resumo da API (`useSummary`). O texto do plano fica em `data/plan-labels.ts`. |
 | `src/app/preferences/`, `src/app/settings/`, `src/app/security-privacy/` | Rotas `/preferences`, `/settings` e `/security-privacy`: protegidas pelo `AuthGuard`, abertas pelo menu do perfil. |
 | `src/components/preferences/` | Preferências de estudo: tema (claro, escuro ou sistema), meta diária de XP (20, 50 ou 100), efeitos sonoros e reduzir animações. |
 | `src/components/settings/` | Configurações da conta: notificações (lembrete de estudo, conquistas e atividade dos amigos) e exclusão da conta, com confirmação em dois passos. |
 | `src/components/security-privacy/` | Privacidade e segurança: flags de privacidade (mostrar online, mostrar o curso atual, aparecer no ranking, mostrar a sequência e permitir pedidos de amizade), status do e-mail e redefinição de senha por e-mail (só para quem entra com e-mail e senha). |
 | `src/components/ui/navigation/AppShell.tsx` | Casca de layout das telas principais (Início, Cursos, Ranking, Amigos e Perfil, itens de `nav-items.ts`): mostra a barra inferior no celular e o menu lateral a partir de 768 px (`md`), e define a largura do conteúdo (coluna estreita no celular, mais larga no computador), já respeitando a área segura do celular. A tela só passa o conteúdo. As telas internas usam o `SubPageLayout`, e o login não usa nenhum dos dois porque não tem menu. |
 | `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (`AppShell`, barra inferior, menu lateral, lista de itens do menu, item de menu e layout das telas internas com botão de voltar), `buttons/` (botão de ícone, alternador de tema, interruptor, linha com interruptor, seletor segmentado, campo de busca e botão de sair, com as variantes `card` e `nav` e a prop `className`) e `display/` (avatar, barra de progresso, indicador de estatística, grupo de configurações, estado vazio e o foguinho da sequência: `StreakFlame` e `StreakIcon`, que mostra a chama com mais de 3 dias e um raio nas sequências curtas). |
-| `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`), `useUpdateName` (`PATCH /me`), `useSettings` (`GET /me/settings`), `useUpdateSettings` (`PATCH /me/settings`), `useCourses` (`GET /courses`), `useSetEnrollment` (`PUT` e `DELETE /me/courses/:courseId`) e `useFriends` (amigos, hoje com dados fictícios, ainda sem a API). Os que gravam usam atualização otimista: a tela muda na hora e volta atrás se a API falhar. |
-| `src/types/` | Tipos TypeScript globais usados em mais de uma tela, como `settings.ts` (privacidade, preferências e notificações). |
+| `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`, nome e foto), `useSummary` (`GET /me/summary`, XP, sequência, meta do dia e cursos ativos), `useUpdateName` (`PATCH /me`), `useSettings` (`GET /me/settings`), `useUpdateSettings` (`PATCH /me/settings`), `useCourses` (`GET /courses`), `useSetEnrollment` (`PUT` e `DELETE /me/courses/:courseId`, e recarrega também o resumo) e `useFriends` (amigos, hoje com dados fictícios, ainda sem a API). Os que gravam usam atualização otimista: a tela muda na hora e volta atrás se a API falhar. |
+| `src/types/` | Tipos TypeScript globais usados em mais de uma tela, como `settings.ts` (privacidade, preferências e notificações) e `summary.ts` (o resumo do aluno: plano, estatísticas, meta do dia e cursos ativos). |
 | `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`), o cliente do Supabase (`supabase/`) e o `normalize-text.ts`, que tira acentos e maiúsculas para comparar textos nas buscas. |
 | `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. |
 | `src/theme/` | Tema do Material UI: cores, tipografia e modo claro/escuro. |
@@ -329,7 +329,8 @@ Conforme o app crescer, as próximas telas previstas são `lessons` e a rota `ra
 
 | Rota | Usada por | Situação |
 | --- | --- | --- |
-| `GET /me` | Perfil | Existe. |
+| `GET /me` | Nome e foto (tela inicial) | Existe. Devolve `name` e `photoURL`. |
+| `GET /me/summary` | Tela inicial e perfil | Existe. Devolve plano, XP, nível, sequência, meta do dia e cursos ativos. O XP do dia só vale quando as lições gravarem. |
 | `PATCH /me` | Edição do nome | Existe. Grava no Supabase, no Firestore e no Firebase Auth. |
 | `GET /courses` | Cursos | Existe. Devolve os cursos com o progresso e o `lockReason`. |
 | `PUT /me/courses/:courseId` | Cursos (Adicionar) | Existe. `403` se o curso é do Pro ou se o limite do plano foi atingido. |
@@ -337,7 +338,8 @@ Conforme o app crescer, as próximas telas previstas são `lessons` e a rota `ra
 | `GET /me/settings` | Preferências, configurações e privacidade | A criar. Cria os padrões se o usuário ainda não tem. |
 | `PATCH /me/settings` | Preferências, configurações e privacidade | A criar. Valida só os campos conhecidos. |
 | `DELETE /me` | Excluir conta | A criar. Apaga Firestore, Supabase e o usuário do Firebase Auth. |
-| Amigos (busca de pessoas e pedido de amizade) | Amigos | A definir. A tela usa dados fictícios, e a API deve omitir online, curso atual e sequência de quem desligou a flag. |
+| `GET /users/search?q=` | Amigos (busca) | Existe na API, mas a tela ainda usa dados fictícios. Devolve `uid`, `name` e `avatarUrl`. |
+| Pedido de amizade, lista de amigos e ranking | Amigos e Ranking | A criar. A API deve omitir online, curso atual e sequência de quem desligou a flag. |
 
 **Planos:** existem só o gratuito e o Pro. O Pro libera os cursos avançados e mais de 2 cursos ao mesmo tempo (o gratuito tem limite). O app nunca decide isso: ele mostra o `lockReason` que a API devolve, e a API também recusa o pedido com `403`.
 
