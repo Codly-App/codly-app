@@ -24,7 +24,7 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
     - `types/`: tipos da tela, em `index.ts` (o import fica `@/components/<tela>/types`).
     - `schemas/`: validações `zod` dos formulários.
     - `hooks/`: hooks usados só por essa tela. Crie a subpasta quando houver o primeiro hook.
-- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`, `useSettings`, `useUpdateSettings`, `useCourses`, `useSetEnrollment`).
+- `src/hooks/`: hooks globais usados em várias telas (ex.: autenticação, `useProfile`, `useSettings`, `useUpdateSettings`, `useCourses`, `useSetEnrollment`, `useFriends`). Hooks que chamam a API ou que mais de uma tela deve usar ficam aqui, num arquivo `useXxx.ts` (o arquivo do `useFriends` é `useFriend.ts`).
 - A sequência diária sempre usa o `StreakIcon` de `ui/display/` (chama com mais de 3 dias, raio nas sequências curtas). Não copie essa regra nem o `StreakFlame` para dentro de uma tela.
 - Planos: existem só o gratuito (`free`) e o Pro (`pro`). Quem decide o acesso e o limite de cursos é a API. O app nunca calcula plano nem limite: mostra o `lockReason` (`plan` ou `limit`) que a API devolve em cada curso, com as mensagens em `courses/data/lock-messages.ts`, e deixa a API recusar o pedido (`403`).
 - Remover um curso não apaga o progresso: a API só marca o curso como não ativo. Diga isso ao usuário na confirmação.
@@ -97,7 +97,7 @@ Use apenas classes de cor desta tabela. Classes como `text-muted` só podem ser 
 - Formatação e lint com Biome (`npm run lint`, `npm run format`). Rode antes de finalizar, junto com `npm test` (verificação dos padrões, abaixo).
 - Textos da interface em português do Brasil. Nomes de código (arquivos, variáveis, componentes) em inglês.
 - Validação de formulários com `react-hook-form` + `zod`.
-- Ícones com `react-icons`. Animações com `framer-motion`.
+- Ícones com `react-icons`. Animações com `framer-motion`. O pacote `motion` (importado de `motion/react`) também está instalado e hoje só o `AuthGuard` o usa. Em código novo, prefira `framer-motion`.
 - Não instale bibliotecas novas sem avisar e justificar.
 
 ## Verificação automática dos padrões

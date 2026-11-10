@@ -1,4 +1,4 @@
-import { FriendsMain } from "@/components/friends/FiendsMain";
+import { FriendsMain } from "@/components/friends/FriendsMain";
 
 export default function page() {
     return <FriendsMain />;
