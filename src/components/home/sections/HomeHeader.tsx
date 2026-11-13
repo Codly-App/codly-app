@@ -1,13 +1,14 @@
 
 "use client";
 
-import { FiBell, FiStar, FiUser } from "react-icons/fi";
+import { FiBell, FiStar } from "react-icons/fi";
 import { IconButton } from "@/components/ui/buttons/IconButton";
 import { ThemeToggle } from "@/components/ui/buttons/ThemeToggle";
 import { StatPill } from "@/components/ui/display/StatPill";
 import type { UserStats } from "@/types/summary";
 import { StreakIcon } from "@/components/ui/display/StreakIcon";
 import { useProfile } from "@/hooks/useProfile";
+import { getAuthUserInfo } from "@/lib/auth-user";
 import { Avatar } from "@/components/ui/display/Avatar";
 
 interface HomeHeaderProps {
@@ -19,7 +20,7 @@ export function HomeHeader({ stats }: HomeHeaderProps) {
 
     const displayName = profile?.name || "Estudante";
     const firstName = displayName.trim().split(/\s+/)[0];
-    const photoURL = profile?.photoURL;
+    const photoURL = getAuthUserInfo().picture;
     const streak = stats?.streak ?? 0;
     const xp = stats?.xp ?? 0;
     const level = stats?.level ?? 1;
