@@ -36,7 +36,8 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 - Animações que se repetem (pulso, balão, chama) usam `useReducedMotion` do `framer-motion` e ficam paradas para quem pediu menos movimento no sistema.
 - Telas internas (abertas a partir de outra tela, como `preferences/`, `settings/` e `security-privacy/`) usam o `SubPageLayout` de `ui/navigation/`, que traz o título e o botão de voltar. Não repita esse cabeçalho em cada tela.
 - Listas de opções (rótulo, descrição e chave de cada interruptor) ficam em `data/` da tela, e a section apenas percorre a lista. Não repita um `SettingToggle` escrito à mão para cada opção.
-- Preferências do usuário (privacidade, preferências e notificações) são gravadas pela API em `PATCH /me/settings`, nunca no app. Use `useUpdateSettings`, que atualiza a tela na hora e desfaz se a API falhar. Quem aplica as flags de privacidade é a API, nunca o app.
+- Preferências do usuário (privacidade, preferências e notificações) são gravadas pela API em `PATCH /me/settings`, nunca no app. Use `useUpdateSettings`, que atualiza a tela na hora e desfaz se a API falhar. Quem aplica as flags de privacidade é a API, nunca o app. A meta diária escolhida aparece na tela inicial pelo resumo (`useSummary`), por isso `useUpdateSettings` recarrega o resumo também.
+- A próxima lição do cartão "Continuar" é sempre calculada pela trilha com `getNextLesson` (`trail/data/trail-progress.ts`), a partir do `lessonsDone` que a API devolve. A API não diz qual é a próxima lição.
 - `src/components/auth/`: proteção de rotas (`AuthGuard`).
 - `src/lib/`: infraestrutura sem interface (api, Firebase Auth, Supabase, query client) e utilitários puros sem tela, como `normalize-text.ts`.
 - `src/providers/`: providers que envolvem o app.
