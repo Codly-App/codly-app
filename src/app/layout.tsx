@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
-// import { Providers } from "@/providers/Providers";
+import type { ReactNode } from "react";
 import "./globals.css";
 import { Providers } from "@/providers/Providers";
 
@@ -52,7 +52,7 @@ export const viewport: Viewport = {
         { media: "(prefers-color-scheme: dark)", color: "#0f0b1a" },
     ],
 };
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children,}: Readonly<{ children: ReactNode }>) {
     return (
         <html
             lang="pt-BR"
