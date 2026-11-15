@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FiCheck, FiX } from "react-icons/fi";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
 import {
     type NameFormData,
     nameSchema,
@@ -16,6 +17,7 @@ interface EditNameFormProps {
 
 export function EditNameForm({ initialName, onDone }: EditNameFormProps) {
     const { mutate, isPending, isError } = useUpdateName();
+    const { play } = useSoundEffects();
     const {
         register,
         handleSubmit,
@@ -26,7 +28,13 @@ export function EditNameForm({ initialName, onDone }: EditNameFormProps) {
     });
 
     function onSubmit({ name }: NameFormData) {
-        mutate(name, { onSuccess: onDone });
+        mutate(name, {
+            onSuccess: () => {
+                play("success");
+                onDone();
+            },
+            onError: () => play("error"),
+        });
     }
 
     return (

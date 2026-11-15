@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import { useSetEnrollment } from "@/hooks/useSetEnrollment";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
 
 interface RemoveCourseButtonProps {
     readonly courseId: string;
@@ -11,6 +12,7 @@ interface RemoveCourseButtonProps {
 export function RemoveCourseButton({ courseId }: RemoveCourseButtonProps) {
     const [confirming, setConfirming] = useState(false);
     const { mutate, isPending } = useSetEnrollment();
+    const { play } = useSoundEffects();
 
     if (!confirming) {
         return (
@@ -41,7 +43,12 @@ export function RemoveCourseButton({ courseId }: RemoveCourseButtonProps) {
                 </button>
                 <button
                     type="button"
-                    onClick={() => mutate({ courseId, enrolled: false })}
+                    onClick={() =>
+                        mutate(
+                            { courseId, enrolled: false },
+                            { onSuccess: () => play("toggle") },
+                        )
+                    }
                     disabled={isPending}
                     className="flex-1 rounded-xl bg-danger py-2 text-sm font-medium text-on-primary disabled:opacity-60"
                 >

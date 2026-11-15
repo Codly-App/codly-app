@@ -19,7 +19,10 @@ export function AddCourseButton({ courseId }: AddCourseButtonProps) {
             onClick={() =>
                 mutate(
                     { courseId, enrolled: true },
-                    { onSuccess: () => play("success") },
+                    {
+                        onSuccess: () => play("success"),
+                        onError: () => play("error"),
+                    },
                 )
             }
             className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-on-primary transition active:scale-95 disabled:opacity-60"
