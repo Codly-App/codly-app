@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReduceMotion } from "@/hooks/useReduceMotion";
 
 export function NodePulse() {
-    const reduceMotion = useReducedMotion();
+    const reduceMotion = useReduceMotion();
 
     if (reduceMotion) return null;
 

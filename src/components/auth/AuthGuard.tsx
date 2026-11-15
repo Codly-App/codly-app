@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
+import { PreferencesProvider } from "@/providers/PreferencesProvider";
 
 type AuthGuardProps = { children: ReactNode; };
 
@@ -76,5 +77,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
             </div>
         );
     }
-    return <>{children}</>;
+    
+    return <PreferencesProvider>{children}</PreferencesProvider>;
 }

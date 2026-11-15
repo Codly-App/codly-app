@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import { useReduceMotion } from "@/hooks/useReduceMotion";
 
 interface ProgressBarProps {
     value: number;
@@ -16,6 +17,7 @@ export function ProgressBar({
 }: ProgressBarProps) {
     const percent = Math.min(100, Math.max(0, value));
     const onPrimary = variant === "onPrimary";
+    const reduceMotion = useReduceMotion();
 
     return (
         <div
@@ -34,9 +36,9 @@ export function ProgressBar({
                     "h-full rounded-full",
                     onPrimary ? "bg-on-primary" : "bg-primary",
                 )}
-                initial={{ width: 0 }}
+                initial={reduceMotion ? false : { width: 0 }}
                 animate={{ width: `${percent}%` }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                transition={{ duration: reduceMotion ? 0 : 0.8, ease: "easeOut" }}
             />
         </div>
     );
