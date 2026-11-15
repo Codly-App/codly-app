@@ -1,5 +1,4 @@
-import { LoginForm } from "./Sections/LoginForm";
-import { LoginHeader } from "./Sections/LoginHeader";
+import { LoginForm } from "@/components/login/sections/LoginForm";
 
 export function LoginMain() {
     return (

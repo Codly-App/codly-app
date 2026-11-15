@@ -1,5 +1,5 @@
 import { useSettings } from "@/hooks/useSettings";
-import { playSound, type SoundName } from "@/lib/sound";
+import { playSound, type SoundName } from "@/lib/sounds";
 
 export function useSoundEffects() {
     const { data } = useSettings();
