@@ -1,0 +1,27 @@
+name: Padrões do projeto
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, develop]
+
+jobs:
+  padroes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Testes de padrão
+        run: npm test
+
+      - name: Conferir os tipos
+        run: npx tsc --noEmit

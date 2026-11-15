@@ -4,6 +4,7 @@ import { NOTIFICATION_OPTIONS } from "@/components/settings/data/notification-op
 import { SettingToggle } from "@/components/ui/buttons/SettingToggle";
 import { SettingsGroup } from "@/components/ui/display/SettingsGroup";
 import { useSettings } from "@/hooks/useSettings";
+import { askStudyReminderPermission } from "@/lib/study-reminder";
 import { useUpdateSettings } from "@/hooks/useUpdateSettings";
 
 export function NotificationsSection() {
@@ -18,9 +19,12 @@ export function NotificationsSection() {
                     label={label}
                     description={description}
                     checked={data.notifications[key]}
-                    onChange={(value) =>
-                        mutate({ notifications: { [key]: value } })
-                    }
+                    onChange={(value) => {
+                        if (key === "dailyReminder" && value) {
+                            askStudyReminderPermission().catch(() => undefined);
+                        }
+                        mutate({ notifications: { [key]: value } });
+                    }}
                 />
             ))}
         </SettingsGroup>

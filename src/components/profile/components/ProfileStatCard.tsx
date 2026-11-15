@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
 interface ProfileStatCardProps {
-    icon: ReactNode;
-    value: string;
-    label: string;
+    readonly icon: ReactNode;
+    readonly value: string;
+    readonly label: string;
 }
 
 export function ProfileStatCard({ icon, value, label }: ProfileStatCardProps) {

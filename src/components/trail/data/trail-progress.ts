@@ -1,5 +1,7 @@
+import { TRAILS } from "@/components/trail/data/trails";
 import type {
     LessonStatus,
+    ProgressLesson,
     ProgressUnit,
     TrailUnit,
 } from "@/components/trail/types";
@@ -35,4 +37,19 @@ export function withProgress(
                 .length,
         };
     });
+}
+
+export function getNextLesson(
+    courseId: string,
+    lessonsDone: number,
+): ProgressLesson | null {
+    const trail = TRAILS[courseId];
+
+    if (!trail) return null;
+
+    return (
+        withProgress(trail.units, lessonsDone)
+            .flatMap((unit) => unit.lessons)
+            .find((lesson) => lesson.status === "current") ?? null
+    );
 }

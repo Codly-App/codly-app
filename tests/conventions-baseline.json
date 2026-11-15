@@ -1,0 +1,29 @@
+{
+    "sem-import-relativo-que-sobe": {
+        "src/components/ui/navigation/SideNav.tsx": "dívida: trocar ../buttons/LogoutButton por @/components/ui/buttons/LogoutButton"
+    },
+    "tipos-em-ts": {
+        "src/components/trail/types/index.tsx": "dívida: renomear para index.ts"
+    },
+    "export-nomeado": {
+        "src/components/auth/AuthGuard.tsx": "dívida: trocar export default por export function"
+    },
+    "arquivo-curto": {
+        "src/components/login/sections/EmailForm.tsx": "dívida: 137 linhas; separar o campo de senha (com o botão de mostrar) em um componente"
+    },
+    "cores-soltas": {
+        "src/app/layout.tsx": "exceção: o themeColor do navegador exige hex"
+    },
+    "largura-so-no-shell": {
+        "src/components/login/LoginMain.tsx": "exceção: o login não tem menu e usa o próprio layout, sem AppShell"
+    },
+    "sem-style-inline": {
+        "src/components/trail/components/TrailNode.tsx": "exceção: o left em % da lição é dinâmico"
+    },
+    "raiz-da-tela": {
+        "src/components/login/schema": "dívida: renomear a pasta para schemas"
+    },
+    "exportacao-estatica": {
+        "next.config.ts": "dívida: acrescentar output: export antes de gerar o Android e o iOS"
+    }
+}

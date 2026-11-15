@@ -57,3 +57,12 @@ body {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
+}

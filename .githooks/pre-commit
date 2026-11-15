@@ -1,0 +1,31 @@
+#!/bin/sh
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Para pular de propósito: SKIP_CHECKS=1 git commit ...
+if [ "$SKIP_CHECKS" = "1" ]; then
+    echo "Verificações puladas (SKIP_CHECKS=1)."
+    exit 0
+fi
+
+echo "Verificando os padrões do projeto..."
+if ! npm test --silent; then
+    if [ "$branch" = "main" ]; then
+        echo ""
+        echo "COMMIT BLOQUEADO: corrija os erros acima e tente de novo."
+        echo "(Só em emergência: git commit --no-verify)"
+        exit 1
+    fi
+    echo ""
+    echo "AVISO: há erros de padrão (acima). Fora da main o commit passa, mas corrija antes do PR."
+fi
+
+if ! npx --no-install biome check --staged --no-errors-on-unmatched; then
+    if [ "$branch" = "main" ]; then
+        echo ""
+        echo "COMMIT BLOQUEADO: rode npx biome check --write e adicione os arquivos de novo (git add)."
+        exit 1
+    fi
+    echo ""
+    echo "AVISO: o Biome encontrou problemas nos arquivos do commit. Fora da main o commit passa."
+fi

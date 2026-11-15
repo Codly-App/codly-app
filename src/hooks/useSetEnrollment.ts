@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Course } from "@/components/courses/types";
 import { COURSES_KEY } from "@/hooks/useCourses";
 import { api } from "@/lib/api";
+import { SUMMARY_KEY } from "@/hooks/useSummary";
 
 interface EnrollmentInput {
     courseId: string;
@@ -44,6 +45,9 @@ export function useSetEnrollment() {
             }
         },
         onSettled: () =>
-            queryClient.invalidateQueries({ queryKey: COURSES_KEY }),
+            Promise.all([
+                queryClient.invalidateQueries({ queryKey: COURSES_KEY }),
+                queryClient.invalidateQueries({ queryKey: SUMMARY_KEY }),
+            ]),
     });
 }

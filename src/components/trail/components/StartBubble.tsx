@@ -1,10 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReduceMotion } from "@/hooks/useReduceMotion";
 
 export function StartBubble() {
-    const reduceMotion = useReducedMotion();
-
+    const reduceMotion = useReduceMotion();
     return (
         <motion.span
             aria-hidden

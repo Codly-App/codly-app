@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SETTINGS_KEY } from "@/hooks/useSettings";
 import { api } from "@/lib/api";
+import { SUMMARY_KEY } from "@/hooks/useSummary";
 import type { SettingsPatch, UserSettings } from "@/types/settings";
 
 function applyPatch(
@@ -39,6 +40,9 @@ export function useUpdateSettings() {
             }
         },
         onSettled: () =>
-            queryClient.invalidateQueries({ queryKey: SETTINGS_KEY }),
+            Promise.all([
+                queryClient.invalidateQueries({ queryKey: SETTINGS_KEY }),
+                queryClient.invalidateQueries({ queryKey: SUMMARY_KEY }),
+            ]),
     });
 }

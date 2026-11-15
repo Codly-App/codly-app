@@ -5,6 +5,7 @@ import { SettingToggle } from "@/components/ui/buttons/SettingToggle";
 import { SettingsGroup } from "@/components/ui/display/SettingsGroup";
 import { useSettings } from "@/hooks/useSettings";
 import { useUpdateSettings } from "@/hooks/useUpdateSettings";
+import { playSound } from "@/lib/sounds";
 
 export function ExperienceSection() {
     const { data } = useSettings();
@@ -18,9 +19,10 @@ export function ExperienceSection() {
                     label={label}
                     description={description}
                     checked={data.preferences[key]}
-                    onChange={(value) =>
-                        mutate({ preferences: { [key]: value } })
-                    }
+                    onChange={(value) => {
+                        if (key === "soundEffects" && value) playSound("toggle");
+                        mutate({ preferences: { [key]: value } });
+                    }}
                 />
             ))}
         </SettingsGroup>
