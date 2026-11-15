@@ -20,7 +20,8 @@ export function ExperienceSection() {
                     description={description}
                     checked={data.preferences[key]}
                     onChange={(value) => {
-                        if (key === "soundEffects" && value) playSound("toggle");
+                        if (key === "soundEffects" && value)
+                            playSound("toggle");
                         mutate({ preferences: { [key]: value } });
                     }}
                 />

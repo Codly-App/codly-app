@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { CourseIcon } from "@/components/ui/display/CourseIcon";
 import { RemoveCourseButton } from "@/components/courses/components/RemoveCourseButton";
 import type { Course } from "@/components/courses/types";
+import { CourseIcon } from "@/components/ui/display/CourseIcon";
 import { ProgressBar } from "@/components/ui/display/ProgressBar";
 
 interface EnrolledCourseCardProps {

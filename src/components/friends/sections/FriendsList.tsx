@@ -12,7 +12,12 @@ interface FriendsListProps {
     onMessage: (uid: string) => void;
 }
 
-export function FriendsList({ users, onAdd, onViewProfile, onMessage }: FriendsListProps) {
+export function FriendsList({
+    users,
+    onAdd,
+    onViewProfile,
+    onMessage,
+}: FriendsListProps) {
     if (users.length === 0) {
         return (
             <EmptyState
@@ -24,7 +29,10 @@ export function FriendsList({ users, onAdd, onViewProfile, onMessage }: FriendsL
     }
 
     return (
-        <section aria-label="Usuários" className="flex flex-col gap-3 md:grid md:grid-cols-2">
+        <section
+            aria-label="Usuários"
+            className="flex flex-col gap-3 md:grid md:grid-cols-2"
+        >
             {users.map((user) => (
                 <FriendCard
                     key={user.uid}

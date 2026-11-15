@@ -1,7 +1,10 @@
 "use client";
 import { SearchInput } from "@/components/ui/buttons/SearchInput";
 
-interface FriendsSearchProps { value: string; onChange: (value: string) => void; }
+interface FriendsSearchProps {
+    value: string;
+    onChange: (value: string) => void;
+}
 
 export function FriendsSearch({ value, onChange }: FriendsSearchProps) {
     return (

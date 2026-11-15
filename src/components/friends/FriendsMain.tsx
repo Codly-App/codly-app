@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { FriendsHeader } from "@/components/friends/sections/FriendsHeader";
-import { FriendsSearch } from "@/components/friends/sections/FriendsSearch";
 import { FriendsList } from "@/components/friends/sections/FriendsList";
-import { useFriends } from "@/hooks/useFriend";
+import { FriendsSearch } from "@/components/friends/sections/FriendsSearch";
 import { AppShell } from "@/components/ui/navigation/AppShell";
+import { useFriends } from "@/hooks/useFriend";
 import { normalizeText } from "@/lib/normalize-text";
 
 export function FriendsMain() {
@@ -18,8 +18,8 @@ export function FriendsMain() {
 
     const filteredUsers = users.filter((user) =>
         [user.name, user.username, user.uid].some((value) =>
-            normalizeText(value).includes(query)
-        )
+            normalizeText(value).includes(query),
+        ),
     );
 
     return (
@@ -35,9 +35,20 @@ export function FriendsMain() {
                     </output>
                 )}
 
-                <FriendsList users={filteredUsers} onAdd={sendRequest}
-                    onViewProfile={() => setNotice("Perfil público: aguardando integração com a API.")}
-                    onMessage={() => setNotice("Mensagens: funcionalidade em desenvolvimento.")}/>
+                <FriendsList
+                    users={filteredUsers}
+                    onAdd={sendRequest}
+                    onViewProfile={() =>
+                        setNotice(
+                            "Perfil público: aguardando integração com a API.",
+                        )
+                    }
+                    onMessage={() =>
+                        setNotice(
+                            "Mensagens: funcionalidade em desenvolvimento.",
+                        )
+                    }
+                />
             </div>
         </AppShell>
     );

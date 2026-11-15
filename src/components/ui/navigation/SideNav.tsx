@@ -36,7 +36,7 @@ export function SideNav() {
                     </Link>
                 );
             })}
-            <LogoutButton className="mt-auto" variant="nav"/>
+            <LogoutButton className="mt-auto" variant="nav" />
         </nav>
     );
 }

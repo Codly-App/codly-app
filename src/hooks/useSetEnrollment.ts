@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Course } from "@/components/courses/types";
 import { COURSES_KEY } from "@/hooks/useCourses";
-import { api } from "@/lib/api";
 import { SUMMARY_KEY } from "@/hooks/useSummary";
+import { api } from "@/lib/api";
 
 interface EnrollmentInput {
     courseId: string;

@@ -38,7 +38,10 @@ export function ProgressBar({
                 )}
                 initial={reduceMotion ? false : { width: 0 }}
                 animate={{ width: `${percent}%` }}
-                transition={{ duration: reduceMotion ? 0 : 0.8, ease: "easeOut" }}
+                transition={{
+                    duration: reduceMotion ? 0 : 0.8,
+                    ease: "easeOut",
+                }}
             />
         </div>
     );

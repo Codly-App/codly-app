@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { FiPlay } from "react-icons/fi";
+import { getNextLesson } from "@/components/trail/data/trail-progress";
 import { ProgressBar } from "@/components/ui/display/ProgressBar";
 import type { SummaryCourse } from "@/types/summary";
-import { getNextLesson } from "@/components/trail/data/trail-progress";
 
 interface ContinueCardProps {
     readonly course: SummaryCourse;
@@ -13,7 +13,8 @@ export function ContinueCard({ course }: ContinueCardProps) {
         ? Math.round((course.lessonsDone / course.lessonsTotal) * 100)
         : 0;
     const next = getNextLesson(course.id, course.lessonsDone);
-    const finished = course.lessonsTotal > 0 && course.lessonsDone >= course.lessonsTotal;
+    const finished =
+        course.lessonsTotal > 0 && course.lessonsDone >= course.lessonsTotal;
     const href = next
         ? `/lessons?course=${course.id}&lesson=${next.id}`
         : `/trail?course=${course.id}`;

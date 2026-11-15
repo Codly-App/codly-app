@@ -12,7 +12,7 @@ if [ "$SKIP_CHECKS" = "1" ]; then
 fi
 
 echo "Conferindo os tipos..."
-if ! npx --no-install tsc --noEmit; then
+if ! node node_modules/typescript/bin/tsc --noEmit; then
     if [ "$vai_para_main" -eq 1 ]; then
         echo ""
         echo "ENVIO BLOQUEADO: corrija os erros de tipo acima."

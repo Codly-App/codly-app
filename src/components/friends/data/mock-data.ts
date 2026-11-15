@@ -1,4 +1,3 @@
-
 import type { FriendUser } from "@/components/friends/types";
 
 export const mockUsers: FriendUser[] = [

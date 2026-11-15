@@ -4,10 +4,10 @@ import { useState } from "react";
 import { AuthDivider } from "@/components/login/components/AuthDivider";
 import { GoogleButton } from "@/components/login/components/GoogleButton";
 import { ModeSwitch } from "@/components/login/components/ModeSwitch";
-import { useAuthActions } from "@/hooks/useAuthActions";
 import { EmailForm } from "@/components/login/sections/EmailForm";
 import { LoginHeader } from "@/components/login/sections/LoginHeader";
 import type { AuthMode, EmailAuthValues } from "@/components/login/types";
+import { useAuthActions } from "@/hooks/useAuthActions";
 
 const EMPTY_VALUES: EmailAuthValues = {
     name: "",

@@ -7,7 +7,7 @@ import { type ReactNode, useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
 import { PreferencesProvider } from "@/providers/PreferencesProvider";
 
-type AuthGuardProps = { children: ReactNode; };
+type AuthGuardProps = { children: ReactNode };
 
 export default function AuthGuard({ children }: AuthGuardProps) {
     const router = useRouter();
@@ -38,24 +38,39 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                     initial={reduceMotion ? false : { opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
-                    className="relative z-10 flex flex-col items-center gap-6">
+                    className="relative z-10 flex flex-col items-center gap-6"
+                >
                     <div className="relative flex items-center justify-center">
                         <div className="absolute size-20 rounded-full bg-primary/20 blur-2xl" />
 
                         <motion.div
-                            animate={reduceMotion ? undefined : { scale: [1, 1.05, 1] }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", }}
-                            className="relative flex size-16 items-center justify-center rounded-2xl bg-primary text-3xl font-extrabold text-on-primary shadow-lg shadow-primary/20">
+                            animate={
+                                reduceMotion
+                                    ? undefined
+                                    : { scale: [1, 1.05, 1] }
+                            }
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            }}
+                            className="relative flex size-16 items-center justify-center rounded-2xl bg-primary text-3xl font-extrabold text-on-primary shadow-lg shadow-primary/20"
+                        >
                             C
                         </motion.div>
                     </div>
 
                     <div className="flex items-center gap-1.5">
                         {[0, 1, 2].map((index) => (
-                            <motion.span key={index}
-                                animate={reduceMotion ? undefined : {
-                                    opacity: [0.3, 1, 0.3], y: [0, -3, 0],
-                                }
+                            <motion.span
+                                key={index}
+                                animate={
+                                    reduceMotion
+                                        ? undefined
+                                        : {
+                                              opacity: [0.3, 1, 0.3],
+                                              y: [0, -3, 0],
+                                          }
                                 }
                                 transition={{
                                     duration: 1.2,
@@ -69,14 +84,18 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                     </div>
 
                     <div className="text-center">
-                        <p className="text-sm font-semibold text-foreground">Verificando sua sessão</p>
+                        <p className="text-sm font-semibold text-foreground">
+                            Verificando sua sessão
+                        </p>
 
-                        <p className="mt-1 text-xs text-foreground/70">Preparando sua experiência na Codly...</p>
+                        <p className="mt-1 text-xs text-foreground/70">
+                            Preparando sua experiência na Codly...
+                        </p>
                     </div>
                 </motion.div>
             </div>
         );
     }
-    
+
     return <PreferencesProvider>{children}</PreferencesProvider>;
 }

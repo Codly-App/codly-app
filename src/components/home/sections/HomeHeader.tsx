@@ -1,15 +1,14 @@
-
 "use client";
 
 import { FiBell, FiStar } from "react-icons/fi";
 import { IconButton } from "@/components/ui/buttons/IconButton";
 import { ThemeToggle } from "@/components/ui/buttons/ThemeToggle";
+import { Avatar } from "@/components/ui/display/Avatar";
 import { StatPill } from "@/components/ui/display/StatPill";
-import type { UserStats } from "@/types/summary";
 import { StreakIcon } from "@/components/ui/display/StreakIcon";
 import { useProfile } from "@/hooks/useProfile";
 import { getAuthUserInfo } from "@/lib/auth-user";
-import { Avatar } from "@/components/ui/display/Avatar";
+import type { UserStats } from "@/types/summary";
 
 interface HomeHeaderProps {
     readonly stats?: UserStats;
@@ -51,14 +50,23 @@ export function HomeHeader({ stats }: HomeHeaderProps) {
             </div>
 
             <div className="flex flex-wrap gap-2">
-                <StatPill icon={<StreakIcon streak={streak} />}
-                    value={`${streak} dias`} label="Sequência diária" />
+                <StatPill
+                    icon={<StreakIcon streak={streak} />}
+                    value={`${streak} dias`}
+                    label="Sequência diária"
+                />
 
-                <StatPill icon={<FiStar className="text-primary" />}
-                    value={`${xp} XP`} label="Experiência" />
+                <StatPill
+                    icon={<FiStar className="text-primary" />}
+                    value={`${xp} XP`}
+                    label="Experiência"
+                />
 
-                <StatPill icon={<FiStar className="text-primary" />}
-                    value={`Nível ${level}`} label="Nível atual" />
+                <StatPill
+                    icon={<FiStar className="text-primary" />}
+                    value={`Nível ${level}`}
+                    label="Nível atual"
+                />
             </div>
         </header>
     );

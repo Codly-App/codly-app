@@ -223,6 +223,19 @@ const RULES = [
         find: ({ clean }) => linesMatching(clean, /\bstyle=\{\{/),
     },
     {
+        id: "sem-important",
+        title: "Uso de !important",
+        hint: "Não use !important (nem o ! do Tailwind, como !p-4). CSS escrito fora de @layer já vence os utilitários do Tailwind e do MUI; senão, ajuste a ordem das camadas ou a especificidade.",
+        files: () => allFiles.filter((f) => /\.(css|ts|tsx)$/.test(f)),
+        find: ({ file, clean }) =>
+            linesMatching(
+                clean,
+                file.endsWith(".css")
+                    ? /!\s*important\b/
+                    : /!\s*important\b|(?:^|[\s"'`])![a-z][a-z0-9]*-[\w[\]/.%-]+/,
+            ),
+    },
+    {
         id: "nome-de-hook",
         title: "Hook fora do padrão useXxx",
         hint: "Arquivos em hooks/ se chamam useXxx.ts e começam com use + maiúscula.",

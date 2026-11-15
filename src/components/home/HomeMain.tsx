@@ -16,9 +16,9 @@ export function HomeMain() {
             <HomeHeader stats={data?.stats} />
 
             {isLoading && (
-                <p role="status" className="text-sm text-foreground/70">
+                <output className="block text-sm text-foreground/70">
                     Carregando seu progresso...
-                </p>
+                </output>
             )}
 
             {isError && (

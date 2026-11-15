@@ -32,7 +32,11 @@ export function ProfileMain() {
             ) : (
                 <p
                     role={isError ? "alert" : "status"}
-                    className={isError ? "text-sm text-danger" : "text-sm text-foreground/70"}
+                    className={
+                        isError
+                            ? "text-sm text-danger"
+                            : "text-sm text-foreground/70"
+                    }
                 >
                     {isError
                         ? "Não foi possível carregar seu progresso."

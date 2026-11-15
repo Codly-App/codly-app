@@ -37,6 +37,9 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 - Telas internas (abertas a partir de outra tela, como `preferences/`, `settings/` e `security-privacy/`) usam o `SubPageLayout` de `ui/navigation/`, que traz o título e o botão de voltar. Não repita esse cabeçalho em cada tela.
 - Listas de opções (rótulo, descrição e chave de cada interruptor) ficam em `data/` da tela, e a section apenas percorre a lista. Não repita um `SettingToggle` escrito à mão para cada opção.
 - Preferências do usuário (privacidade, preferências e notificações) são gravadas pela API em `PATCH /me/settings`, nunca no app. Use `useUpdateSettings`, que atualiza a tela na hora e desfaz se a API falhar. Quem aplica as flags de privacidade é a API, nunca o app. A meta diária escolhida aparece na tela inicial pelo resumo (`useSummary`), por isso `useUpdateSettings` recarrega o resumo também.
+- As preferências do app são aplicadas pelo `PreferencesProvider` (dentro do `AuthGuard`). Animação nova usa o `useReduceMotion` de `src/hooks/` (e não o `useReducedMotion` do `framer-motion` direto), para respeitar a opção "reduzir animações" além da preferência do sistema. Som usa o `useSoundEffects`, que só toca com a opção ligada. Não chame `playSound` direto, exceto para o som de teste ao ligar a opção.
+- Toda rota de tela com menu (`page.tsx`) usa o `AuthGuard`, inclusive Amigos e Ranking. É por ele que passam as preferências e o redirecionamento para o login.
+- A tela de login tem o próprio layout (sem `AppShell`). Seu formulário é dividido em `LoginForm` (estado), `EmailForm` (campos) e componentes pequenos, e a lógica do Firebase fica em `useAuthActions`.
 - A próxima lição do cartão "Continuar" é sempre calculada pela trilha com `getNextLesson` (`trail/data/trail-progress.ts`), a partir do `lessonsDone` que a API devolve. A API não diz qual é a próxima lição.
 - `src/components/auth/`: proteção de rotas (`AuthGuard`).
 - `src/lib/`: infraestrutura sem interface (api, Firebase Auth, Supabase, query client) e utilitários puros sem tela, como `normalize-text.ts`.
@@ -65,6 +68,7 @@ App web (Next.js 16, React 19, TypeScript) empacotado com Capacitor para Android
 ## Estilo e cores
 
 - **Tailwind sempre primeiro.** O prop `style` e CSS inline são o último recurso, só quando o Tailwind não resolve (valor realmente dinâmico em tempo de execução, por exemplo largura calculada de uma barra de XP).
+- **Proibido `!important`**, no CSS e no Tailwind (o `!` como em `!p-4`). Para um estilo vencer o outro, escreva o CSS fora de qualquer `@layer` (o CSS sem camada vence os utilitários do Tailwind e o MUI, que ficam em camadas) ou ajuste a ordem das camadas no `globals.css`. Exemplo: o bloco `.reduce-motion` do `globals.css`.
 - Use o MUI só para componentes complexos que o Tailwind não cobre bem (modal, menu, seletor de data, etc.). Estilize o MUI pelo tema em `src/theme/theme.ts`, não por `sx` espalhado.
 - **Use sempre as cores da plataforma**, definidas em `src/app/globals.css`. Nunca use cores soltas (`#fff`, `bg-purple-500`, `text-gray-700`) nem valores arbitrários (`bg-[#7c3aed]`).
 
@@ -92,7 +96,7 @@ Use apenas classes de cor desta tabela. Classes como `text-muted` só podem ser 
 - Campos de texto com `text-base` (16 px): abaixo disso o Safari do iPhone dá zoom ao focar.
 - Diferenças de plataforma se resolvem com CSS responsivo. Use `Capacitor.isNativePlatform()` só quando o comportamento muda de verdade (por exemplo, o login com Google).
 - Botão de sair é sempre o `LogoutButton` de `ui/buttons/` (`variant="card"` ou `"nav"`, e `className` só para ajustes como `mt-auto`). Não crie outro.
-- Sombras e brilhos usam as cores do tema (`shadow-primary/20`), nunca `rgba(...)`. A única exceção são as cores oficiais do logo do Google.
+- Sombras e brilhos usam as cores do tema (`shadow-primary/20`), nunca `rgba(...)`. O ícone do Google vem do `react-icons` (`FcGoogle`): não se desenha em SVG com cores soltas.
 
 ## Código
 
@@ -101,7 +105,7 @@ Use apenas classes de cor desta tabela. Classes como `text-muted` só podem ser 
 - Textos da interface em português do Brasil. Nomes de código (arquivos, variáveis, componentes) em inglês.
 - Validação de formulários com `react-hook-form` + `zod`.
 - Ícones com `react-icons`. Animações com `framer-motion`. O pacote `motion` (importado de `motion/react`) também está instalado e hoje só o `AuthGuard` o usa. Em código novo, prefira `framer-motion`.
-- Não instale bibliotecas novas sem avisar e justificar.
+- Não instale bibliotecas novas sem avisar e justificar. A única adicionada com justificativa recente é a `@capacitor/local-notifications`, o plugin oficial do Capacitor para o lembrete diário de estudo no celular.
 
 ## Verificação automática dos padrões
 

@@ -1,8 +1,8 @@
 import { FiLock } from "react-icons/fi";
 import { AddCourseButton } from "@/components/courses/components/AddCourseButton";
-import { CourseIcon } from "@/components/ui/display/CourseIcon";
 import { LOCK_MESSAGES } from "@/components/courses/data/lock-messages";
 import type { Course } from "@/components/courses/types";
+import { CourseIcon } from "@/components/ui/display/CourseIcon";
 
 interface CatalogCourseCardProps {
     readonly course: Course;

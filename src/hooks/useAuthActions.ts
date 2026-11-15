@@ -44,7 +44,8 @@ export function useAuthActions() {
             await action();
         } catch (err) {
             const silent =
-                err instanceof FirebaseError && SILENT_ERRORS.includes(err.code);
+                err instanceof FirebaseError &&
+                SILENT_ERRORS.includes(err.code);
 
             if (!silent) setError(getErrorMessage(err));
         } finally {

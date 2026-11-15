@@ -1,4 +1,3 @@
-
 interface LoginHeaderProps {
     mode: "login" | "register";
 }
@@ -17,9 +16,7 @@ export function LoginHeader({ mode }: LoginHeaderProps) {
             </div>
 
             <h1 className="text-2xl font-extrabold tracking-tight text-title sm:text-[27px]">
-                {isLogin
-                    ? "Bem-vindo à Codly"
-                    : "Crie sua conta na Codly"}
+                {isLogin ? "Bem-vindo à Codly" : "Crie sua conta na Codly"}
             </h1>
 
             <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-foreground/70">

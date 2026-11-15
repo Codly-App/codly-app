@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SETTINGS_KEY } from "@/hooks/useSettings";
-import { api } from "@/lib/api";
 import { SUMMARY_KEY } from "@/hooks/useSummary";
+import { api } from "@/lib/api";
 import type { SettingsPatch, UserSettings } from "@/types/settings";
 
 function applyPatch(

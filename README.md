@@ -90,6 +90,7 @@ Trabalhamos com tecnologias modernas para o desenvolvimento de aplicações web,
 - `@capacitor/splash-screen`: controla a tela de abertura (splash) do aplicativo.
 - `@capacitor/status-bar`: personaliza a barra de status do dispositivo (cor e estilo).
 - `@capacitor/preferences`: armazenamento local simples de chave e valor, usado para guardar dados de sessão.
+- `@capacitor/local-notifications`: agenda avisos no próprio celular, sem servidor. É usado no lembrete diário de estudo (às 19h), só no app Android e iOS.
 - `@capacitor/cli`: ferramenta de linha de comando para sincronizar o projeto e gerar os projetos nativos.
 - `@capacitor/android`: plataforma Android do Capacitor, que gera o projeto para o Android Studio.
 - `@capacitor/ios`: plataforma iOS do Capacitor, que gera o projeto para o Xcode.
@@ -153,6 +154,8 @@ codly-app/
    │  │  └─ page.tsx
    │  ├─ friends/
    │  │  └─ page.tsx
+   │  ├─ rank/
+   │  │  └─ page.tsx
    │  ├─ preferences/
    │  │  └─ page.tsx
    │  ├─ settings/
@@ -185,10 +188,14 @@ codly-app/
    │  │  ├─ data/            mock-data.ts
    │  │  └─ types/           index.ts
    │  ├─ rank/
-   │  │  └─ RankMain.tsx     (placeholder, ainda sem rota)
+   │  │  └─ RankMain.tsx     (placeholder com aviso "em breve")
    │  ├─ login/
    │  │  ├─ LoginMain.tsx
-   │  │  └─ sections/        LoginHeader, LoginForm
+   │  │  ├─ sections/        LoginHeader, LoginForm, EmailForm
+   │  │  ├─ components/      GoogleButton, AuthDivider, ModeSwitch, TextField, FormMessages, SubmitButton
+   │  │  ├─ schema/          register-validation.ts
+   │  │  ├─ data/            auth-errors.ts
+   │  │  └─ types/           index.ts
    │  ├─ profile/
    │  │  ├─ ProfileMain.tsx
    │  │  ├─ sections/        ProfileHeader, ProfileStats, ProfileLevelCard, ProfileMenu
@@ -222,7 +229,11 @@ codly-app/
    │  ├─ useCourses.ts
    │  ├─ useSetEnrollment.ts
    │  ├─ useSummary.ts
-   │  └─ useFriend.ts
+   │  ├─ useFriend.ts
+   │  ├─ useAuthActions.ts
+   │  ├─ useReduceMotion.ts
+   │  ├─ useSoundEffects.ts
+   │  └─ useStudyReminder.ts
    ├─ types/
    │  ├─ settings.ts
    │  └─ summary.ts
@@ -231,9 +242,12 @@ codly-app/
    │  ├─ firebase.ts
    │  ├─ query-client.ts
    │  ├─ normalize-text.ts
+   │  ├─ sounds.ts
+   │  ├─ study-reminder.ts
    │  └─ supabase/
    ├─ providers/
    │  ├─ Providers.tsx
+   │  ├─ PreferencesProvider.tsx
    │  └─ ThemeSync.tsx
    └─ theme/
       └─ theme.ts
@@ -273,7 +287,7 @@ O projeto confere sozinho se o código segue as regras do `CLAUDE.md`. O mesmo t
 | Hook `pre-push` | A cada `git push` (confere os tipos com o `tsc`) | **Avisa** e o envio segue | **Bloqueia** o envio |
 | Ação do GitHub (`padroes.yml`) | Em todo Pull Request para a `main` | Informativo (X ou ✔) | Pode ser exigida na proteção da branch (Settings, Branches) |
 
-**O que ele confere (21 verificações):** nada de Firestore no app, sem `../` nos imports, um componente por arquivo, nome do arquivo igual ao componente, só o `XxxMain.tsx` na raiz da tela, `export default` só em `page` e `layout`, arquivos de até 120 linhas, sem `any`, só as cores da plataforma, sem cor solta (`#hex` ou `rgba`), `dvh` em vez de `vh`, `max-w-md` só no `AppShell` e no `SubPageLayout`, `BottomNav` só no `AppShell`, sem `useMemo` e `useCallback`, sem CSS inline, hooks `useXxx`, tipos em `.ts`, segredos fora do código, arquivos secretos fora do Git e o `output: "export"` do Next.
+**O que ele confere (22 verificações):** nada de Firestore no app, sem `../` nos imports, um componente por arquivo, nome do arquivo igual ao componente, só o `XxxMain.tsx` na raiz da tela, `export default` só em `page` e `layout`, arquivos de até 120 linhas, sem `any`, só as cores da plataforma, sem cor solta (`#hex` ou `rgba`), `dvh` em vez de `vh`, `max-w-md` só no `AppShell` e no `SubPageLayout`, `BottomNav` só no `AppShell`, sem `useMemo` e `useCallback`, sem CSS inline, sem `!important`, hooks `useXxx`, tipos em `.ts`, segredos fora do código, arquivos secretos fora do Git e o `output: "export"` do Next.
 
 **Como usar:**
 
@@ -281,7 +295,7 @@ O projeto confere sozinho se o código segue as regras do `CLAUDE.md`. O mesmo t
 - Os hooks são ligados sozinhos no `npm install`.
 - Para pular de propósito: `git commit --no-verify` ou `git push --no-verify`. Na `develop` normalmente nem é preciso, porque só avisa. O erro não some: ele aparece de novo no Pull Request para a `main`.
 
-**Lista de exceções (`tests/conventions-baseline.json`):** guarda o que já está fora do padrão ou é uma exceção justificada, para a verificação não travar o que já existia. Cada entrada tem o **motivo**, começando com `dívida:` (a corrigir) ou `exceção:` (justificada, como as cores oficiais do logo do Google e o `themeColor` do navegador). Regra nova que não esteja na lista falha. Quando uma dívida é corrigida, o teste exige tirá-la da lista, então ela só diminui.
+**Lista de exceções (`tests/conventions-baseline.json`):** guarda o que já está fora do padrão ou é uma exceção justificada, para a verificação não travar o que já existia. Cada entrada tem o **motivo**, começando com `dívida:` (a corrigir) ou `exceção:` (justificada, como o `themeColor` do navegador, que exige hex, e a largura do cartão do login, que não usa o `AppShell`). Regra nova que não esteja na lista falha. Quando uma dívida é corrigida, o teste exige tirá-la da lista, então ela só diminui.
 
 ### Para que serve cada pasta e arquivo
 
@@ -301,21 +315,22 @@ O projeto confere sozinho se o código segue as regras do `CLAUDE.md`. O mesmo t
 | `src/components/courses/` | Tela de cursos, onde o usuário gerencia os cursos dele. Duas abas: **Meus cursos** (progresso, Continuar, que abre a trilha, e Remover com confirmação, mantendo o progresso salvo) e **Explorar** (barra de busca por título e descrição, que ignora acentos e maiúsculas, e Adicionar). Cada curso vem da API com um `lockReason`: `plan` (curso exclusivo do plano Pro) ou `limit` (o plano gratuito atingiu o limite de cursos ao mesmo tempo), e a tela só mostra a mensagem (`data/lock-messages.ts`). Quem aplica as regras é a API. Os ícones são escolhidos pela chave `iconKey`, pelo `CourseIcon` de `ui/display/`, que a tela inicial também usa. Enquanto a API não responde, usa dados fictícios (`data/mock-data.ts`) e mostra um aviso. |
 | `src/app/trail/` | Rota `/trail?course=<id>`: protegida pelo `AuthGuard`, só monta o `TrailMain`. O curso vem da URL (por isso a página usa `Suspense`, exigido pela exportação estática). |
 | `src/components/trail/` | Trilha do curso, em estilo de caminho. Cada unidade (`TrailUnitSection`) tem um banner (`UnitBanner`) e as lições em zigue-zague (`NODE_X` em `data/trail-layout.ts`), ligadas por uma linha pontilhada curva (`TrailConnector`) que fica roxa até onde o aluno já chegou. Cada lição (`TrailNode`) pode estar **feita** (check), **atual** (play, com pulso e o balão "Começar") ou **bloqueada** (cadeado), e o último item de cada unidade é um desafio, maior e com troféu. O status vem do `lessonsDone` do curso (`withProgress` em `data/trail-progress.ts`, que também tem o `getNextLesson`, usado pela tela inicial), e o resumo no topo mostra progresso, próxima lição e XP ganho. Hoje existe só a trilha de SQL, com 6 unidades e 24 lições fixas (`data/sql-trail.ts`, registrada em `data/trails.ts`). Cursos sem trilha mostram "Trilha em construção". As animações respeitam a preferência de movimento reduzido do sistema. Tocar numa lição leva a `/lessons`, que ainda não existe. |
-| `src/app/friends/` | Rota `/friends`: só monta o `FriendsMain`. É aberta pelo botão Amigos do menu. |
+| `src/app/friends/` | Rota `/friends`: protegida pelo `AuthGuard`, só monta o `FriendsMain`. É aberta pelo botão Amigos do menu. |
 | `src/components/friends/` | Tela de amigos: `FriendsMain` compõe o cabeçalho, a busca (por nome, usuário ou código, sem acento nem maiúscula, com `normalizeText`) e a lista de pessoas (`FriendCard`), com ações de enviar pedido, ver perfil e mensagem. Hoje usa dados fictícios (`data/mock-data.ts`) pelo hook `useFriends`, e o perfil público e as mensagens ainda mostram só um aviso. |
-| `src/components/rank/` | Tela de ranking: por enquanto só o `RankMain`, um placeholder. O menu já aponta para `/ranking`, mas a rota (`src/app/ranking/page.tsx`) ainda não existe. |
-| `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). `LoginMain` monta o cartão centralizado, que tem o próprio layout (sem menu), e as sections `LoginHeader` e `LoginForm` ficam em `sections/`. |
+| `src/app/rank/` | Rota da tela de ranking, protegida pelo `AuthGuard`. Atenção: a pasta se chama `rank`, mas o menu abre `/ranking`, então o botão ainda leva a um erro 404 até renomear a pasta para `ranking`. |
+| `src/components/rank/` | Tela de ranking: por enquanto só o `RankMain`, com o aviso "Ranking em breve" (a classificação por XP depende da API). |
+| `src/components/login/` | Tela de login e cadastro (Google e e-mail e senha). `LoginMain` monta o cartão centralizado, que tem o próprio layout (sem menu). O `LoginForm` guarda o modo (entrar ou criar conta) e os campos, e junta o `LoginHeader`, o botão do Google (`GoogleButton`, com o `FcGoogle` do `react-icons`), o divisor, a troca de modo e o `EmailForm` (campos com o `TextField`, mensagens e botão de enviar). A regra do Firebase (entrar com Google ou e-mail, criar conta com verificação por e-mail e redefinir senha) fica no hook `useAuthActions`, as mensagens de erro em `data/auth-errors.ts` e a validação do cadastro em `schema/register-validation.ts` (a pasta ainda está no singular e deve virar `schemas`). |
 | `src/components/profile/` | Tela de perfil: `ProfileMain` compõe o cabeçalho (avatar, nome com edição, e-mail e plano), as estatísticas, o progresso de nível, o menu (preferências, configurações e segurança e privacidade) e o botão de sair. A edição do nome usa `react-hook-form` + `zod` (`schemas/`) e a API (`PATCH /me`). Nome, e-mail e foto vêm do Firebase Auth, e o plano, o XP, o nível e a sequência vêm do resumo da API (`useSummary`). O texto do plano fica em `data/plan-labels.ts`. |
 | `src/app/preferences/`, `src/app/settings/`, `src/app/security-privacy/` | Rotas `/preferences`, `/settings` e `/security-privacy`: protegidas pelo `AuthGuard`, abertas pelo menu do perfil. |
-| `src/components/preferences/` | Preferências de estudo: tema (claro, escuro ou sistema), meta diária de XP (20, 50 ou 100, que muda a barra da tela inicial), efeitos sonoros e reduzir animações. As escolhas são salvas pela API (`PATCH /me/settings`). |
-| `src/components/settings/` | Configurações da conta: notificações (lembrete de estudo, conquistas e atividade dos amigos) e exclusão da conta, com confirmação em dois passos. |
+| `src/components/preferences/` | Preferências de estudo: tema (claro, escuro ou sistema), meta diária de XP (20, 50 ou 100, que muda a barra da tela inicial), efeitos sonoros e reduzir animações. As escolhas são salvas pela API (`PATCH /me/settings`). **Reduzir animações** vale para o app todo (chama, pulso e balão da trilha, barra de progresso e as transições dos botões) e soma com a preferência do sistema. **Efeitos sonoros** tocam ao adicionar um curso e, ao ligar a opção, um som de teste (a tela de lições vai usar acerto, erro e conclusão). O tema depende de o `ThemeProvider` do `next-themes` estar montado nos providers, o que hoje não acontece. |
+| `src/components/settings/` | Configurações da conta: notificações (lembrete de estudo, conquistas e atividade dos amigos) e exclusão da conta, com confirmação em dois passos. O **lembrete de estudo** agenda um aviso diário às 19h no celular (só no app Android e iOS, e pede a permissão ao ligar). **Conquistas e níveis** e **atividade dos amigos** só guardam a escolha: os avisos dependem de a API enviar notificações (push) quando esses eventos existirem. |
 | `src/components/security-privacy/` | Privacidade e segurança: flags de privacidade (mostrar online, mostrar o curso atual, aparecer no ranking, mostrar a sequência e permitir pedidos de amizade), status do e-mail e redefinição de senha por e-mail (só para quem entra com e-mail e senha). |
 | `src/components/ui/navigation/AppShell.tsx` | Casca de layout das telas principais (Início, Cursos, Ranking, Amigos e Perfil, itens de `nav-items.ts`): mostra a barra inferior no celular e o menu lateral a partir de 768 px (`md`), e define a largura do conteúdo (coluna estreita no celular, mais larga no computador), já respeitando a área segura do celular. A tela só passa o conteúdo. As telas internas usam o `SubPageLayout`, e o login não usa nenhum dos dois porque não tem menu. |
 | `src/components/ui/` | Componentes compartilhados entre telas, divididos por tipo: `navigation/` (`AppShell`, barra inferior, menu lateral, lista de itens do menu, item de menu e layout das telas internas com botão de voltar), `buttons/` (botão de ícone, alternador de tema, interruptor, linha com interruptor, seletor segmentado, campo de busca e botão de sair, com as variantes `card` e `nav` e a prop `className`) e `display/` (avatar, barra de progresso, indicador de estatística, grupo de configurações, estado vazio e o foguinho da sequência: `StreakFlame` e `StreakIcon`, que mostra a chama com mais de 3 dias e um raio nas sequências curtas). |
-| `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`, nome e foto), `useSummary` (`GET /me/summary`, XP, sequência, meta do dia e cursos ativos), `useUpdateName` (`PATCH /me`), `useSettings` (`GET /me/settings`), `useUpdateSettings` (`PATCH /me/settings`, e recarrega também o resumo, porque a meta diária aparece nele), `useCourses` (`GET /courses`), `useSetEnrollment` (`PUT` e `DELETE /me/courses/:courseId`, e recarrega também o resumo) e `useFriends` (amigos, hoje com dados fictícios, ainda sem a API). Os que gravam usam atualização otimista: a tela muda na hora e volta atrás se a API falhar. |
+| `src/hooks/` | Hooks que chamam a API com React Query: `useProfile` (`GET /me`, nome e foto), `useSummary` (`GET /me/summary`, XP, sequência, meta do dia e cursos ativos), `useUpdateName` (`PATCH /me`), `useSettings` (`GET /me/settings`), `useUpdateSettings` (`PATCH /me/settings`, e recarrega também o resumo, porque a meta diária aparece nele), `useCourses` (`GET /courses`), `useSetEnrollment` (`PUT` e `DELETE /me/courses/:courseId`, e recarrega também o resumo) e `useFriends` (amigos, hoje com dados fictícios, ainda sem a API). Os hooks de preferência são `useReduceMotion` (sistema ou opção ligada), `useSoundEffects` (toca só se a opção estiver ligada) e `useStudyReminder` (liga ou desliga o lembrete quando a opção muda), e o `useAuthActions` guarda a lógica do Firebase da tela de login. Os que gravam usam atualização otimista: a tela muda na hora e volta atrás se a API falhar. |
 | `src/types/` | Tipos TypeScript globais usados em mais de uma tela, como `settings.ts` (privacidade, preferências e notificações) e `summary.ts` (o resumo do aluno: plano, estatísticas, meta do dia e cursos ativos). |
-| `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`), o cliente do Supabase (`supabase/`) e o `normalize-text.ts`, que tira acentos e maiúsculas para comparar textos nas buscas. |
-| `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. |
+| `src/lib/` | Código de infraestrutura, sem interface: cliente HTTP (`api.ts`), Firebase Auth (`firebase.ts`), cache de dados (`query-client.ts`), o cliente do Supabase (`supabase/`), o `normalize-text.ts`, que tira acentos e maiúsculas para comparar textos nas buscas, o `sounds.ts` (gera os efeitos sonoros no próprio aparelho, sem arquivos de áudio) e o `study-reminder.ts` (liga, desliga e pede permissão para o lembrete diário, só no app nativo). |
+| `src/providers/` | Componentes que envolvem o app e fornecem recursos a todas as telas: MUI, tema claro/escuro e React Query. O `PreferencesProvider` fica dentro do `AuthGuard` (só para quem está logado) e aplica as preferências: liga a classe `reduce-motion` no `<html>` e o `MotionConfig` quando "reduzir animações" está ativo (ou o sistema pediu menos movimento) e agenda o lembrete de estudo. |
 | `src/theme/` | Tema do Material UI: cores, tipografia e modo claro/escuro. |
 | `.env.example` | Modelo das variáveis de ambiente. Copie para `.env.local` e preencha (o `.env` nunca vai para o Git). |
 
@@ -323,7 +338,7 @@ O projeto confere sozinho se o código segue as regras do `CLAUDE.md`. O mesmo t
 
 **Organização dentro de cada tela:** só o arquivo `XxxMain.tsx` fica na raiz da pasta. O restante vai em subpastas: `sections/` (blocos grandes da tela), `components/` (peças menores usadas pelas sections), `data/` (dados fictícios e listas de opções), `types/` (tipos da tela) e `schemas/` (validações `zod`).
 
-Conforme o app crescer, as próximas telas previstas são `lessons` e a rota `ranking` (o `friends` já existe, com dados fictícios), seguindo a mesma organização em subpastas. A rota em `src/app/` apenas monta o componente da tela.
+Conforme o app crescer, a próxima tela prevista é `lessons` (o `friends` já existe, com dados fictícios, e o `rank` é um placeholder), seguindo a mesma organização em subpastas. A rota em `src/app/` apenas monta o componente da tela.
 
 ### Rotas da API usadas pelas telas
 

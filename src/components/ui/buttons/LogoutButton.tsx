@@ -8,10 +8,13 @@ import { auth } from "@/lib/firebase";
 
 interface LogoutButtonProps {
     readonly variant?: "card" | "nav";
-    readonly className?:string;
+    readonly className?: string;
 }
 
-export function LogoutButton({ variant = "card", className }: LogoutButtonProps) {
+export function LogoutButton({
+    variant = "card",
+    className,
+}: LogoutButtonProps) {
     const router = useRouter();
     const isNav = variant === "nav";
 
@@ -28,7 +31,8 @@ export function LogoutButton({ variant = "card", className }: LogoutButtonProps)
                 "flex w-full items-center transition",
                 isNav
                     ? "gap-3 rounded-xl px-3 py-3 font-medium text-danger hover:bg-surface sm:cursor-pointer"
-                    : "justify-center gap-2 rounded-2xl bg-surface p-4 font-semibold text-title active:scale-95",className,
+                    : "justify-center gap-2 rounded-2xl bg-surface p-4 font-semibold text-title active:scale-95",
+                className,
             )}
         >
             <FiLogOut aria-hidden className={clsx(isNav && "text-xl")} />
