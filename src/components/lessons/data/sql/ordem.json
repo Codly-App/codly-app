@@ -1,0 +1,136 @@
+[
+    {
+        "id": "ordem-1",
+        "intro": "O ORDER BY ordena o resultado. Por padrão vai do menor para o maior (ASC). Use DESC para ir do maior para o menor.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual lista os alunos do mais velho para o mais novo?",
+                "options": [
+                    "SELECT * FROM alunos ORDER BY idade DESC;",
+                    "SELECT * FROM alunos ORDER BY idade ASC;",
+                    "SELECT * FROM alunos SORT idade;",
+                    "SELECT * FROM alunos GROUP BY idade;"
+                ],
+                "explanation": "DESC ordena do maior para o menor."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "SELECT * FROM alunos ___ BY nome ___;",
+                "blanks": ["ORDER", "ASC"],
+                "extra": ["GROUP", "DESC"],
+                "explanation": "ORDER BY ordena, e ASC é do menor para o maior (de A a Z, no texto)."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": ["SELECT * FROM alunos", "ORDER BY idade", "DESC;"],
+                "explanation": "O ORDER BY fica depois do FROM e do WHERE."
+            }
+        ]
+    },
+    {
+        "id": "ordem-2",
+        "intro": "O LIMIT define quantas linhas voltam. O OFFSET pula linhas do começo. Juntos servem para dividir o resultado em páginas.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "O que faz LIMIT 5?",
+                "options": [
+                    "Traz no máximo 5 linhas",
+                    "Pula 5 linhas",
+                    "Traz só a coluna 5",
+                    "Apaga 5 linhas"
+                ],
+                "explanation": "O LIMIT corta o resultado no número de linhas pedido."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para pular 10 linhas e trazer 5:",
+                "template": "SELECT * FROM alunos LIMIT 5 ___ 10;",
+                "blanks": ["OFFSET"],
+                "extra": ["ORDER", "SKIP"],
+                "explanation": "O OFFSET pula as primeiras linhas antes de contar o LIMIT."
+            },
+            {
+                "kind": "choice",
+                "prompt": "Com LIMIT 3 OFFSET 3, quais linhas voltam?",
+                "options": [
+                    "A 4ª, a 5ª e a 6ª",
+                    "A 1ª, a 2ª e a 3ª",
+                    "A 3ª, a 4ª e a 5ª",
+                    "Só a 3ª"
+                ],
+                "explanation": "O OFFSET 3 pula 3 linhas e o LIMIT 3 traz as 3 seguintes."
+            }
+        ]
+    },
+    {
+        "id": "ordem-3",
+        "intro": "O DISTINCT tira as repetições do resultado. SELECT DISTINCT cidade FROM alunos; mostra cada cidade uma só vez.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Para listar cada cidade uma única vez, use:",
+                "options": [
+                    "SELECT DISTINCT cidade FROM alunos;",
+                    "SELECT UNIQUE cidade FROM alunos;",
+                    "SELECT cidade ONCE FROM alunos;",
+                    "SELECT cidade FROM alunos DISTINCT;"
+                ],
+                "explanation": "O DISTINCT vem logo depois do SELECT."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "SELECT ___ cidade FROM alunos;",
+                "blanks": ["DISTINCT"],
+                "extra": ["LIMIT", "ORDER"],
+                "explanation": "DISTINCT remove as linhas repetidas."
+            },
+            {
+                "kind": "choice",
+                "prompt": "Se 5 alunos moram em Recife, quantas linhas 'Recife' aparecem com DISTINCT?",
+                "options": ["1", "5", "0", "Depende da idade"],
+                "explanation": "Com DISTINCT, cada valor aparece só uma vez."
+            }
+        ]
+    },
+    {
+        "id": "ordem-desafio",
+        "intro": "Desafio: use ORDER BY e LIMIT para montar um top 10.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Como trazer as 10 vendas de maior valor?",
+                "code": "vendas (id, produto, valor)",
+                "options": [
+                    "SELECT * FROM vendas ORDER BY valor DESC LIMIT 10;",
+                    "SELECT * FROM vendas LIMIT 10 ORDER BY valor DESC;",
+                    "SELECT TOP 10 vendas ORDER valor;",
+                    "SELECT * FROM vendas ORDER BY valor ASC LIMIT 10;"
+                ],
+                "explanation": "Primeiro ordena do maior para o menor (DESC), depois limita a 10."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "SELECT produto FROM vendas ___ BY valor DESC ___ 10;",
+                "blanks": ["ORDER", "LIMIT"],
+                "extra": ["GROUP", "OFFSET"],
+                "explanation": "ORDER BY ordena e LIMIT corta o resultado."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": [
+                    "SELECT * FROM vendas",
+                    "ORDER BY valor DESC",
+                    "LIMIT 10;"
+                ],
+                "explanation": "O LIMIT é sempre o último da consulta."
+            }
+        ]
+    }
+]

@@ -1,0 +1,132 @@
+[
+    {
+        "id": "where-1",
+        "intro": "O WHERE filtra as linhas. Você compara com =, >, <, >= e <=, e usa <> para diferente. Texto vai entre aspas simples, como 'Recife'.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual consulta traz os alunos maiores de 18 anos?",
+                "options": [
+                    "SELECT * FROM alunos WHERE idade > 18;",
+                    "SELECT * FROM alunos FILTER idade > 18;",
+                    "SELECT idade > 18 FROM alunos;",
+                    "WHERE idade > 18 FROM alunos;"
+                ],
+                "explanation": "O WHERE vem depois do FROM e traz a condição."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "SELECT * FROM alunos ___ cidade = 'Recife';",
+                "blanks": ["WHERE"],
+                "extra": ["ORDER BY", "GROUP BY"],
+                "explanation": "O WHERE filtra as linhas pela condição."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": ["SELECT * FROM alunos", "WHERE", "idade >= 18;"],
+                "explanation": "O filtro sempre vem depois da tabela."
+            }
+        ]
+    },
+    {
+        "id": "where-2",
+        "intro": "O AND exige que as duas condições sejam verdadeiras. O OR basta que uma seja. O NOT inverte a condição.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Para trazer alunos de Recife E maiores de 18, qual operador entre as condições?",
+                "options": ["AND", "OR", "NOT", "IN"],
+                "explanation": "O AND só aceita a linha se as duas condições forem verdadeiras."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para trazer alunos de Recife OU de Natal:",
+                "template": "WHERE cidade = 'Recife' ___ cidade = 'Natal'",
+                "blanks": ["OR"],
+                "extra": ["AND", "NOT"],
+                "explanation": "Com OR, basta uma das condições ser verdadeira."
+            },
+            {
+                "kind": "choice",
+                "prompt": "O que faz NOT idade > 18?",
+                "options": [
+                    "Traz quem tem 18 anos ou menos",
+                    "Traz quem tem mais de 18",
+                    "Traz todos os alunos",
+                    "Dá erro"
+                ],
+                "explanation": "O NOT inverte: quem não tem mais de 18 tem 18 ou menos."
+            }
+        ]
+    },
+    {
+        "id": "where-3",
+        "intro": "O LIKE busca por um padrão: o símbolo % vale por qualquer quantidade de letras. O IN confere se o valor está em uma lista.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual consulta traz os nomes que começam com A?",
+                "options": [
+                    "WHERE nome LIKE 'A%'",
+                    "WHERE nome = 'A%'",
+                    "WHERE nome IN 'A'",
+                    "WHERE nome STARTS 'A'"
+                ],
+                "explanation": "LIKE 'A%' aceita qualquer nome que comece com A."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para trazer alunos de Recife ou Natal:",
+                "template": "WHERE cidade ___ ('Recife', 'Natal')",
+                "blanks": ["IN"],
+                "extra": ["LIKE", "AS"],
+                "explanation": "O IN confere se a cidade está na lista entre parênteses."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": ["SELECT * FROM alunos", "WHERE nome", "LIKE 'M%';"],
+                "explanation": "Primeiro a tabela, depois a coluna e o padrão do LIKE."
+            }
+        ]
+    },
+    {
+        "id": "where-desafio",
+        "intro": "Desafio: combine WHERE, AND, LIKE e IN para achar o registro certo.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual traz quem mora em Recife, tem mais de 18 anos e o nome começa com M?",
+                "code": "alunos (id, nome, cidade, idade)",
+                "options": [
+                    "WHERE cidade = 'Recife' AND idade > 18 AND nome LIKE 'M%'",
+                    "WHERE cidade = 'Recife' OR idade > 18 OR nome LIKE 'M%'",
+                    "WHERE cidade IN 'Recife' AND idade > 18",
+                    "WHERE nome = 'M%' AND cidade = Recife"
+                ],
+                "explanation": "As três condições precisam valer juntas, por isso AND."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "SELECT * FROM alunos ___ cidade ___ ('Recife', 'Natal') ___ idade >= 18;",
+                "blanks": ["WHERE", "IN", "AND"],
+                "extra": ["OR", "LIKE"],
+                "explanation": "Cidade na lista E idade de pelo menos 18."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": [
+                    "SELECT nome",
+                    "FROM alunos",
+                    "WHERE idade > 18",
+                    "AND cidade = 'Natal';"
+                ],
+                "explanation": "O AND liga a segunda condição à primeira."
+            }
+        ]
+    }
+]

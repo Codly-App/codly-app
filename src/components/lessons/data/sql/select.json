@@ -1,0 +1,137 @@
+[
+    {
+        "id": "select-1",
+        "intro": "O SELECT pede dados e o FROM diz de qual tabela eles vêm. O asterisco (*) significa todas as colunas. Exemplo: SELECT * FROM alunos;",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "O que esta consulta faz?",
+                "code": "SELECT * FROM alunos;",
+                "options": [
+                    "Traz todas as colunas e linhas de alunos",
+                    "Apaga a tabela alunos",
+                    "Traz só o nome dos alunos",
+                    "Cria a tabela alunos"
+                ],
+                "explanation": "O * pede todas as colunas, e o FROM escolhe a tabela alunos."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete a consulta:",
+                "template": "___ * ___ alunos;",
+                "blanks": ["SELECT", "FROM"],
+                "extra": ["WHERE", "INTO"],
+                "explanation": "SELECT escolhe o que trazer e FROM diz de onde."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta na ordem certa:",
+                "items": ["SELECT", "*", "FROM", "alunos;"],
+                "explanation": "A ordem é sempre SELECT, as colunas, FROM e a tabela."
+            }
+        ]
+    },
+    {
+        "id": "select-2",
+        "intro": "Em vez do *, escreva os nomes das colunas separados por vírgula. Assim você traz só o que precisa.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual consulta traz só o nome e a cidade?",
+                "options": [
+                    "SELECT nome, cidade FROM alunos;",
+                    "SELECT * FROM alunos;",
+                    "SELECT alunos FROM nome;",
+                    "FROM alunos SELECT nome;"
+                ],
+                "explanation": "Liste as colunas depois do SELECT, separadas por vírgula."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para trazer nome e cidade:",
+                "template": "SELECT nome, ___ FROM alunos;",
+                "blanks": ["cidade"],
+                "extra": ["alunos", "*"],
+                "explanation": "A segunda coluna pedida é a cidade."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": ["SELECT", "nome,", "cidade", "FROM", "alunos;"],
+                "explanation": "Primeiro o SELECT, depois as colunas e por último o FROM com a tabela."
+            }
+        ]
+    },
+    {
+        "id": "select-3",
+        "intro": "O AS dá um apelido a uma coluna no resultado, sem mudar a tabela. Exemplo: SELECT nome AS aluno FROM alunos;",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "O que o AS faz?",
+                "code": "SELECT nome AS aluno FROM alunos;",
+                "options": [
+                    "Dá um apelido à coluna no resultado",
+                    "Apaga a coluna",
+                    "Ordena o resultado",
+                    "Filtra as linhas"
+                ],
+                "explanation": "O AS só muda o nome mostrado, a tabela continua igual."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "SELECT nome ___ aluno FROM alunos;",
+                "blanks": ["AS"],
+                "extra": ["IN", "OR"],
+                "explanation": "O AS vem entre a coluna e o apelido."
+            },
+            {
+                "kind": "choice",
+                "prompt": "Qual será o nome da coluna no resultado?",
+                "code": "SELECT idade AS anos FROM alunos;",
+                "options": ["anos", "idade", "AS", "alunos"],
+                "explanation": "O apelido é o que vem depois do AS."
+            }
+        ]
+    },
+    {
+        "id": "select-desafio",
+        "intro": "Desafio: use o que você aprendeu sobre SELECT, colunas e apelidos.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual consulta mostra a cidade de cada aluno com o apelido local?",
+                "options": [
+                    "SELECT cidade AS local FROM alunos;",
+                    "SELECT local AS cidade FROM alunos;",
+                    "SELECT cidade local alunos;",
+                    "SELECT * AS local FROM alunos;"
+                ],
+                "explanation": "O apelido vai depois do AS, ao lado da coluna que ele renomeia."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para trazer id e nome:",
+                "template": "___ id, nome ___ alunos;",
+                "blanks": ["SELECT", "FROM"],
+                "extra": ["WHERE", "AS"],
+                "explanation": "SELECT escolhe as colunas e FROM escolhe a tabela."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": [
+                    "SELECT",
+                    "id,",
+                    "nome",
+                    "AS",
+                    "aluno",
+                    "FROM",
+                    "alunos;"
+                ],
+                "explanation": "O apelido fica logo depois da coluna, antes do FROM."
+            }
+        ]
+    }
+]

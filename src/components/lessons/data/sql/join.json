@@ -1,0 +1,138 @@
+[
+    {
+        "id": "join-1",
+        "intro": "Dados relacionados ficam em tabelas separadas, ligadas por uma chave estrangeira: uma coluna que guarda o id de outra tabela. Em matriculas, a coluna aluno_id aponta para o id de alunos.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "O que é uma chave estrangeira?",
+                "options": [
+                    "Uma coluna que guarda o id de outra tabela",
+                    "Uma coluna sem valor",
+                    "A primeira coluna de qualquer tabela",
+                    "Uma senha do banco"
+                ],
+                "explanation": "Ela liga uma linha de uma tabela à linha de outra."
+            },
+            {
+                "kind": "choice",
+                "prompt": "Em matriculas, qual coluna liga a tabela alunos?",
+                "code": "matriculas (aluno_id, curso_id, nota)",
+                "options": ["aluno_id", "nota", "curso_id", "id"],
+                "explanation": "O aluno_id guarda o id do aluno que fez a matrícula."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "A coluna aluno_id é uma chave ___ que aponta para a coluna ___ da tabela alunos.",
+                "blanks": ["estrangeira", "id"],
+                "extra": ["primária", "nome"],
+                "explanation": "Ela aponta para a chave primária (o id) da outra tabela."
+            }
+        ]
+    },
+    {
+        "id": "join-2",
+        "intro": "O INNER JOIN junta duas tabelas e traz só as linhas que têm par nas duas. O ON diz qual coluna liga uma tabela à outra.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "O que o INNER JOIN traz?",
+                "options": [
+                    "Só as linhas com par nas duas tabelas",
+                    "Todas as linhas da primeira tabela",
+                    "Todas as linhas da segunda tabela",
+                    "Nenhuma linha"
+                ],
+                "explanation": "Linhas sem par em uma das tabelas ficam de fora."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "SELECT alunos.nome FROM alunos ___ JOIN matriculas ___ matriculas.aluno_id = alunos.id;",
+                "blanks": ["INNER", "ON"],
+                "extra": ["LEFT", "WHERE"],
+                "explanation": "INNER JOIN junta as tabelas e ON diz como elas se ligam."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": [
+                    "SELECT alunos.nome",
+                    "FROM alunos",
+                    "INNER JOIN matriculas",
+                    "ON matriculas.aluno_id = alunos.id;"
+                ],
+                "explanation": "O JOIN vem depois do FROM, e o ON logo em seguida."
+            }
+        ]
+    },
+    {
+        "id": "join-3",
+        "intro": "O LEFT JOIN traz todas as linhas da tabela da esquerda, mesmo as que não têm par na da direita. Onde não há par, o resultado vem vazio (NULL).",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Para listar todos os alunos, mesmo os sem matrícula, use:",
+                "options": ["LEFT JOIN", "INNER JOIN", "ORDER BY", "DISTINCT"],
+                "explanation": "O LEFT JOIN mantém todas as linhas da tabela da esquerda (alunos)."
+            },
+            {
+                "kind": "choice",
+                "prompt": "Um aluno sem matrícula, num LEFT JOIN, aparece com a nota:",
+                "options": [
+                    "Vazia (NULL)",
+                    "0",
+                    "Igual à do aluno anterior",
+                    "Ele não aparece"
+                ],
+                "explanation": "Sem par, as colunas da outra tabela vêm como NULL."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "SELECT alunos.nome, matriculas.nota FROM alunos ___ JOIN matriculas ON matriculas.aluno_id = alunos.id;",
+                "blanks": ["LEFT"],
+                "extra": ["INNER", "ORDER"],
+                "explanation": "LEFT JOIN traz todos os alunos, tenham ou não matrícula."
+            }
+        ]
+    },
+    {
+        "id": "join-desafio",
+        "intro": "Desafio final: use JOIN, GROUP BY e funções de resumo no banco completo.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual consulta mostra o nome do aluno e o título do curso?",
+                "code": "alunos (id, nome)\nmatriculas (aluno_id, curso_id)\ncursos (id, titulo)",
+                "options": [
+                    "SELECT alunos.nome, cursos.titulo FROM alunos INNER JOIN matriculas ON matriculas.aluno_id = alunos.id INNER JOIN cursos ON matriculas.curso_id = cursos.id;",
+                    "SELECT nome, titulo FROM alunos, cursos;",
+                    "SELECT alunos.nome, cursos.titulo FROM alunos INNER JOIN cursos;",
+                    "SELECT * FROM matriculas;"
+                ],
+                "explanation": "A matrícula liga o aluno ao curso, então precisamos de dois JOINs."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para contar as matrículas de cada aluno (inclusive de quem não tem):",
+                "template": "SELECT alunos.nome, COUNT(matriculas.curso_id) FROM alunos ___ JOIN matriculas ON matriculas.aluno_id = alunos.id ___ BY alunos.nome;",
+                "blanks": ["LEFT", "GROUP"],
+                "extra": ["INNER", "ORDER"],
+                "explanation": "LEFT JOIN mantém todos os alunos e GROUP BY conta por aluno."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta da nota média de cada curso:",
+                "items": [
+                    "SELECT cursos.titulo, AVG(matriculas.nota)",
+                    "FROM cursos",
+                    "INNER JOIN matriculas ON matriculas.curso_id = cursos.id",
+                    "GROUP BY cursos.titulo;"
+                ],
+                "explanation": "Junta as tabelas e agrupa por curso para calcular a média de cada um."
+            }
+        ]
+    }
+]

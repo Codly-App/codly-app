@@ -1,0 +1,135 @@
+[
+    {
+        "id": "banco-1",
+        "intro": "Um banco de dados é como um grande armário de arquivos: guarda informações organizadas para você encontrar e mudar tudo depois, de forma rápida. A linguagem que usamos para conversar com ele se chama SQL.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Para que serve um banco de dados?",
+                "options": [
+                    "Guardar e organizar informações",
+                    "Desenhar imagens",
+                    "Enviar e-mails",
+                    "Ligar o computador"
+                ],
+                "explanation": "Um banco guarda dados organizados, para consultar e alterar quando precisar."
+            },
+            {
+                "kind": "choice",
+                "prompt": "O que é SQL?",
+                "options": [
+                    "Uma linguagem para conversar com bancos de dados",
+                    "Um tipo de computador",
+                    "Um programa de edição de fotos",
+                    "Uma rede social"
+                ],
+                "explanation": "SQL (Structured Query Language) é a linguagem usada para pedir e alterar dados em um banco."
+            },
+            {
+                "kind": "order",
+                "prompt": "Coloque na ordem o caminho de um pedido ao banco:",
+                "items": [
+                    "Você escreve a consulta",
+                    "O banco procura os dados",
+                    "O banco devolve o resultado"
+                ],
+                "explanation": "Primeiro você pergunta, depois o banco procura e por fim responde."
+            }
+        ]
+    },
+    {
+        "id": "banco-2",
+        "intro": "Os dados ficam em tabelas. Cada coluna é um tipo de informação (como nome) e cada linha é um registro completo (como um aluno).",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Em uma tabela de alunos, o que representa uma linha?",
+                "options": [
+                    "Um aluno completo",
+                    "Só o nome de todos",
+                    "O nome da tabela",
+                    "Uma regra do banco"
+                ],
+                "explanation": "Cada linha é um registro inteiro, com todas as colunas de um aluno."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete a frase:",
+                "template": "Uma ___ guarda um tipo de informação e uma ___ guarda um registro completo.",
+                "blanks": ["coluna", "linha"],
+                "extra": ["tabela"],
+                "explanation": "Coluna é um tipo de dado (nome, idade). Linha é um registro inteiro."
+            },
+            {
+                "kind": "order",
+                "prompt": "Do maior para o menor, coloque na ordem:",
+                "items": ["Banco de dados", "Tabela", "Linha", "Valor"],
+                "explanation": "O banco tem tabelas, a tabela tem linhas e cada linha tem valores."
+            }
+        ]
+    },
+    {
+        "id": "banco-3",
+        "intro": "A chave primária é a coluna que identifica cada linha de forma única, como o CPF de uma pessoa. Ela nunca se repete e nunca fica vazia.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual coluna seria uma boa chave primária de alunos?",
+                "options": [
+                    "id (um número único por aluno)",
+                    "cidade",
+                    "idade",
+                    "nome"
+                ],
+                "explanation": "Cidade, idade e nome podem se repetir. O id é único para cada aluno."
+            },
+            {
+                "kind": "choice",
+                "prompt": "Uma chave primária pode se repetir?",
+                "options": [
+                    "Não, cada valor é único",
+                    "Sim, sempre",
+                    "Só se estiver vazia",
+                    "Só em tabelas pequenas"
+                ],
+                "explanation": "Se pudesse repetir, não identificaria uma linha só."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "A chave primária não pode ser ___ nem ___.",
+                "blanks": ["vazia", "repetida"],
+                "extra": ["grande", "maiúscula"],
+                "explanation": "Ela precisa existir e ser única em toda a tabela."
+            }
+        ]
+    },
+    {
+        "id": "banco-desafio",
+        "intro": "Hora do desafio! Leia o esquema da tabela e responda as perguntas. O esquema é só a lista das colunas.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual é a chave primária da tabela?",
+                "code": "alunos (id, nome, cidade, idade)",
+                "options": ["id", "nome", "cidade", "idade"],
+                "explanation": "O id identifica cada aluno de forma única."
+            },
+            {
+                "kind": "choice",
+                "prompt": "Quantas colunas tem a tabela alunos?",
+                "code": "alunos (id, nome, cidade, idade)",
+                "options": ["4", "3", "5", "1"],
+                "explanation": "São quatro colunas: id, nome, cidade e idade."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete:",
+                "template": "A tabela se chama ___ e a coluna que identifica cada linha é ___.",
+                "blanks": ["alunos", "id"],
+                "extra": ["nome", "idade"],
+                "explanation": "O nome da tabela é alunos e a chave primária é o id."
+            }
+        ]
+    }
+]

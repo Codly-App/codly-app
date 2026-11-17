@@ -1,0 +1,146 @@
+[
+    {
+        "id": "agregacao-1",
+        "intro": "As funções de resumo calculam um valor a partir de várias linhas: COUNT conta, SUM soma e AVG calcula a média.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual consulta soma todos os valores das vendas?",
+                "options": [
+                    "SELECT SUM(valor) FROM vendas;",
+                    "SELECT COUNT(valor) FROM vendas;",
+                    "SELECT AVG(valor) FROM vendas;",
+                    "SELECT TOTAL valor FROM vendas;"
+                ],
+                "explanation": "SUM soma os valores da coluna."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para contar as linhas:",
+                "template": "SELECT ___(*) FROM vendas;",
+                "blanks": ["COUNT"],
+                "extra": ["SUM", "AVG"],
+                "explanation": "COUNT(*) conta quantas linhas existem."
+            },
+            {
+                "kind": "choice",
+                "prompt": "Para calcular a média dos valores, use:",
+                "options": [
+                    "AVG(valor)",
+                    "SUM(valor)",
+                    "COUNT(valor)",
+                    "MEDIA(valor)"
+                ],
+                "explanation": "AVG vem de average, média em inglês."
+            }
+        ]
+    },
+    {
+        "id": "agregacao-2",
+        "intro": "O MIN traz o menor valor de uma coluna e o MAX traz o maior.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual traz a venda mais cara?",
+                "options": [
+                    "SELECT MAX(valor) FROM vendas;",
+                    "SELECT MIN(valor) FROM vendas;",
+                    "SELECT TOP(valor) FROM vendas;",
+                    "SELECT BIG(valor) FROM vendas;"
+                ],
+                "explanation": "MAX traz o maior valor."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para trazer o menor e o maior valor:",
+                "template": "SELECT ___(valor), ___(valor) FROM vendas;",
+                "blanks": ["MIN", "MAX"],
+                "extra": ["SUM", "AVG"],
+                "explanation": "MIN é o menor e MAX é o maior."
+            },
+            {
+                "kind": "choice",
+                "prompt": "O que MIN(idade) devolve na tabela de alunos?",
+                "options": [
+                    "A menor idade",
+                    "A maior idade",
+                    "A média das idades",
+                    "A quantidade de alunos"
+                ],
+                "explanation": "MIN devolve o menor valor da coluna."
+            }
+        ]
+    },
+    {
+        "id": "agregacao-3",
+        "intro": "O GROUP BY agrupa as linhas iguais para contar ou somar por grupo. O HAVING filtra os grupos depois de calculados (o WHERE filtra antes).",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Como contar quantos alunos há em cada cidade?",
+                "options": [
+                    "SELECT cidade, COUNT(*) FROM alunos GROUP BY cidade;",
+                    "SELECT cidade, COUNT(*) FROM alunos;",
+                    "SELECT COUNT(cidade) FROM alunos ORDER BY cidade;",
+                    "SELECT GROUP cidade FROM alunos;"
+                ],
+                "explanation": "O GROUP BY cria um grupo por cidade, e o COUNT conta cada grupo."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para mostrar só as cidades com mais de 2 alunos:",
+                "template": "SELECT cidade, COUNT(*) FROM alunos GROUP BY cidade ___ COUNT(*) > 2;",
+                "blanks": ["HAVING"],
+                "extra": ["WHERE", "LIMIT"],
+                "explanation": "O HAVING filtra grupos, e o WHERE não consegue usar o COUNT."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": [
+                    "SELECT produto, SUM(valor)",
+                    "FROM vendas",
+                    "GROUP BY produto;"
+                ],
+                "explanation": "O GROUP BY vem depois do FROM e do WHERE."
+            }
+        ]
+    },
+    {
+        "id": "agregacao-desafio",
+        "intro": "Desafio: monte relatórios de vendas com resumo, grupo e filtro de grupo.",
+        "exercises": [
+            {
+                "kind": "choice",
+                "prompt": "Qual relatório mostra o total vendido por produto, do maior para o menor?",
+                "code": "vendas (id, produto, valor)",
+                "options": [
+                    "SELECT produto, SUM(valor) FROM vendas GROUP BY produto ORDER BY SUM(valor) DESC;",
+                    "SELECT produto, SUM(valor) FROM vendas ORDER BY produto;",
+                    "SELECT SUM(produto) FROM vendas GROUP BY valor;",
+                    "SELECT produto, valor FROM vendas GROUP BY SUM;"
+                ],
+                "explanation": "Agrupa por produto, soma os valores e ordena pela soma, do maior para o menor."
+            },
+            {
+                "kind": "code",
+                "prompt": "Complete para mostrar os produtos com mais de 5 vendas:",
+                "template": "SELECT produto, ___(*) FROM vendas ___ BY produto ___ COUNT(*) > 5;",
+                "blanks": ["COUNT", "GROUP", "HAVING"],
+                "extra": ["WHERE", "SUM"],
+                "explanation": "Conta por grupo e filtra os grupos com o HAVING."
+            },
+            {
+                "kind": "order",
+                "prompt": "Monte a consulta:",
+                "items": [
+                    "SELECT produto, AVG(valor)",
+                    "FROM vendas",
+                    "GROUP BY produto",
+                    "HAVING AVG(valor) > 100;"
+                ],
+                "explanation": "O HAVING fica depois do GROUP BY."
+            }
+        ]
+    }
+]

@@ -3,11 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { FiCheck, FiX } from "react-icons/fi";
-import { useSoundEffects } from "@/hooks/useSoundEffects";
 import {
     type NameFormData,
     nameSchema,
 } from "@/components/profile/schemas/name-schema";
+import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useUpdateName } from "@/hooks/useUpdateName";
 
 interface EditNameFormProps {
