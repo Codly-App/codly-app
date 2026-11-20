@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { CodeBlock } from "@/components/lessons/components/CodeBlock";
 import type {
     BankItem,
@@ -12,12 +12,14 @@ import { shuffle } from "@/lib/shuffle";
 
 // A resposta certa é sempre a primeira opção do conteúdo
 const CORRECT_ID = "option-0";
+const LETTERS = "ABCDE";
 
 export function ChoiceQuestion({
     exercise,
     locked,
     onChange,
 }: ExerciseProps<ChoiceExercise>) {
+    const group = useId();
     const [options] = useState<BankItem[]>(() =>
         shuffle(
             exercise.options.map((label, position) => ({
@@ -36,7 +38,7 @@ export function ChoiceQuestion({
     }
 
     function stateClass(id: string) {
-        if (locked && id === CORRECT_ID) return "border-primary bg-primary/10";
+        if (locked && id === CORRECT_ID) return "border-success bg-success/10";
         if (locked && id === selected) return "border-danger bg-danger/10";
 
         return id === selected
@@ -44,22 +46,50 @@ export function ChoiceQuestion({
             : "border-transparent bg-surface";
     }
 
+    function badgeClass(id: string) {
+        if (locked && id === CORRECT_ID) {
+            return "border-success bg-success text-background";
+        }
+        if (locked && id === selected) {
+            return "border-danger bg-danger text-on-primary";
+        }
+
+        return id === selected
+            ? "border-primary bg-primary text-on-primary"
+            : "border-primary/40 text-primary";
+    }
+
     return (
         <div className="flex flex-col gap-3">
             {exercise.code && <CodeBlock>{exercise.code}</CodeBlock>}
-            {options.map(({ id, label }) => (
-                <button
+            {options.map(({ id, label }, position) => (
+                <label
                     key={id}
-                    type="button"
-                    onClick={() => pick(id)}
-                    aria-pressed={id === selected}
                     className={clsx(
-                        "w-full rounded-2xl border-2 p-4 text-left text-base font-medium text-title transition active:scale-[0.99]",
+                        "flex items-center gap-3 rounded-2xl border-2 p-4 text-base font-medium text-title transition active:scale-[0.99] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary",
+                        locked ? "cursor-default" : "cursor-pointer",
                         stateClass(id),
                     )}
                 >
-                    {label}
-                </button>
+                    <input
+                        type="radio"
+                        name={group}
+                        checked={id === selected}
+                        disabled={locked}
+                        onChange={() => pick(id)}
+                        className="sr-only"
+                    />
+                    <span
+                        aria-hidden
+                        className={clsx(
+                            "flex size-8 shrink-0 items-center justify-center rounded-full border-2 text-sm font-bold",
+                            badgeClass(id),
+                        )}
+                    >
+                        {LETTERS[position]}
+                    </span>
+                    <span>{label}</span>
+                </label>
             ))}
         </div>
     );

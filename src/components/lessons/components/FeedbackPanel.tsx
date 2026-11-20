@@ -21,15 +21,13 @@ export function FeedbackPanel({
             aria-live="polite"
             className={clsx(
                 "flex flex-col gap-3 rounded-2xl p-4",
-                correct ? "bg-primary/10" : "bg-danger/10",
+                correct ? "bg-success/10" : "bg-danger/10",
             )}
         >
             <h3
                 className={clsx(
                     "flex items-center gap-2 font-bold",
-                    correct
-                        ? "text-primary-strong dark:text-title"
-                        : "text-danger",
+                    correct ? "text-success" : "text-danger",
                 )}
             >
                 {correct ? (
@@ -42,7 +40,7 @@ export function FeedbackPanel({
             {!correct && (
                 <p className="text-sm text-foreground">
                     Resposta certa:{" "}
-                    <span className="font-mono font-semibold">
+                    <span className="font-mono font-semibold text-success">
                         {answerText}
                     </span>
                 </p>
@@ -51,7 +49,12 @@ export function FeedbackPanel({
             <button
                 type="button"
                 onClick={onContinue}
-                className="rounded-2xl bg-primary py-3 font-semibold text-on-primary transition active:scale-95"
+                className={clsx(
+                    "rounded-2xl py-3 font-semibold transition active:scale-95",
+                    correct
+                        ? "bg-success text-background"
+                        : "bg-danger text-on-primary",
+                )}
             >
                 {isLast ? "Concluir lição" : "Continuar"}
             </button>

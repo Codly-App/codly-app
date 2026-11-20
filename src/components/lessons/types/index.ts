@@ -21,6 +21,7 @@ export interface CodeExercise {
 
 export interface OrderExercise {
     kind: "order";
+    
     prompt: string;
     /** Itens na ordem certa. A tela embaralha. */
     items: string[];
